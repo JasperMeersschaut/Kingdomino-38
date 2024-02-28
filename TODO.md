@@ -4,11 +4,11 @@
 
 ### normaal verloop
 
-- [ ] 1. De gebruiker wenst zich te registreren
+- [x] 1. De gebruiker wenst zich te registreren
      > Eerst [DR_HOOFDMENU](#dr_hoofdmenu) aanmaken. Hierbij krijgt de gebruiker de keuze om een nieuwe speler aan te maken.
 
-- [ ] 2. Het systeem vraagt gebruikersnaam en geboortejaar.
-- [ ] 3. De speler geeft de gegevens in.
+- [x] 2. Het systeem vraagt gebruikersnaam en geboortejaar.
+- [x] 3. De speler geeft de gegevens in.
 - [ ] 4. Het systeem valideert ([DR_NIEUWE_SPELER](#dr_nieuwe_speler)).
      > Zorgen dat de gegevens niet meteen in de constructor worden gestoken maar dat ze eerst gevalideerd worden door de setters.
 
@@ -20,7 +20,7 @@
 
 - [ ] 4A. Het systeem detecteert dat niet voldaan is aan [DR_NIEUWE_SPELER](#dr_nieuwe_speler)
 - [ ] 4A1. Het systeem geeft een gepaste melding.
-- [ ] 4A2. Keer terug naar stap 2 van het normale verloop.
+- [ ] 4A2. Keer terug naar stap 2 van het [normale verloop](#normaal-verloop).
 > Het systeem vraagt opnieuw voor de gegevens.
 
 ### DR_NIEUWE_SPELER
@@ -36,7 +36,7 @@
 
 ### DR_HOOFDMENU
 
-Volgend menu wordt getoond:
+- [X] Volgend menu wordt getoond:
 
 ```
 1. Registreer nieuwe speler
