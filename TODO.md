@@ -28,13 +28,13 @@
 
 ### DR_NIEUWE_SPELER
 - [x] Gebruikersnaam is uniek en is minstens 6 karakters lang
-  > - [ ] Controle? ()
+  > - [x] Controle? (Sam Ramaswami)
 - [x] Gebruikersnaam mag niet enkel uit spaties bestaan
-  > - [ ] Controle? ()
+  > - [x] Controle? (Sam Ramaswami)
 - [x] Geboortejaar moet geldig zijn en elke gebruiker is minstens 6 jaar oud
-  > - [ ] Controle? ()
+  > - [x] Controle? (Sam Ramaswami, extra checks toegevoegd.)
 - [x] Aantal overwinningen is 0, aantal gespeelde spelletjes is 0
-  > - [ ] Controle? ()
+  > - [x] Controle? (Sam Ramaswami)
 
 ### DR_HOOFDMENU 
 - [x] Volgend menu wordt getoond:
