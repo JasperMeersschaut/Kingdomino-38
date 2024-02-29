@@ -1,8 +1,10 @@
+
 package domein;
 
 import java.util.Scanner;
 
 public class DomeinController {
+
 	Scanner scanner = new Scanner(System.in);
 	private final SpelerRepository spelerRepository;
 
@@ -11,31 +13,28 @@ public class DomeinController {
 	}
 
 	public void registreerSpeler() { // Registreert de speler volgens gebruikersnaam en geboortejaar
-		String gebruikersnaam;
-		int geboortejaar;
-		System.out.println("Geef een gebruikersnaam op: ");
-		gebruikersnaam = scanner.nextLine();
-		System.out.println("Geef een geboortejaar op: ");
-		geboortejaar = scanner.nextInt();
-		Speler nieuweSpeler = new Speler(gebruikersnaam, geboortejaar); // De net opgevraagde gegevens worden in de
-																		// nieuweSpeler constructor gestoken
-		spelerRepository.voegToe(nieuweSpeler);
+		try {
+			System.out.print("Geef een gebruikersnaam op: ");
+			String gebruikersnaam = scanner.next();
+			System.out.print("Geef een geboortejaar op: ");
+			int geboortejaar = scanner.nextInt();
+			spelerRepository.voegToe(new Speler(gebruikersnaam, geboortejaar)); // De net opgevraagde gegevens worden in de
+																										// nieuweSpeler constructor gestoken
+		}
+		catch (Exception error) {
+			System.out.printf("De inloggegevens zijn incorrect!%n%s%n", error);
+			registreerSpeler();
+		}
 	}
 
-	public void startMenu() {
+	public int toonHoofdMenu() {
 		int keuze;
-		do {
-			System.out.println("1. Registreer nieuwe speler");
-			System.out.println("2. Start nieuw spel");
-			System.out.println("3. Afsluiten");
-			keuze = scanner.nextInt();
-			if (keuze == 1) {
-				registreerSpeler();
-			}
-			if (keuze == 2) {
-				Spel spel = new Spel();
-			}
-
-		} while (keuze != 3);// Loopt tot de keuze gelijk is aan 3
+		System.out.println("1. Registreer nieuwe speler");
+		System.out.println("2. Start nieuw spel");
+		System.out.println("3. Afsluiten");
+		System.out.print("Geef je keuze: ");
+		keuze = scanner.nextInt();
+		return keuze;
 	}
+
 }

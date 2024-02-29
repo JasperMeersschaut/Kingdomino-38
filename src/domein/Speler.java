@@ -1,8 +1,10 @@
+
 package domein;
 
 import java.time.LocalDate;
 
 public class Speler {
+
 	private String gebruikersnaam;
 	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
@@ -23,13 +25,10 @@ public class Speler {
 	}
 
 	private void setGebruikersnaam(String gebruikersnaam) {
-		if (gebruikersnaam.length() < 6 && gebruikersnaam.isBlank()) {
-			throw new IllegalArgumentException(
-					"Gebruikersnaam moet minstens 6 karakters bevatten en mag niet leeg zijn.");
-		} else {
+		if (gebruikersnaam.length() < 6 || gebruikersnaam.isBlank())
+			throw new IllegalArgumentException("Gebruikersnaam moet minstens 6 karakters bevatten en mag niet leeg zijn.");
+		else
 			this.gebruikersnaam = gebruikersnaam;
-		}
-
 	}
 
 	public int getGeboortejaar() {
@@ -37,36 +36,25 @@ public class Speler {
 	}
 
 	private void setGeboortejaar(int geboortejaar) {
-		if (geboortejaar - LocalDate.now().getYear() < 6) {
-
+		if (LocalDate.now().getYear() - geboortejaar < 6 || LocalDate.now().getYear() - geboortejaar > 150)
 			throw new IllegalArgumentException("Speler moet minstens 6 jaar zijn.");
-		} else {
-			this.geboortejaar = geboortejaar;
-		}
+		this.geboortejaar = geboortejaar;
 	}
 
 	public int getAantalGewonnen() {
 		return aantalGewonnen;
 	}
 
-	private void setAantalGewonnen(int aantalGewonnen) {
-		if (aantalGewonnen != 0) {
-			throw new IllegalArgumentException("Aantal gewonnen moet 0 zijn.");
-		} else {
-			this.aantalGewonnen = aantalGewonnen;
-		}
+	public void setAantalGewonnen(int aantalGewonnen) {
+		this.aantalGewonnen = aantalGewonnen;
 	}
 
 	public int getAantalGespeeld() {
 		return aantalGespeeld;
 	}
 
-	private void setAantalGespeeld(int aantalGespeeld) {
-		if (aantalGespeeld != 0) {
-			throw new IllegalArgumentException("Aantal gespeeld moet 0 zijn.");
-		} else {
-			this.aantalGespeeld = aantalGespeeld;
-		}
+	public void setAantalGespeeld(int aantalGespeeld) {
+		this.aantalGespeeld = aantalGespeeld;
 	}
 
 }
