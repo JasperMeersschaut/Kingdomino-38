@@ -13,10 +13,10 @@
      > - [ ] Controle? ()
 - [x] 3. De speler geeft de gegevens in. (Jasper Meersschaut)
      > - [ ] Controle? ()
-- [ ] 4. Het systeem valideert ([DR_NIEUWE_SPELER](#dr_nieuwe_speler)). ()
+- [x] 4. Het systeem valideert ([DR_NIEUWE_SPELER](#dr_nieuwe_speler)). ()
      > Zorgen dat de gegevens niet meteen in de constructor worden gestoken maar dat ze eerst gevalideerd worden door de setters.
 
-- [ ] 5. Het systeem registreert de speler. ()
+- [x] 5. Het systeem registreert de speler. ()
 - [ ] 6.  Het systeem toont een bevestiging en de beschikbare keuzemogelijkheden volgens [DR_HOOFDMENU](#dr_hoofdmenu). ()
 
 ### Alternatieve verlopen:
