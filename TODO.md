@@ -17,13 +17,13 @@
      > Zorgen dat de gegevens niet meteen in de constructor worden gestoken maar dat ze eerst gevalideerd worden door de setters.
 
 - [x] 5. Het systeem registreert de speler. ()
-- [ ] 6.  Het systeem toont een bevestiging en de beschikbare keuzemogelijkheden volgens [DR_HOOFDMENU](#dr_hoofdmenu). ()
+- [x] 6.  Het systeem toont een bevestiging en de beschikbare keuzemogelijkheden volgens [DR_HOOFDMENU](#dr_hoofdmenu). ()
 
 ### Alternatieve verlopen:
 
-- [ ] 4A. Het systeem detecteert dat niet voldaan is aan [DR_NIEUWE_SPELER](#dr_nieuwe_speler) ()
-- [ ] 4A1. Het systeem geeft een gepaste melding. ()
-- [ ] 4A2. Keer terug naar stap 2 van het [normale verloop](#normaal-verloop).
+- [x] 4A. Het systeem detecteert dat niet voldaan is aan [DR_NIEUWE_SPELER](#dr_nieuwe_speler) ()
+- [x] 4A1. Het systeem geeft een gepaste melding. ()
+- [x] 4A2. Keer terug naar stap 2 van het [normale verloop](#normaal-verloop).
   > Het systeem vraagt opnieuw voor de gegevens. ()
 
 ### DR_NIEUWE_SPELER

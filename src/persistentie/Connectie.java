@@ -9,7 +9,7 @@ import com.jcraft.jsch.Session;
 public class Connectie {
 
 	private static final int MYSQL_PORT = 3306, SSH_PORT = 22;
-	private static final String SSH_PRIVATE_KEY_PATH = "C:\\Users\\Kjell\\.ssh\\id_rsa_NOTOPENSSH";
+	private static final String SSH_PRIVATE_KEY_PATH = "C:\\Users\\Kjell\\.ssh\\id_rsa_RSA";
 	private static final String MYSQL_DB = "ID429632_kingdominoG38";
 	private static final String MYSQL_USER = "ID429632_kingdominoG38";
 	private static final String MYSQL_SERVER_URL = MYSQL_USER + ".db.webhosting.be";

@@ -18,11 +18,11 @@ public class DomeinController {
 			String gebruikersnaam = scanner.next();
 			System.out.print("Geef een geboortejaar op: ");
 			int geboortejaar = scanner.nextInt();
-			spelerRepository.voegToe(new Speler(gebruikersnaam, geboortejaar)); // De net opgevraagde gegevens worden in de
-																										// nieuweSpeler constructor gestoken
+			spelerRepository.voegToe(new Speler(gebruikersnaam, geboortejaar));
+			System.out.printf("%s is succesvol aangemaakt%n", gebruikersnaam);
 		}
 		catch (Exception error) {
-			System.out.printf("De inloggegevens zijn incorrect!%n%s%n", error);
+			System.out.println(error);
 			registreerSpeler();
 		}
 	}
