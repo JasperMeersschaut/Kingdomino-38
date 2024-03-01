@@ -26,7 +26,8 @@ public class Speler {
 
 	private void setGebruikersnaam(String gebruikersnaam) {
 		if (gebruikersnaam.length() < 6 || gebruikersnaam.isBlank())
-			throw new IllegalArgumentException("Gebruikersnaam moet minstens 6 karakters bevatten en mag niet leeg zijn.");
+			throw new IllegalArgumentException(
+					"Gebruikersnaam moet minstens 6 karakters bevatten en mag niet leeg zijn.");
 		else
 			this.gebruikersnaam = gebruikersnaam;
 	}
@@ -36,8 +37,12 @@ public class Speler {
 	}
 
 	private void setGeboortejaar(int geboortejaar) {
-		if (LocalDate.now().getYear() - geboortejaar < 6 || LocalDate.now().getYear() - geboortejaar > 150)
+		int huidigJaar = LocalDate.now().getYear();
+		if (huidigJaar - geboortejaar < 6) {
 			throw new IllegalArgumentException("Speler moet minstens 6 jaar zijn.");
+		} else if (Integer.toString(huidigJaar).length() != 4 || huidigJaar - geboortejaar < 0) {
+			throw new IllegalArgumentException("Geboortejaar is niet geldig.");
+		}
 		this.geboortejaar = geboortejaar;
 	}
 
