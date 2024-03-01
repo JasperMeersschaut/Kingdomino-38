@@ -11,7 +11,8 @@ import domein.Speler;
 
 public class SpelerMapper {
 
-	private static final String INSERT_SPELER = "INSERT INTO Speler (gebruikersnaam, geboortejaar)" + "VALUES (?, ?)";
+	private static final String INSERT_SPELER = "INSERT INTO Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld)"
+			+ "VALUES (?, ?, ?, ?)";
 
 	public void voegToe(Speler speler) {
 		Connectie ssh = new Connectie();
@@ -19,6 +20,8 @@ public class SpelerMapper {
 				PreparedStatement query = conn.prepareStatement(INSERT_SPELER)) {
 			query.setString(1, speler.getGebruikersnaam());
 			query.setInt(2, speler.getGeboortejaar());
+			query.setInt(3, speler.getAantalGewonnen());
+			query.setInt(4, speler.getAantalGespeeld());
 			query.executeUpdate();
 		}
 		catch (SQLException ex) {
@@ -39,7 +42,9 @@ public class SpelerMapper {
 			try (ResultSet rs = query.executeQuery()) {
 				if (rs.next()) {
 					int geboortejaar = rs.getInt("geboortejaar");
-					speler = new Speler(gebruikersnaam, geboortejaar);
+					int aantalGewonnen = rs.getInt("aantalGewonnen");
+					int aantalGespeeld = rs.getInt("aantalGespeeld");
+					speler = new Speler(gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld);
 				}
 			}
 		}
