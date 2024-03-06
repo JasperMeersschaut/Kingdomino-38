@@ -2,6 +2,6 @@
 
 ## UC1
 
-Speler(<u>gebruikersnaam</u>, geboortejaar)
+Speler(<ins>gebruikersnaam</ins>, geboortejaar, aantalGewonnen, aantalGespeeld)
 
 ## UC2
