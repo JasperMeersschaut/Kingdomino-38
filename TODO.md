@@ -46,3 +46,21 @@
 ```
 
 > - [ ] Controle? ()
+
+### Nog te doen voor eerste contactmoment
+
+- [ ] Jasper moet nog een commit op VP maken
+- [ ] Iedereen moet opvolgingsformulier nog invullen
+- [ ] Java speler geboortejaarcheck aanpassen
+  - Controleert nu eerst of speler jonger is dan 6, gooit exception en kijkt daarna of speler jonger is dan 0, wat ook jonger dus 6. In dat geval zou al een exception geworpen moeten zijn en kan dit dus niet voorvallen (is dus overbodig). geboortejaar kan wel nog altijd negatief zijn of in de middeleeuwen liggen.
+  - Ideetje: we veranderen bij de 2de controle `huidigJaar - geboortejaar < 0` naar `huidigJaar - geboortejaar > 150`. Dan kan niemand ouder zijn dan 150 jaar. Als je dan een negatief geboortejaar ingeeft gaat er sowieso ook een exception geworpen worden want volgens onze controle zou je dan 2000+ jaar oud zijn en dat is dus > 150.
+  - de `else if` mag een gewone `if` worden, die else is overbodig
+
+### Ideetjes om nog te doen
+
+- [ ] Java project in een apart mapje stoppen (bv. java), zo is onze github pagina ordelijker. 
+  - Dan heb je een database mapje, een java mapje, de gitignore, readme en de todo. Dan staan die .classpath en .project files niet in de weg. Nadeel is wel dat iedereen waarschijnlijk bij eclips het projectfolder gaat moeten aanpassen omdat de src map nog 1 mapje dieper zit dan daarvoor. Wat vinden jullie daarvan?
+  - Indien we dit gaan doen gaan we waarschijnlijk ook de gitignore file moeten aanpassen
+- [ ] Op VP elk diagram in een apart mapje steken. Dus in hoofdmap 3 mappen (AD, DM , SSDenOC) en dan in elke map een submap met Use Case X als naam, of in de hoofdmap telkens een Use Case X map met in elke map een (AD, DM en SSDenOC) map
+  - is makkelijker om bij te houden en ordelijker voor de lectoren
+  - Het is nu al supper onoverzichtelijk en we hebben nog maar 1 use case geanalyseerd
