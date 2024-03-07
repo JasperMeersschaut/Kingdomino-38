@@ -42,9 +42,8 @@ public class Speler {
 		int huidigJaar = LocalDate.now().getYear();
 		if (huidigJaar - geboortejaar < MIN_LEEFTIJD)
 			throw new IllegalArgumentException(String.format("Speler moet minstens %d jaar zijn.", MIN_LEEFTIJD));
-		else
-			if (Integer.toString(huidigJaar).length() != 4 || huidigJaar - geboortejaar < 0)
-				throw new IllegalArgumentException("Geboortejaar is niet geldig.");
+		if (Integer.toString(geboortejaar).length() != 4 || geboortejaar < 0)
+			throw new IllegalArgumentException("Geboortejaar is niet geldig.");
 		this.geboortejaar = geboortejaar;
 	}
 
