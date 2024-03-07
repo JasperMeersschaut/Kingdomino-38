@@ -7,7 +7,7 @@
   - [ ] Implementeren in 
 - [ ] UC2: domeinklasse -> domeinregels toevoegen + TESTEN 
 - [ ] UC3: analyse opstellen (AD, DM, SSD, OC)
-  - [ ] AD
+  - [x] AD
   - [ ] DM
-  - [ ] SSD
+  - [x] SSD
   - [ ] OC
