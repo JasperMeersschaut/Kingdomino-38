@@ -7,12 +7,12 @@
 - [x] 1. De gebruiker wenst zich te registreren (Jasper Meersschaut)
      > Eerst [DR_HOOFDMENU](#dr_hoofdmenu) aanmaken. Hierbij krijgt de gebruiker de keuze om een nieuwe speler aan te maken.
      >
-     > - [ ] Controle? ()
+     > - [x] Controle? ()
 
 - [x] 2. Het systeem vraagt gebruikersnaam en geboortejaar. (Jasper Meersschaut)
-     > - [ ] Controle? ()
+     > - [x] Controle? ()
 - [x] 3. De speler geeft de gegevens in. (Jasper Meersschaut)
-     > - [ ] Controle? ()
+     > - [x] Controle? ()
 - [x] 4. Het systeem valideert ([DR_NIEUWE_SPELER](#dr_nieuwe_speler)). ()
      > Zorgen dat de gegevens niet meteen in de constructor worden gestoken maar dat ze eerst gevalideerd worden door de setters.
 
