@@ -60,7 +60,7 @@ local.properties
 .project
 
 # Custom
-kingdomino-g38\src\persistentie\Connectie.java
+src/persistentie/Connectie.java
 .classpath
 *.classpath
 
