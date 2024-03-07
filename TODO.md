@@ -51,7 +51,7 @@
 
 - [ ] Jasper moet nog een commit op VP maken
 - [ ] Iedereen moet opvolgingsformulier nog invullen
-- [ ] Java speler geboortejaarcheck aanpassen
+- [x] Java speler geboortejaarcheck aanpassen
   - Controleert nu eerst of speler jonger is dan 6, gooit exception en kijkt daarna of speler jonger is dan 0, wat ook jonger dus 6. In dat geval zou al een exception geworpen moeten zijn en kan dit dus niet voorvallen (is dus overbodig). geboortejaar kan wel nog altijd negatief zijn of in de middeleeuwen liggen.
   - Ideetje: we veranderen bij de 2de controle `huidigJaar - geboortejaar < 0` naar `huidigJaar - geboortejaar > 150`. Dan kan niemand ouder zijn dan 150 jaar. Als je dan een negatief geboortejaar ingeeft gaat er sowieso ook een exception geworpen worden want volgens onze controle zou je dan 2000+ jaar oud zijn en dat is dus > 150.
   - de `else if` mag een gewone `if` worden, die else is overbodig
