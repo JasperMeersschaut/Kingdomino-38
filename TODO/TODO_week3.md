@@ -47,16 +47,16 @@
 3. Afsluiten
 ```
 
-> - [ ] Controle? ()
+> - [x] Controle? ()
 
 ### Nog te doen voor eerste contactmoment
 
 - [x] Jasper moet nog een commit op VP maken
-- [ ] Iedereen moet opvolgingsformulier nog invullen
-  - [ ] algemeen
-  - [ ] Kjell
+- [x] Iedereen moet opvolgingsformulier nog invullen
+  - [x] algemeen
+  - [x] Kjell
   - [x] Sam
-  - [ ] Keanu
+  - [x] Keanu
   - [x] Emiel
   - [x] Jasper
 
@@ -71,6 +71,6 @@
 - [ ] Java project in een apart mapje stoppen (bv. java), zo is onze github pagina ordelijker.
   - Dan heb je een database mapje, een java mapje, de gitignore, readme en de todo. Dan staan die .classpath en .project files niet in de weg. Nadeel is wel dat iedereen waarschijnlijk bij eclips het projectfolder gaat moeten aanpassen omdat de src map nog 1 mapje dieper zit dan daarvoor. Wat vinden jullie daarvan?
   - Indien we dit gaan doen gaan we waarschijnlijk ook de gitignore file moeten aanpassen
-- [ ] Op VP elk diagram in een apart mapje steken. Dus in hoofdmap 3 mappen (AD, DM , SSDenOC) en dan in elke map een submap met Use Case X als naam, of in de hoofdmap telkens een Use Case X map met in elke map een (AD, DM en SSDenOC) map
+- [x] Op VP elk diagram in een apart mapje steken. Dus in hoofdmap 3 mappen (AD, DM , SSDenOC) en dan in elke map een submap met Use Case X als naam, of in de hoofdmap telkens een Use Case X map met in elke map een (AD, DM en SSDenOC) map
   - is makkelijker om bij te houden en ordelijker voor de lectoren
   - Het is nu al supper onoverzichtelijk en we hebben nog maar 1 use case geanalyseerd
