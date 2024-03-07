@@ -7,12 +7,12 @@
 - [x] 1. De gebruiker wenst zich te registreren (Jasper Meersschaut)
      > Eerst [DR_HOOFDMENU](#dr_hoofdmenu) aanmaken. Hierbij krijgt de gebruiker de keuze om een nieuwe speler aan te maken.
      >
-     > - [ ] Controle? ()
+     > - [x] Controle? (Emiel Vandenberghe)
 
 - [x] 2. Het systeem vraagt gebruikersnaam en geboortejaar. (Jasper Meersschaut)
-     > - [ ] Controle? ()
+     > - [x] Controle? (Emiel Vandenberghe)
 - [x] 3. De speler geeft de gegevens in. (Jasper Meersschaut)
-     > - [ ] Controle? ()
+     > - [x] Controle? (Emiel Vandenberghe)
 - [x] 4. Het systeem valideert ([DR_NIEUWE_SPELER](#dr_nieuwe_speler)). ()
      > Zorgen dat de gegevens niet meteen in de constructor worden gestoken maar dat ze eerst gevalideerd worden door de setters.
 
@@ -60,7 +60,8 @@
   - [x] Emiel
   - [x] Jasper
 
-- [ ] Java speler geboortejaarcheck aanpassen
+- [x] Java speler geboortejaarcheck aanpassen
+
   - Controleert nu eerst of speler jonger is dan 6, gooit exception en kijkt daarna of speler jonger is dan 0, wat ook jonger dus 6. In dat geval zou al een exception geworpen moeten zijn en kan dit dus niet voorvallen (is dus overbodig). geboortejaar kan wel nog altijd negatief zijn of in de middeleeuwen liggen.
   - Ideetje: we veranderen bij de 2de controle `huidigJaar - geboortejaar < 0` naar `huidigJaar - geboortejaar > 150`. Dan kan niemand ouder zijn dan 150 jaar. Als je dan een negatief geboortejaar ingeeft gaat er sowieso ook een exception geworpen worden want volgens onze controle zou je dan 2000+ jaar oud zijn en dat is dus > 150.
   - de `else if` mag een gewone `if` worden, die else is overbodig
