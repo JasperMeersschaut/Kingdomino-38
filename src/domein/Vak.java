@@ -14,4 +14,8 @@ public class Vak {
 		this.kronen = kronen;
 	}
 
+	public int getKronen() {
+		return kronen;
+	}
+
 }
