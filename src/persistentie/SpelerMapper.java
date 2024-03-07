@@ -23,11 +23,9 @@ public class SpelerMapper {
 			query.setInt(3, speler.getAantalGewonnen());
 			query.setInt(4, speler.getAantalGespeeld());
 			query.executeUpdate();
-		}
-		catch (SQLException ex) {
+		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
-		}
-		finally {
+		} finally {
 			ssh.closeConnection();
 		}
 	}
@@ -47,11 +45,9 @@ public class SpelerMapper {
 					speler = new Speler(gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld);
 				}
 			}
-		}
-		catch (SQLException ex) {
+		} catch (SQLException ex) {
 			throw new RuntimeException(ex);
-		}
-		finally {
+		} finally {
 			ssh.closeConnection();
 		}
 		return speler;

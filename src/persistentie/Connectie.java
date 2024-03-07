@@ -52,22 +52,19 @@ public class Connectie {
 				System.out.println("    Server:Port: " + SSH_SERVER_URL + ":" + SSH_PORT);
 				this.allocatedLocalPort = this.sshSession.setPortForwardingL(RANDOM_LOCAL_PORT, MYSQL_SERVER_URL,
 						MYSQL_PORT);
-				System.out
-						.println("  Forwarded port on " + MYSQL_SERVER_URL + ": " + allocatedLocalPort + " -> " + MYSQL_PORT);
-			}
-			catch (Exception e) {
+				System.out.println(
+						"  Forwarded port on " + MYSQL_SERVER_URL + ": " + allocatedLocalPort + " -> " + MYSQL_PORT);
+			} catch (Exception e) {
 				System.out.println("Could not establish SSH connection!");
 				e.printStackTrace();
 			}
-		else
-			if (!this.sshSession.isConnected())
-				try {
-					System.out.println("Reopening ssh connection...");
-					this.sshSession.connect();
-				}
-				catch (Exception e) {
-					System.err.print(e);
-				}
+		else if (!this.sshSession.isConnected())
+			try {
+				System.out.println("Reopening ssh connection...");
+				this.sshSession.connect();
+			} catch (Exception e) {
+				System.err.print(e);
+			}
 	}
 
 }

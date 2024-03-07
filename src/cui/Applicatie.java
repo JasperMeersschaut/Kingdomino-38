@@ -16,8 +16,8 @@ public class Applicatie {
 		do {
 			keuze = dc.toonHoofdMenu();
 			switch (keuze) {
-				case 1 -> dc.registreerSpeler();
-				// case 2 -> dc.startNieuwSpel();
+			case 1 -> dc.registreerSpeler();
+			// case 2 -> dc.startNieuwSpel();
 			}
 		} while (keuze != 3);
 	}
