@@ -1,10 +1,10 @@
 
 package domein;
 
+import utils.Kleur;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import utils.Kleur;
 
 public class Spel {
 
@@ -15,7 +15,7 @@ public class Spel {
 	private static final int MIN_AANTAL_SPELERS = 3;
 	private static final int MAX_AANTAL_SPELER = 4;
 
-	public Spel(Speler[] spelers) {
+	public Spel() {
 		setSpelers(spelers);
 		stapel = tegelRepository.geeftegels();
 		beschikbareKleuren = new ArrayList<>();
