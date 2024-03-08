@@ -6,6 +6,7 @@
   - [ ] Implementeren in
 - [ ] UC2: domeinklasse -> domeinregels toevoegen + TESTEN
 - [ ] UC3: analyse opstellen (AD, DM, SSD, OC)
+- [ ] Meertaligheid implementeren in javaproject
 
 ## Feedback moment 1
 
@@ -16,9 +17,9 @@
 
 #### SSD
 
-- [ ] Na loop keuze speler en kleur iets terugsturen naar de console, (toont nog eens alle kleuren en spelerlijst) tussen 2 en 3
-- [ ] 3 ook in de loop
-- [ ] pre condities verwijderen
+- [x] Na loop keuze speler en kleur iets terugsturen naar de console, (toont nog eens alle kleuren en spelerlijst) tussen 2 en 3
+- [x] 3 ook in de loop
+- [x] pre condities verwijderen
 
 #### domein model
 
