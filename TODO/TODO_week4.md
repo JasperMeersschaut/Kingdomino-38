@@ -3,10 +3,22 @@
 - UC2: ERD, relationeel model, implementeren in MySQL
   - [ ] ERD
   - [ ] Relationeel Model
-  - [ ] Implementeren in
+  - [ ] Implementeren in SQL
+- [ ] UC2: console uitwerken (java)
 - [ ] UC2: domeinklasse -> domeinregels toevoegen + TESTEN
-- [ ] UC3: analyse opstellen (AD, DM, SSD, OC)
+- UC3: analyse opstellen (AD, DM, SSD, OC)
+  - [x] UC3: AD
+      - [ ] controle
+  - [ ] UC3: DM
+      - [ ] controle
+  - [x] UC3: SSD
+      - [ ] controle
+  - [ ] UC3: OC
+      - [ ] controle
+  - [ ] UC3: DCD
+      - [ ] controle
 - [ ] Meertaligheid implementeren in javaproject
+      - [ ] controle
 
 ## Feedback moment 1
 
@@ -31,16 +43,3 @@
 - [ ] Scanner verwijderen bij de domeincontroller
 - [ ] toonHoofdMenu() moet niet in de domeincontroller
 - [ ] Gebruik van DTO's
-
-## Opdracht week 4
-- [ ] UC2: console uitwerken (java)
-- UC2: ERD, relationeel model, implementeren in MySQL
-  - [ ] ERD
-  - [ ] Relationeel Model
-  - [ ] Implementeren in 
-- [ ] UC2: domeinklasse -> domeinregels toevoegen + TESTEN 
-- [ ] UC3: analyse opstellen (AD, DM, SSD, OC)
-  - [x] AD
-  - [ ] DM
-  - [x] SSD
-  - [ ] OC
