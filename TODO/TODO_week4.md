@@ -24,8 +24,8 @@
 
 ### visual paradigm
 #### Activity diagram
-- [ ] Bij de keuze nodes schrijven wat de richtingen doen
-- [ ] Eerste speler is random koning, volgende ook?
+- [x] Bij de keuze nodes schrijven wat de richtingen doen
+- [x] Eerste speler is random koning, volgende ook?
 
 #### SSD
 
