@@ -24,12 +24,12 @@ public class HoofdMenu {
 			scanner.nextLine();
 			keuzeGeldig = true;
 		} catch (InputMismatchException ime) {
-			System.err.println("Vul een getal in!");
+			System.err.println("enter_a_number");
 			scanner.nextLine();
 		}
 		// all catcher
 		catch (Exception e) {
-			System.err.println("Er is iets fout gelopen");
+			System.err.println("error_occurred");
 			scanner.nextLine();
 		}
 		return keuze;
