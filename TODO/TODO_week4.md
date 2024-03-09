@@ -8,17 +8,17 @@
 - [ ] UC2: domeinklasse -> domeinregels toevoegen + TESTEN
 - UC3: analyse opstellen (AD, DM, SSD, OC)
   - [x] UC3: AD
-      - [ ] controle
+    - [ ] controle
   - [ ] UC3: DM
-      - [ ] controle
+    - [ ] controle
   - [x] UC3: SSD
-      - [ ] controle
+    - [ ] controle
   - [ ] UC3: OC
-      - [ ] controle
+    - [ ] controle
   - [ ] UC3: DCD
-      - [ ] controle
+    - [ ] controle
 - [ ] Meertaligheid implementeren in javaproject
-      - [ ] controle
+    - [ ] controle
 
 ## Feedback moment 1
 
