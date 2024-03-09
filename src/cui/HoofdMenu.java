@@ -1,13 +1,16 @@
 package cui;
 
 import java.util.InputMismatchException;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class HoofdMenu {
 	private Scanner scanner;
+	private ResourceBundle messages;
 
 	public HoofdMenu() {
 		scanner = new Scanner(System.in);
+		messages = ResourceBundle.getBundle("messages");
 	}
 
 	public int toonHoofdMenu() {
@@ -15,10 +18,8 @@ public class HoofdMenu {
 		boolean keuzeGeldig = false;
 
 		try {
-			System.out.println("1. Registreer nieuwe speler");
-			System.out.println("2. Start nieuw spel");
-			System.out.println("3. Afsluiten");
-			System.out.print("Geef je keuze: ");
+			String menuText = messages.getString("main_menu");
+	        System.out.println(menuText);
 			keuze = scanner.nextInt();
 			scanner.nextLine();
 			keuzeGeldig = true;
