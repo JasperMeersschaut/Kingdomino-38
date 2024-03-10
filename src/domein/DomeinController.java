@@ -1,16 +1,25 @@
 
 package domein;
 
-import java.awt.Menu;
+import java.util.List;
+
+import cui.Applicatie;
+import cui.HoofdMenu;
+import utils.Kleur;
 
 public class DomeinController {
 	private Spel spel;
-	private Menu menu;
 	private static SpelerRepository spelerRepository;
+	private Applicatie applicatie = new Applicatie();
+	HoofdMenu hoofdMenu = new HoofdMenu();
 
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
-		menu = new Menu();
+	}
+
+	public int toonHoofdMenu() {
+
+		return hoofdMenu.toonHoofdMenu();
 	}
 
 	public void registreerSpeler(String gebruikersnaam, int geboortejaar) {
@@ -22,8 +31,8 @@ public class DomeinController {
 		spel.start();
 	}
 
-//	public static List<Kleur> toonBeschikbareKleuren() {
-//		return Spel.toonBeschikbareKleuren();
-//	}
+	public static List<Kleur> toonBeschikbareKleuren() {
+		return Spel.toonBeschikbareKleuren();
+	}
 
 }

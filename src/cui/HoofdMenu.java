@@ -5,13 +5,8 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class HoofdMenu {
-	private Scanner scanner;
-	private ResourceBundle messages;
-
-	public HoofdMenu() {
-		scanner = new Scanner(System.in);
-		messages = ResourceBundle.getBundle("messages");
-	}
+	private Scanner scanner = new Scanner(System.in);;
+	private ResourceBundle messages = ResourceBundle.getBundle("messages");;
 
 	public int toonHoofdMenu() {
 		int keuze = 0;
@@ -19,12 +14,12 @@ public class HoofdMenu {
 
 		try {
 			String menuText = messages.getString("main_menu");
-	        System.out.println(menuText);
+			System.out.print(menuText);
 			keuze = scanner.nextInt();
 			scanner.nextLine();
 			keuzeGeldig = true;
 		} catch (InputMismatchException ime) {
-			System.err.println("enter_a_number");
+			System.err.print("enter_a_number");
 			scanner.nextLine();
 		}
 		// all catcher

@@ -1,10 +1,10 @@
 
 package domein;
 
-import utils.Kleur;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import utils.Kleur;
 
 public class Spel {
 
@@ -21,7 +21,7 @@ public class Spel {
 		beschikbareKleuren = new ArrayList<>();
 	}
 
-	public void setSpelers(Speler[] spelers) {
+	public void setSpelers(Speler[] spelers) { // @Kjell: Is dit geen private setter?
 		if (spelers.length < 3 || spelers.length > 4)
 			throw new IllegalArgumentException(
 					String.format("Er moeten %d of %d spelers meespelen", MIN_AANTAL_SPELERS, MAX_AANTAL_SPELER));

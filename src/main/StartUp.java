@@ -1,6 +1,7 @@
 
-package cui;
+package main;
 
+import cui.Applicatie;
 import domein.DomeinController;
 
 public class StartUp {
