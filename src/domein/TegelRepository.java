@@ -1,10 +1,10 @@
 
 package domein;
 
+import utils.Landschap;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import utils.Landschap;
 
 public class TegelRepository {
 
@@ -76,5 +76,5 @@ public class TegelRepository {
 		}
 		return tegels;
 	}
-
+// Er moet nog toegevoegd worden dat er maar 36 tegels gebruikt worden als er 3 spelers zijn. Moet niet gebeuren in deze klasse maar kan opzich wel. Mss best in spel.java
 }

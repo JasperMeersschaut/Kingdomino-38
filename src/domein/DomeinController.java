@@ -10,7 +10,6 @@ import utils.Kleur;
 public class DomeinController {
 	private Spel spel;
 	private static SpelerRepository spelerRepository;
-	private Applicatie applicatie = new Applicatie();
 	HoofdMenu hoofdMenu = new HoofdMenu();
 
 	public DomeinController() {

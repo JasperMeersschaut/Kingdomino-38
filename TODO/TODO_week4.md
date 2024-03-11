@@ -40,6 +40,6 @@
 
 #### DCD
 
-- [ ] Scanner verwijderen bij de domeincontroller
+- [x] Scanner verwijderen bij de domeincontroller
 - [ ] toonHoofdMenu() moet niet in de domeincontroller
 - [ ] Gebruik van DTO's

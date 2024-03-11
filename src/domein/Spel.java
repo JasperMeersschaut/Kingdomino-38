@@ -1,24 +1,21 @@
 
 package domein;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import utils.Kleur;
+
+import java.util.List;
 
 public class Spel {
 
 	private Speler[] spelers;
 	private List<Tegel> stapel;
 	private TegelRepository tegelRepository = new TegelRepository();
-	private static List<Kleur> beschikbareKleuren = Kleur.geefKleuren();
 	private static final int MIN_AANTAL_SPELERS = 3;
 	private static final int MAX_AANTAL_SPELER = 4;
 
 	public Spel() {
 		setSpelers(spelers);
 		stapel = tegelRepository.geeftegels();
-		beschikbareKleuren = new ArrayList<>();
 	}
 
 	public void setSpelers(Speler[] spelers) { // @Kjell: Is dit geen private setter?
@@ -29,7 +26,7 @@ public class Spel {
 	}
 
 	public static List<Kleur> toonBeschikbareKleuren() {
-		return beschikbareKleuren;
+		return Kleur.geefKleuren();
 	}
 
 	public void start() {
