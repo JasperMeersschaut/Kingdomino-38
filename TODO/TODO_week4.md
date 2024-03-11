@@ -43,7 +43,10 @@
 - [x] Koninkrijk = een groep vakjes en de speler heeft een konkrijk
     - [ ] controle
 - [x] aggregatie/compisisite nakijken. Dus moet waarschijnlijk gewoon weg.
-    - [ ] controle
+    - [ ] De prompts moeten een extra spatie hebben zodat de tekst niet tegen de invoer aanplakt
+        - [ ] controle
+    - [ ] De error messages zijn vaste strings en worden niet uit de resourcebundle gehaald
+        - [ ] controle
 
 #### DCD
 
