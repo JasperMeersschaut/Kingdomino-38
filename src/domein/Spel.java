@@ -3,6 +3,7 @@ package domein;
 
 import utils.Kleur;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Spel {
@@ -32,4 +33,15 @@ public class Spel {
 	public void start() {
 
 	}
+	
+	protected List<Tegel> shuffleTegels() {           
+		List<Tegel> tegels = new ArrayList<>();
+		int indexVoorTegel;
+		for (Tegel tegel : this.stapel) {
+			indexVoorTegel = (int) Math.round(Math.random() * tegels.size());
+			tegels.add(indexVoorTegel, tegel);
+		}
+		return tegels;
+	}
+	// Er moet nog toegevoegd worden dat er maar 36 tegels gebruikt worden als er 3 spelers zijn. Moet niet gebeuren in deze klasse maar kan opzich wel. Mss best in spel.java
 }

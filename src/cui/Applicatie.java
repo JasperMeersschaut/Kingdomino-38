@@ -24,7 +24,7 @@ public class Applicatie {
 	public Applicatie(DomeinController dc) {
 		this.dc = dc;
 		Locale locale = Locale.getDefault(); // de juiste resource-bundel op basis van de huidige taalinstellingen
-		messages = ResourceBundle.getBundle("messages", locale);
+		messages = ResourceBundle.getBundle("messages", locale); 
 	}
 
 	public void start() {
@@ -68,10 +68,10 @@ public class Applicatie {
 	public void startNieuwSpel() {
 		Spel spel = new Spel();
 		System.out.println("Beschikbare kleuren: ");
-		// int index = 1;
-		// for (Kleur kleur : dc.toonBeschikbareKleuren())
-		// System.out.println("\t" + String.format("%d: %s ", index++, kleur));
-		//
+//		 int index = 1;
+//		 for (Kleur kleur : dc.toonBeschikbareKleuren())
+//		 System.out.println("\t" + String.format("%d: %s ", index++, kleur));
+//		
 	}
 
 }
