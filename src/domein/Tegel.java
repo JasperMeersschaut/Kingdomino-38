@@ -3,7 +3,7 @@ package domein;
 
 import utils.Landschap;
 
-public class Tegel {
+public class Tegel implements Comparable<Tegel> {
 
 	private int nummer;
 	private Landschap landschapLinks;
@@ -31,6 +31,11 @@ public class Tegel {
 
 	public int getAantalKronen() {
 		return aantalKronen;
+	}
+
+	@Override
+	public int compareTo(Tegel t) {
+		return Integer.compare(this.nummer, t.nummer);
 	}
 
 }
