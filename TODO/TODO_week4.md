@@ -12,7 +12,7 @@
 - UC3: analyse opstellen (AD, DM, SSD, OC)
   - [x] UC3: AD
     - [ ] controle
-  - [ ] UC3: DM
+  - [x] UC3: DM
     - [ ] controle
   - [x] UC3: SSD
     - [ ] controle
