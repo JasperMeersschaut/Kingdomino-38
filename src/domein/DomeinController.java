@@ -3,9 +3,9 @@ package domein;
 
 import java.util.List;
 
-import cui.Applicatie;
+import DTO.AlleSpelersDTO;
+import DTO.SpelerDTO;
 import cui.HoofdMenu;
-import utils.Kleur;
 
 public class DomeinController {
 	private Spel spel;
@@ -25,13 +25,13 @@ public class DomeinController {
 		spelerRepository.voegToe(new Speler(gebruikersnaam, geboortejaar));
 	}
 
-	private void startSpel() {
-		spel = new Spel();
+	public void startSpel(List<SpelerDTO> spelers) {
+		spel = new Spel(spelers);
 		spel.start();
 	}
 
-	public static List<Kleur> toonBeschikbareKleuren() {
-		return Spel.toonBeschikbareKleuren();
+	public List<AlleSpelersDTO> toonBeschikbareSpelers() {
+		return spelerRepository.toonBeschikbareSpelers();
 	}
 
 }

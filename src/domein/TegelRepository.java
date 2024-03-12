@@ -1,10 +1,10 @@
 
 package domein;
 
-import utils.Landschap;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import utils.Landschap;
 
 public class TegelRepository {
 
@@ -61,13 +61,21 @@ public class TegelRepository {
 		tegels.add(new Tegel(46, Landschap.AARDE, Landschap.MIJN, 2));
 		tegels.add(new Tegel(47, Landschap.AARDE, Landschap.MIJN, 2));
 		tegels.add(new Tegel(48, Landschap.ZAND, Landschap.MIJN, 3));
-		tegels = spel.shuffleTegels();
+		tegels = shuffleTegels();
 	}
 
 	public List<Tegel> geeftegels() {
 		return tegels;
 	}
 
-	
+	private List<Tegel> shuffleTegels() {
+		List<Tegel> tegels = new ArrayList<>();
+		int indexVoorTegel;
+		for (Tegel tegel : this.tegels) {
+			indexVoorTegel = (int) Math.round(Math.random() * tegels.size());
+			tegels.add(indexVoorTegel, tegel);
+		}
+		return tegels;
 	}
-
+// Er moet nog toegevoegd worden dat er maar 36 tegels gebruikt worden als er 3 spelers zijn. Moet niet gebeuren in deze klasse maar kan opzich wel. Mss best in spel.java
+}

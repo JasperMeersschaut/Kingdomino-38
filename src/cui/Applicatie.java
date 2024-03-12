@@ -7,7 +7,6 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import domein.DomeinController;
-import domein.Spel;
 import exceptions.GebruikersnaamInGebruikException;
 
 public class Applicatie {
@@ -16,6 +15,7 @@ public class Applicatie {
 	private DomeinController dc;
 	Scanner scanner = new Scanner(System.in);
 	private HoofdMenu hoofdMenu = new HoofdMenu();
+	private SpelMenu spelMenu = new SpelMenu();
 
 	public Applicatie() {
 
@@ -24,7 +24,7 @@ public class Applicatie {
 	public Applicatie(DomeinController dc) {
 		this.dc = dc;
 		Locale locale = Locale.getDefault(); // de juiste resource-bundel op basis van de huidige taalinstellingen
-		messages = ResourceBundle.getBundle("messages", locale); 
+		messages = ResourceBundle.getBundle("messages", locale);
 	}
 
 	public void start() {
@@ -33,7 +33,7 @@ public class Applicatie {
 			keuze = dc.toonHoofdMenu();
 			switch (keuze) {
 			case 1 -> registreerSpeler();
-			case 2 -> startNieuwSpel();
+			case 2 -> spelMenu.spelerToevoegen();
 			}
 		} while (keuze != 3);
 	}
@@ -65,13 +65,13 @@ public class Applicatie {
 		} while (!spelerGeldig);
 	}
 
-	public void startNieuwSpel() {
-		Spel spel = new Spel();
-		System.out.println(messages.getString("available_colours"));
+//	public void startNieuwSpel() {
+//		Spel spel = new Spel();
+//		System.out.println(messages.getString("available_colours"));
 //		 int index = 1;
 //		 for (Kleur kleur : dc.toonBeschikbareKleuren())
 //		 System.out.println("\t" + String.format("%d: %s ", index++, kleur));
 //		
-	}
+//	}
 
 }
