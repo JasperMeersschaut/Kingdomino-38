@@ -67,7 +67,7 @@ public class Applicatie {
 
 	public void startNieuwSpel() {
 		Spel spel = new Spel();
-		System.out.println("Beschikbare kleuren: ");
+		System.out.println(messages.getString("available_colours"));
 //		 int index = 1;
 //		 for (Kleur kleur : dc.toonBeschikbareKleuren())
 //		 System.out.println("\t" + String.format("%d: %s ", index++, kleur));
