@@ -1,6 +1,8 @@
 
 package domein;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,10 +10,13 @@ import DTO.SpelerDTO;
 import utils.Kleur;
 
 public class Spel {
+
 	private DomeinController dc = new DomeinController();
 	Scanner scanner = new Scanner(System.in);
 	List<SpelerDTO> spelers;
 	private List<Tegel> stapel;
+	private List<Tegel> startKolom;
+	private List<Tegel> eindKolom;
 	private TegelRepository tegelRepository = new TegelRepository();
 	private static final int MIN_AANTAL_SPELERS = 3;
 	private static final int MAX_AANTAL_SPELER = 4;
@@ -19,6 +24,7 @@ public class Spel {
 	public Spel(List<SpelerDTO> spelers) {
 		setSpelers(spelers);
 		stapel = tegelRepository.geeftegels();
+		startKolom = new ArrayList<>();
 	}
 
 	private void setSpelers(List<SpelerDTO> spelers) {
@@ -33,9 +39,15 @@ public class Spel {
 	}
 
 	public void start() {
-
 	}
-	// Er moet nog toegevoegd worden dat er maar 36 tegels gebruikt worden als er 3
-	// spelers zijn. Moet niet gebeuren in deze klasse maar kan opzich wel. Mss best
-	// in spel.java
+
+	public void vulStartKolomAan() {
+		int aantal = spelers.size();
+		for (int index = 1; index <= aantal; index++) {
+			startKolom.add(stapel.getLast());
+			stapel.removeLast();
+		}
+		Collections.sort(stapel);
+	}
+
 }
