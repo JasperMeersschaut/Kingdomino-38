@@ -8,6 +8,7 @@ import dto.SpelerDTO;
 public class DomeinController {
 
 	private static SpelerRepository spelerRepository;
+	private Spel spel;
 
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
@@ -25,8 +26,12 @@ public class DomeinController {
 		return spelerRepository.geefAlleSpelers();
 	}
 
-	public void startSpel(List<SpelerDTO> spelers) {
-		new Spel(spelers);
+	public void maakSpelAan(List<SpelerDTO> spelers) {
+		spel = new Spel(spelers);
+	}
+
+	public String toonSpelOverzicht() {
+		return spel.toonSpelOverzicht();
 	}
 
 }

@@ -33,10 +33,15 @@ public class Applicatie {
 				case 1 -> registreerMenu.registreerSpeler();
 				case 2 -> {
 					List<SpelerDTO> spelers = spelMenu.vraagSpelersEnKleuren();
-					dc.startSpel(spelers);
+					speelSpel(spelers);
 				}
 			}
 		} while (keuze != 3);
+	}
+
+	private void speelSpel(List<SpelerDTO> spelers) {
+		dc.maakSpelAan(spelers);
+		System.out.println(dc.toonSpelOverzicht());
 	}
 
 }
