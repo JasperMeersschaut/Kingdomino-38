@@ -59,5 +59,5 @@
 
 #### Java
 
-- [ ] Meertaligheid implementeren in javaproject
-  - [ ] Controle
+- [x] Meertaligheid implementeren in javaproject
+  - [x] Controle

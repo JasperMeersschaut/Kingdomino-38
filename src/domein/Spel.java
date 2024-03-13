@@ -3,7 +3,9 @@ package domein;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import DTO.SpelerDTO;
 import DTO.TegelDTO;
@@ -20,6 +22,7 @@ public class Spel {
 	private static final int MIN_AANTAL_SPELERS = 3;
 	private static final int MAX_AANTAL_SPELER = 4;
 	private ResourceBundle messages;
+	Scanner scanner = new Scanner(System.in);
 
 	public Spel(List<SpelerDTO> spelers) {
 		setSpelers(spelers);
@@ -133,4 +136,62 @@ public class Spel {
 		return tegelVak;
 	}
 
+	public void kiesWillekeurigeKoning() {
+		// Alle spelers die nog geen koning plaatsten
+		List<SpelerDTO> spelersZonderTegel = new ArrayList(); // maakt array voor alle spelers die nog geen tegel gelegt
+																// hebben
+		boolean isGeplaatst; // boolean voor of koning al geplaatst is
+		for (SpelerDTO speler : spelers) {
+			isGeplaatst = false;
+			for (TegelDTO tegel : this.startKolom) {
+				// Checken of speler al koning plaatste
+				if (tegel.spelerDTO() == speler) {
+					isGeplaatst = true;
+					break;
+				}
+			}
+			// Speler toevoegen aan lijst indien die nog geen koning plaatste
+			if (!isGeplaatst) {
+				spelersZonderTegel.add(speler);
+			}
+		}
+
+		// null teruggeven indien alle koningen geplaatst zijn
+		if (spelersZonderTegel.isEmpty()) {
+			throw new IllegalArgumentException(messages.getString("all_kings_placed")); // buiten loop plaatsen
+		}
+
+		// Willekeurige spelerDTO teruggeven waarvan de speler nog geen koning plaatste,
+		// totdat alle koningen geplaatst zijn
+		Random random = new Random();
+		do {
+			int randomIndex = random.nextInt(spelersZonderTegel.size());
+			kiesTegelStartkolom(startKolom, spelersZonderTegel.get(randomIndex));
+			spelersZonderTegel.remove(randomIndex);
+		} while (spelersZonderTegel.size() != 0);
+	}
+
+	public void kiesTegelStartkolom(List<TegelDTO> startkolom, SpelerDTO speler) { // moet nog ergens opgeroepen worden
+		System.out.printf(messages.getString("turn_to_choose_tiles") + startkolom, speler.speler().getGebruikersnaam());
+		TegelDTO tegel = null;
+		boolean tegelGekozen = false;
+		do {
+			System.out.print(messages.getString("give_number_chosen_tile"));
+			int nr = scanner.nextInt();
+			for (int i = 0; i < startkolom.size(); i++) {
+				tegel = startkolom.get(i);
+				if (tegel.tegel().getNummer() == nr) {
+					if (tegel.spelerDTO() == null) {
+						startkolom.remove(i);
+						startkolom.add(i, new TegelDTO(tegel.tegel(), speler));
+						tegelGekozen = true;
+					} else {
+						System.out.println(messages.getString("already_taken_tile")
+								+ tegel.spelerDTO().speler().getGebruikersnaam());
+						break;
+					}
+				}
+			}
+		} while (!tegelGekozen);
+	}
 }

@@ -34,4 +34,7 @@ public class DomeinController {
 		return spel.toonSpelOverzicht();
 	}
 
+	public void kiesWillekeurigeKoning() {
+		spel.kiesWillekeurigeKoning();
+	}
 }
