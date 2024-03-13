@@ -4,12 +4,14 @@ package cui;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import domein.DomeinController;
 import domein.Speler;
 import dto.SpelerDTO;
+import dto.TegelDTO;
 import utils.Kleur;
 
 public class SpelMenu {
@@ -69,15 +71,12 @@ public class SpelMenu {
 						naamGeldig = true;
 				if (!naamGeldig)
 					throw new IllegalArgumentException("Gebruiker is al gekozen!");
-			}
-			catch (IllegalArgumentException iae) {
+			} catch (IllegalArgumentException iae) {
 				System.err.println(iae.getMessage());
-			}
-			catch (InputMismatchException ime) {
+			} catch (InputMismatchException ime) {
 				System.err.println(messages.getString("invalid_input"));
 				scanner.nextLine();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				System.err.println(messages.getString("error_occurred"));
 				scanner.nextLine();
 			}
@@ -93,11 +92,11 @@ public class SpelMenu {
 				toonBeschikbareKleuren(beschikbareKleuren);
 				System.out.print("Geef de kleur van de speler die je wilt toevoegen: ");
 				switch (scanner.nextLine()) {
-					case "groen" -> kleur = Kleur.GROEN;
-					case "blauw" -> kleur = Kleur.BLAUW;
-					case "roos" -> kleur = Kleur.ROOS;
-					case "geel" -> kleur = Kleur.GEEL;
-					default -> kleur = null;
+				case "groen" -> kleur = Kleur.GROEN;
+				case "blauw" -> kleur = Kleur.BLAUW;
+				case "roos" -> kleur = Kleur.ROOS;
+				case "geel" -> kleur = Kleur.GEEL;
+				default -> kleur = null;
 				}
 				if (kleur == null)
 					throw new IllegalArgumentException("Kies een geldige kleur!");
@@ -106,15 +105,12 @@ public class SpelMenu {
 						kleurGeldig = true;
 				if (!kleurGeldig)
 					throw new IllegalArgumentException("Kleur kan niet meer gekozen worden!");
-			}
-			catch (IllegalArgumentException iae) {
+			} catch (IllegalArgumentException iae) {
 				System.err.println(iae.getMessage());
-			}
-			catch (InputMismatchException ime) {
+			} catch (InputMismatchException ime) {
 				System.err.println(messages.getString("invalid_input"));
 				scanner.nextLine();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				System.err.println(messages.getString("error_occurred"));
 				scanner.nextLine();
 			}
@@ -137,6 +133,65 @@ public class SpelMenu {
 			if (kleur != null)
 				System.out.println("- " + kleur.toString());
 		System.out.println("====================");
+	}
+
+	public void kiesWillekeurigeKoning(List<TegelDTO> startkolom) {
+		// Alle spelers die nog geen koning plaatsten
+		List<SpelerDTO> spelersZonderTegel = new ArrayList();
+		boolean isGeplaatst;
+		for (SpelerDTO speler : spelers) {
+			isGeplaatst = false;
+			for (TegelDTO tegel : startkolom) {
+				// Checken of speler al koning plaatste
+				if (tegel.spelerDTO() == speler) {
+					isGeplaatst = true;
+					break;
+				}
+			}
+			// Speler toevoegen aan lijst indien die nog geen koning plaatste
+			if (!isGeplaatst) {
+				spelersZonderTegel.add(speler);
+			}
+		}
+
+		// null teruggeven indien alle koningen geplaatst zijn
+		if (spelersZonderTegel.isEmpty()) {
+			throw new IllegalArgumentException("Alle koningen zijn geplaatst");
+		}
+
+		// Willekeurige spelerDTO teruggeven waarvan de speler nog geen koning plaatste,
+		// totdat alle koningen geplaatst zijn
+		Random random = new Random();
+		do {
+			int randomIndex = random.nextInt(spelersZonderTegel.size());
+			kiesTegelStartkolom(startkolom, spelersZonderTegel.get(randomIndex));
+			spelersZonderTegel.remove(randomIndex);
+		} while (spelersZonderTegel.size() != 0);
+	}
+
+	public void kiesTegelStartkolom(List<TegelDTO> startkolom, SpelerDTO speler) { // moet nog ergens opgeroepen worden
+		System.out.println("Het is aan" + speler.speler().getGebruikersnaam()
+				+ "om een tegel te kiezen. \n Beschikbare tegels: " + startkolom);
+		TegelDTO tegel = null;
+		boolean tegelGekozen = false;
+		do {
+			System.out.print("Geef het nummer van de tegel die je kiest: ");
+			int nr = scanner.nextInt();
+			for (int i = 0; i < startkolom.size(); i++) {
+				tegel = startkolom.get(i);
+				if (tegel.tegel().getNummer() == nr) {
+					if (tegel.spelerDTO() == null) {
+						startkolom.remove(i);
+						startkolom.add(i, new TegelDTO(tegel.tegel(), speler));
+						tegelGekozen = true;
+					} else {
+						System.out.println("Deze tegel is al in beslag genomen door "
+								+ tegel.spelerDTO().speler().getGebruikersnaam());
+						break;
+					}
+				}
+			}
+		} while (!tegelGekozen);
 	}
 
 }
