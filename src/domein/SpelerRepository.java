@@ -2,14 +2,11 @@
 package domein;
 
 import java.util.List;
-import java.util.Scanner;
 
-import DTO.AlleSpelersDTO;
 import exceptions.GebruikersnaamInGebruikException;
 import persistentie.SpelerMapper;
 
 public class SpelerRepository {
-	Scanner scanner = new Scanner(System.in);
 
 	private final SpelerMapper mapper;
 
@@ -31,7 +28,8 @@ public class SpelerRepository {
 		return mapper.geefSpeler(gebruikersnaam);
 	}
 
-	public List<AlleSpelersDTO> toonBeschikbareSpelers() {
+	public List<Speler> geefAlleSpelers() {
 		return mapper.geefAlleSpelers();
 	}
+
 }
