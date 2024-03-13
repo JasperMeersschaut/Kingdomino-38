@@ -5,3 +5,7 @@
 Speler(<ins>gebruikersnaam</ins>, geboortejaar, aantalGewonnen, aantalGespeeld)
 
 ## UC2
+
+Speler(<ins>gebruikersnaam</ins>, geboortejaar, aantalGewonnen, aantalGespeeld)
+
+## UC3
