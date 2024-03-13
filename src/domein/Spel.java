@@ -3,6 +3,9 @@ package domein;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import com.mysql.cj.Messages;
 
 import dto.SpelerDTO;
 import dto.TegelDTO;
@@ -18,18 +21,20 @@ public class Spel {
 	private TegelRepository tegelRepository = new TegelRepository();
 	private static final int MIN_AANTAL_SPELERS = 3;
 	private static final int MAX_AANTAL_SPELER = 4;
+	private ResourceBundle messages;
 
 	public Spel(List<SpelerDTO> spelers) {
 		setSpelers(spelers);
 		stapel = shuffle(tegelRepository.geeftegels());
 		vulKolomAan(startKolom);
 		vulKolomAan(eindKolom);
+		messages = ResourceBundle.getBundle("messages");
 	}
 
 	private void setSpelers(List<SpelerDTO> spelers) {
 		if (spelers.size() != 3 && spelers.size() != 4)
 			throw new IllegalArgumentException(
-					String.format("Er moeten %d of %d spelers meespelen", MIN_AANTAL_SPELERS, MAX_AANTAL_SPELER));
+					String.format(messages.getString("nrplayers_toplay"), MIN_AANTAL_SPELERS, MAX_AANTAL_SPELER));
 		this.spelers = spelers;
 	}
 
@@ -51,11 +56,11 @@ public class Spel {
 
 	public String toonSpelOverzicht() {
 		String overzicht = "";
-		overzicht += toonMenuTitel("Spelers:");
+		overzicht += toonMenuTitel(messages.getString("players"));
 		overzicht += toonSpelers();
-		overzicht += "\n" + toonMenuTitel("Startkolom:");
+		overzicht += "\n" + toonMenuTitel(messages.getString("startcolumn"));
 		overzicht += toonKolom(startKolom);
-		overzicht += "\n" + toonMenuTitel("Eindkolom:");
+		overzicht += "\n" + toonMenuTitel(messages.getString("endcolumn"));
 		overzicht += toonKolom(eindKolom);
 		return overzicht;
 	}
@@ -88,11 +93,11 @@ public class Spel {
 				}
 				index++;
 			}
-			overzichtSpelers += String.format("%s - %s%nKoninkrijk:%n%s%n%n", speler.speler().getGebruikersnaam(),
+			overzichtSpelers += String.format(messages.getString("kingdom"), speler.speler().getGebruikersnaam(),
 					speler.kleur().toString(),
 					indexStartKolom == -1
-							? (indexEindKolom == -1 ? "Koning nog niet geplaatst" : "in eindkolom:\n" + toonTegel(tegelSpeler))
-							: "in startkolom:\n" + toonTegel(tegelSpeler));
+							? (indexEindKolom == -1 ? messages.getString("king_not_placed") : messages.getString("in_endcolumn") + toonTegel(tegelSpeler))
+							: messages.getString("in_startcolumn") + toonTegel(tegelSpeler));
 		}
 		return overzichtSpelers;
 	}
@@ -123,9 +128,9 @@ public class Spel {
 		lRechts = tegel.getLandschapRechts();
 		aantalKronen = tegel.getAantalKronen();
 		tegelVak += String.format(
-				" ------- %n|       | %s%n|   %s   | Landschap: %s-%s  |  Aantal kronen: %d%n|       |%n ------- %n%n",
-				speler == null ? "Tegel is nog niet gekozen."
-						: String.format("Speler: %s - %s", speler.getGebruikersnaam(), kleur.toString()),
+				messages.getString("overview_show_tile"),
+				speler == null ? messages.getString("tile_notyet_chosen")
+						: String.format(messages.getString("player"), speler.getGebruikersnaam(), kleur.toString()),
 				heeftKoning ? "K" : " ", lLinks.toString(), lRechts.toString(), aantalKronen);
 		return tegelVak;
 	}
