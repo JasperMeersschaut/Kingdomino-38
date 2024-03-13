@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import DTO.SpelerDTO;
 import domein.DomeinController;
-import dto.SpelerDTO;
 
 public class Applicatie {
 
@@ -30,11 +30,11 @@ public class Applicatie {
 		do {
 			keuze = hoofdMenu.toonHoofdMenu();
 			switch (keuze) {
-				case 1 -> registreerMenu.registreerSpeler();
-				case 2 -> {
-					List<SpelerDTO> spelers = spelMenu.vraagSpelersEnKleuren();
-					speelSpel(spelers);
-				}
+			case 1 -> registreerMenu.registreerSpeler();
+			case 2 -> {
+				List<SpelerDTO> spelers = spelMenu.vraagSpelersEnKleuren();
+				speelSpel(spelers);
+			}
 			}
 		} while (keuze != 3);
 	}

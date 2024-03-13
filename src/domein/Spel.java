@@ -5,10 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.mysql.cj.Messages;
-
-import dto.SpelerDTO;
-import dto.TegelDTO;
+import DTO.SpelerDTO;
+import DTO.TegelDTO;
 import utils.Kleur;
 import utils.Landschap;
 
@@ -96,7 +94,8 @@ public class Spel {
 			overzichtSpelers += String.format(messages.getString("kingdom"), speler.speler().getGebruikersnaam(),
 					speler.kleur().toString(),
 					indexStartKolom == -1
-							? (indexEindKolom == -1 ? messages.getString("king_not_placed") : messages.getString("in_endcolumn") + toonTegel(tegelSpeler))
+							? (indexEindKolom == -1 ? messages.getString("king_not_placed")
+									: messages.getString("in_endcolumn") + toonTegel(tegelSpeler))
 							: messages.getString("in_startcolumn") + toonTegel(tegelSpeler));
 		}
 		return overzichtSpelers;
@@ -127,8 +126,7 @@ public class Spel {
 		lLinks = tegel.getLandschapLinks();
 		lRechts = tegel.getLandschapRechts();
 		aantalKronen = tegel.getAantalKronen();
-		tegelVak += String.format(
-				messages.getString("overview_show_tile"),
+		tegelVak += String.format(messages.getString("overview_show_tile"),
 				speler == null ? messages.getString("tile_notyet_chosen")
 						: String.format(messages.getString("player"), speler.getGebruikersnaam(), kleur.toString()),
 				heeftKoning ? "K" : " ", lLinks.toString(), lRechts.toString(), aantalKronen);

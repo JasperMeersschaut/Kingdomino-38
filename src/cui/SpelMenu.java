@@ -8,10 +8,10 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+import DTO.SpelerDTO;
+import DTO.TegelDTO;
 import domein.DomeinController;
 import domein.Speler;
-import dto.SpelerDTO;
-import dto.TegelDTO;
 import utils.Kleur;
 
 public class SpelMenu {
@@ -170,8 +170,7 @@ public class SpelMenu {
 	}
 
 	public void kiesTegelStartkolom(List<TegelDTO> startkolom, SpelerDTO speler) { // moet nog ergens opgeroepen worden
-		System.out.printf(messages.getString("turn_to_choose_tiles") + startkolom,
-                speler.speler().getGebruikersnaam());
+		System.out.printf(messages.getString("turn_to_choose_tiles") + startkolom, speler.speler().getGebruikersnaam());
 		TegelDTO tegel = null;
 		boolean tegelGekozen = false;
 		do {

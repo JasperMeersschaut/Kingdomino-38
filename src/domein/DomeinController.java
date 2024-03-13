@@ -3,7 +3,7 @@ package domein;
 
 import java.util.List;
 
-import dto.SpelerDTO;
+import DTO.SpelerDTO;
 
 public class DomeinController {
 
