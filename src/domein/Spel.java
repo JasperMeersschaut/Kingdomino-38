@@ -7,6 +7,7 @@ import java.util.List;
 
 import dto.SpelerDTO;
 import dto.TegelDTO;
+import utils.Kleur;
 import utils.Landschap;
 
 public class Spel {
@@ -22,7 +23,8 @@ public class Spel {
 	public Spel(List<SpelerDTO> spelers) {
 		setSpelers(spelers);
 		stapel = shuffle(tegelRepository.geeftegels());
-		startSpel();
+		vulKolomAan(startKolom);
+		vulKolomAan(eindKolom);
 	}
 
 	private void setSpelers(List<SpelerDTO> spelers) {
@@ -37,53 +39,96 @@ public class Spel {
 		return tegels.subList(0, spelers.size() * 12);
 	}
 
-	private void vulStartKolomAan() {
-		List<Tegel> startKolomTegels = new ArrayList<>();
+	private void vulKolomAan(List<TegelDTO> kolom) {
+		List<Tegel> kolomTegels = new ArrayList<>();
 		for (int index = 1; index <= spelers.size(); index++) {
-			startKolomTegels.add(stapel.get(0));
+			kolomTegels.add(stapel.get(0));
 			stapel.remove(0);
 		}
-		Collections.sort(startKolomTegels);
-		for (Tegel tegel : startKolomTegels)
-			startKolom.add(new TegelDTO(tegel, null));
+		Collections.sort(kolomTegels);
+		for (Tegel tegel : kolomTegels)
+			kolom.add(new TegelDTO(tegel, null));
 	}
 
-	private void startSpel() {
-		vulStartKolomAan();
-		toonStartSpelSituatie();
-		toonSpelSituatie();
+	public String toonSpelOverzicht() {
+		String overzicht = "";
+		overzicht += toonMenuTitel("Spelers:");
+		overzicht += toonSpelers();
+		overzicht += "\n" + toonMenuTitel("Startkolom:");
+		overzicht += toonKolom(startKolom);
+		overzicht += "\n" + toonMenuTitel("Eindkolom:");
+		overzicht += toonKolom(eindKolom);
+		return overzicht;
 	}
 
-	private void toonStartSpelSituatie() {
-		;
+	private String toonMenuTitel(String menuTitel) {
+		String titel = menuTitel + "\n";
+		titel += "=".repeat(menuTitel.length()) + "\n";
+		return titel;
 	}
 
-	private void toonSpelSituatie() {
-		System.out.println("Spelers:");
-		System.out.println("=======");
-		for (SpelerDTO speler : spelers)
-			System.out.printf("%s - %s%nKoning in %s%n%n", speler.speler().getGebruikersnaam(), speler.kleur().toString(),
-					"");
-		System.out.println("\nStartkolom:");
-		System.out.println("===========");
-		boolean heeftKoning;
+	private String toonSpelers() {
+		TegelDTO tegelSpeler = null;
+		String overzichtSpelers = "";
+		for (SpelerDTO speler : spelers) {
+			int indexStartKolom = -1;
+			int index = 0;
+			for (TegelDTO tegel : startKolom) {
+				if (tegel.spelerDTO() != null && tegel.spelerDTO().kleur() == speler.kleur()) {
+					indexStartKolom = index;
+					tegelSpeler = tegel;
+				}
+				index++;
+			}
+			int indexEindKolom = -1;
+			index = 0;
+			for (TegelDTO tegel : eindKolom) {
+				if (tegel.spelerDTO() != null && tegel.spelerDTO().kleur() == speler.kleur()) {
+					indexEindKolom = index;
+					tegelSpeler = tegel;
+				}
+				index++;
+			}
+			overzichtSpelers += String.format("%s - %s%nKoninkrijk:%n%s%n%n", speler.speler().getGebruikersnaam(),
+					speler.kleur().toString(),
+					indexStartKolom == -1
+							? (indexEindKolom == -1 ? "Koning nog niet geplaatst" : "in eindkolom:\n" + toonTegel(tegelSpeler))
+							: "in startkolom:\n" + toonTegel(tegelSpeler));
+		}
+		return overzichtSpelers;
+	}
+
+	private String toonKolom(List<TegelDTO> kolom) {
+		String overzichtKolom = "";
+		for (int index = 1; index <= spelers.size(); index++)
+			overzichtKolom += toonTegel(kolom.get(index - 1));
+		return overzichtKolom;
+	}
+
+	private String toonTegel(TegelDTO tegelDTO) {
+		String tegelVak = "";
+		boolean heeftKoning = false;
+		Speler speler = null;
+		Kleur kleur = null;
+		if (tegelDTO.spelerDTO() != null) {
+			heeftKoning = tegelDTO.spelerDTO() != null;
+			speler = tegelDTO.spelerDTO().speler();
+			kleur = tegelDTO.spelerDTO().kleur();
+		}
 		Tegel tegel;
 		Landschap lLinks;
 		Landschap lRechts;
 		int aantalKronen;
-		for (int index = 1; index <= spelers.size(); index++) {
-			heeftKoning = startKolom.get(index - 1).speler() != null;
-			tegel = startKolom.get(index - 1).tegel();
-			lLinks = tegel.getLandschapLinks();
-			lRechts = tegel.getLandschapRechts();
-			aantalKronen = tegel.getAantalKronen();
-			System.out.printf(
-					" ------- %n|       |%n|   %s   | Landschap: %s-%s  |  Aantal kronen: %d%n|       |%n ------- %n%n",
-					heeftKoning ? "K" : " ", lLinks.toString(), lRechts.toString(), aantalKronen);
-		}
-		System.out.println("Eindkolom:");
-		System.out.println("==========");
-		System.out.println("------Zelfde als eindkolom");
+		tegel = tegelDTO.tegel();
+		lLinks = tegel.getLandschapLinks();
+		lRechts = tegel.getLandschapRechts();
+		aantalKronen = tegel.getAantalKronen();
+		tegelVak += String.format(
+				" ------- %n|       | %s%n|   %s   | Landschap: %s-%s  |  Aantal kronen: %d%n|       |%n ------- %n%n",
+				speler == null ? "Tegel is nog niet gekozen."
+						: String.format("Speler: %s - %s", speler.getGebruikersnaam(), kleur.toString()),
+				heeftKoning ? "K" : " ", lLinks.toString(), lRechts.toString(), aantalKronen);
+		return tegelVak;
 	}
 
 }
