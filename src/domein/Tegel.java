@@ -34,8 +34,8 @@ public class Tegel implements Comparable<Tegel> {
 	}
 
 	@Override
-	public int compareTo(Tegel t) {
-		return Integer.compare(this.nummer, t.nummer);
+	public int compareTo(Tegel tegel) {
+		return Integer.compare(this.nummer, tegel.nummer);
 	}
 
 }

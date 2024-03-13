@@ -1,13 +1,13 @@
 
 package cui;
 
-import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import domein.DomeinController;
-import exceptions.GebruikersnaamInGebruikException;
+import dto.SpelerDTO;
 
 public class Applicatie {
 
@@ -15,63 +15,28 @@ public class Applicatie {
 	private DomeinController dc;
 	Scanner scanner = new Scanner(System.in);
 	private HoofdMenu hoofdMenu = new HoofdMenu();
-	private SpelMenu spelMenu = new SpelMenu();
-
-	public Applicatie() {
-
-	}
+	private RegistreerMenu registreerMenu;
+	private SpelMenu spelMenu;
 
 	public Applicatie(DomeinController dc) {
 		this.dc = dc;
-		Locale locale = Locale.getDefault(); // de juiste resource-bundel op basis van de huidige taalinstellingen
-		messages = ResourceBundle.getBundle("messages", locale);
+		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+		registreerMenu = new RegistreerMenu(this.dc);
+		spelMenu = new SpelMenu(this.dc);
 	}
 
 	public void start() {
 		int keuze;
 		do {
-			keuze = dc.toonHoofdMenu();
+			keuze = hoofdMenu.toonHoofdMenu();
 			switch (keuze) {
-			case 1 -> registreerSpeler();
-			case 2 -> spelMenu.spelerToevoegen();
+				case 1 -> registreerMenu.registreerSpeler();
+				case 2 -> {
+					List<SpelerDTO> spelers = spelMenu.vraagSpelersEnKleuren();
+					dc.startSpel(spelers);
+				}
 			}
 		} while (keuze != 3);
 	}
-
-	public void registreerSpeler() {
-		boolean spelerGeldig = false;
-		do {
-			try {
-				System.out.print(messages.getString("enter_username"));
-				String gebruikersnaam = scanner.nextLine();
-				System.out.print(messages.getString("enter_birth_year"));
-				int geboortejaar = scanner.nextInt();
-				dc.registreerSpeler(gebruikersnaam, geboortejaar);
-				System.out.printf(messages.getString("registration_success"), gebruikersnaam);
-				spelerGeldig = true;
-			} catch (IllegalArgumentException iae) {
-				System.err.println(iae.getMessage());
-				scanner.nextLine();
-			} catch (InputMismatchException ime) {
-				System.err.println(messages.getString("invalid_input"));
-				scanner.nextLine();
-			} catch (GebruikersnaamInGebruikException gige) {
-				System.err.println(gige.getMessage());
-				scanner.nextLine();
-			} catch (Exception e) {
-				System.err.println(messages.getString("error_occurred"));
-				scanner.nextLine();
-			}
-		} while (!spelerGeldig);
-	}
-
-//	public void startNieuwSpel() {
-//		Spel spel = new Spel();
-//		System.out.println(messages.getString("available_colours"));
-//		 int index = 1;
-//		 for (Kleur kleur : dc.toonBeschikbareKleuren())
-//		 System.out.println("\t" + String.format("%d: %s ", index++, kleur));
-//		
-//	}
 
 }
