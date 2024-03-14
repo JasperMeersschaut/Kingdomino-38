@@ -14,13 +14,14 @@
 
 - UC3: analyse opstellen (AD, DM, SSD, OC)
   - [x] UC3: AD
-    - [ ] controle
+    - [x] controle
   - [x] UC3: DM
-    - [ ] controle
+    - [x] controle
   - [x] UC3: SSD
-    - [ ] controle
+    - [x] controle
   - [x] UC3: OC
     - [ ] controle
+    - We kunnen OC nog niet invullen want we weten niet wat er allemaal gebeurd in een ronde.
 
 ## Feedback moment 1
 
@@ -35,27 +36,27 @@
 
 #### SSD
 
-- [ ] Na loop keuze speler en kleur iets terugsturen naar de console, (toont nog eens alle kleuren en spelerlijst) tussen 2 en 3
-  - [ ] controle
+- [x] Na loop keuze speler en kleur iets terugsturen naar de console, (toont nog eens alle kleuren en spelerlijst) tussen 2 en 3
+  - [x] controle
 - [x] 3 ook in de loop
   - [x] controle (staat nu in een loop voor zolang niet alle koningen geplaatst zijn)
 - [x] pre en post condities aanpassen
-  - [ ] controle
+  - [x] controle
 
 #### domein model
 
 - [x] Koninkrijk = een groep vakjes en de speler heeft een konkrijk
-  - [ ] controle
+  - [x] controle
 - [x] aggregatie/compisisite nakijken. Dus moet waarschijnlijk gewoon weg.
 
 #### DCD
 
 - [x] Scanner verwijderen bij de domeincontroller
-  - [ ] controle
+  - [x] controle
 - [x] toonHoofdMenu() moet niet in de domeincontroller
-  - [ ] controle
-- [ ] Gebruik van DTO's
-  - [ ] controle
+  - [x] controle
+- [x] Gebruik van DTO's
+  - [x] controle
 
 #### Java
 
