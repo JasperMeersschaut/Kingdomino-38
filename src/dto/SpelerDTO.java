@@ -1,5 +1,5 @@
 
-package DTO;
+package dto;
 
 import domein.Speler;
 import utils.Kleur;

@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
-import DTO.SpelerDTO;
-import DTO.TegelDTO;
+import dto.SpelerDTO;
+import dto.TegelDTO;
 import utils.Kleur;
 import utils.Landschap;
 
@@ -172,7 +173,11 @@ public class Spel {
 	}
 
 	public void kiesTegelStartkolom(List<TegelDTO> startkolom, SpelerDTO speler) { // moet nog ergens opgeroepen worden
-		System.out.printf(messages.getString("turn_to_choose_tiles") + startkolom, speler.speler().getGebruikersnaam());
+		System.out.printf(
+				// Filteren op beschikbare tegels en de nrs ervan op 1 lijn zetten
+				messages.getString("turn_to_choose_tiles") + startkolom.stream().filter(e -> e.spelerDTO() == null)
+						.map(e -> e.tegel().getNummer()).map(String::valueOf).collect(Collectors.joining(", ")),
+				speler.speler().getGebruikersnaam());
 		TegelDTO tegel = null;
 		boolean tegelGekozen = false;
 		do {

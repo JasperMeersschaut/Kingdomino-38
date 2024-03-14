@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import DTO.SpelerDTO;
 import domein.DomeinController;
 import domein.Speler;
+import dto.SpelerDTO;
 import utils.Kleur;
 
 public class SpelMenu {

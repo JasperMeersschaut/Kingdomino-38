@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
-import DTO.SpelerDTO;
 import domein.DomeinController;
+import dto.SpelerDTO;
 
 public class Applicatie {
 
@@ -42,11 +42,8 @@ public class Applicatie {
 	private void speelSpel(List<SpelerDTO> spelers) {
 		dc.maakSpelAan(spelers);
 		System.out.println(dc.toonSpelOverzicht());
-		for (int i = 0; i < spelers.size(); i++) {
-			dc.kiesWillekeurigeKoning();
-			System.out.println(dc.toonSpelOverzicht());
-		}
-
+		dc.kiesWillekeurigeKoning();
+		System.out.println(dc.toonSpelOverzicht());
 	}
 
 }
