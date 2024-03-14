@@ -1,35 +1,28 @@
-package domein;
 
-import utils.Landschap;
+package domein;
 
 public class Tegel implements Comparable<Tegel> {
 
 	private int nummer;
-	private Landschap landschapLinks;
-	private Landschap landschapRechts;
-	private int aantalKronen;
+	private Vak vakLinks;
+	private Vak vakRechts;
 
-	public Tegel(int nummer, Landschap landschapLinks, Landschap landschapRechts, int aantalKronen) {
+	public Tegel(int nummer, Vak vakLinks, Vak vakRechts) {
 		this.nummer = nummer;
-		this.landschapLinks = landschapLinks;
-		this.landschapRechts = landschapRechts;
-		this.aantalKronen = aantalKronen;
+		this.vakLinks = vakLinks;
+		this.vakRechts = vakRechts;
 	}
 
 	public int getNummer() {
 		return nummer;
 	}
 
-	public Landschap getLandschapLinks() {
-		return landschapLinks;
+	public Vak getVakLinks() {
+		return vakLinks;
 	}
 
-	public Landschap getLandschapRechts() {
-		return landschapRechts;
-	}
-
-	public int getAantalKronen() {
-		return aantalKronen;
+	public Vak getVakRechts() {
+		return vakRechts;
 	}
 
 	@Override

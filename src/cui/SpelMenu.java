@@ -23,10 +23,10 @@ public class SpelMenu {
 		this.dc = dc;
 		scanner = new Scanner(System.in);
 		messages = ResourceBundle.getBundle("messages");
-		spelers = new ArrayList<>();
 	}
 
 	public List<SpelerDTO> vraagSpelersEnKleuren() {
+		spelers = new ArrayList<>();
 		List<Speler> beschikbareSpelers = dc.geefAlleSpelers();
 		Kleur[] beschikbareKleuren = Kleur.values();
 		for (int index = 1; index <= 4; index++)
@@ -69,12 +69,15 @@ public class SpelMenu {
 						naamGeldig = true;
 				if (!naamGeldig)
 					throw new IllegalArgumentException(messages.getString("user_already_chosen"));
-			} catch (IllegalArgumentException iae) {
+			}
+			catch (IllegalArgumentException iae) {
 				System.err.println(iae.getMessage());
-			} catch (InputMismatchException ime) {
+			}
+			catch (InputMismatchException ime) {
 				System.err.println(messages.getString("invalid_input"));
 				scanner.nextLine();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				System.err.println(messages.getString("error_occurred"));
 				scanner.nextLine();
 			}
@@ -90,11 +93,11 @@ public class SpelMenu {
 				toonBeschikbareKleuren(beschikbareKleuren);
 				System.out.print(messages.getString("give_player_colour"));
 				switch (scanner.nextLine()) {
-				case "groen" -> kleur = Kleur.GROEN;
-				case "blauw" -> kleur = Kleur.BLAUW;
-				case "roos" -> kleur = Kleur.ROOS;
-				case "geel" -> kleur = Kleur.GEEL;
-				default -> kleur = null;
+					case "groen" -> kleur = Kleur.GROEN;
+					case "blauw" -> kleur = Kleur.BLAUW;
+					case "roos" -> kleur = Kleur.ROOS;
+					case "geel" -> kleur = Kleur.GEEL;
+					default -> kleur = null;
 				}
 				if (kleur == null)
 					throw new IllegalArgumentException(messages.getString("choose_valid_colour"));
@@ -103,12 +106,15 @@ public class SpelMenu {
 						kleurGeldig = true;
 				if (!kleurGeldig)
 					throw new IllegalArgumentException(messages.getString("colour_cant_be_picked"));
-			} catch (IllegalArgumentException iae) {
+			}
+			catch (IllegalArgumentException iae) {
 				System.err.println(iae.getMessage());
-			} catch (InputMismatchException ime) {
+			}
+			catch (InputMismatchException ime) {
 				System.err.println(messages.getString("invalid_input"));
 				scanner.nextLine();
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				System.err.println(messages.getString("error_occurred"));
 				scanner.nextLine();
 			}
@@ -132,4 +138,5 @@ public class SpelMenu {
 				System.out.println("- " + kleur.toString());
 		System.out.println("====================");
 	}
+
 }

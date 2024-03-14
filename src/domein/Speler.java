@@ -33,8 +33,8 @@ public class Speler {
 
 	private void setGebruikersnaam(String gebruikersnaam) {
 		if (gebruikersnaam.length() < MIN_LENGTE_GERUIKERSNAAM || gebruikersnaam.isBlank())
-			throw new IllegalArgumentException(String.format(
-					messages.getString("valid_username"), MIN_LENGTE_GERUIKERSNAAM));
+			throw new IllegalArgumentException(
+					String.format(messages.getString("valid_username"), MIN_LENGTE_GERUIKERSNAAM));
 		else
 			this.gebruikersnaam = gebruikersnaam;
 	}

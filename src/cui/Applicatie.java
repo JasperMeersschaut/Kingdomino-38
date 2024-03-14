@@ -42,12 +42,12 @@ public class Applicatie {
 
 	private void speelSpel(List<SpelerDTO> spelers) {
 		dc.maakSpelAan(spelers);
-		System.out.println(dc.toonSpelOverzicht());
-		int loopSize = spelers.size();
 		Collections.shuffle(spelers);
+		System.out.println(dc.toonSpelOverzicht());
 		SpelerDTO speler;
-		boolean gekozen = false;
-		for (int i = 0; i < loopSize; i++) {
+		boolean gekozen;
+		for (int i = 0; i < spelers.size(); i++) {
+			gekozen = false;
 			speler = spelers.get(i);
 			do
 				try {

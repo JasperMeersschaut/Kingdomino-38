@@ -41,4 +41,5 @@ public class DomeinController {
 	public String toonSpelerKeuze(SpelerDTO speler) {
 		return spel.toonSpelerKeuze(speler);
 	}
+
 }

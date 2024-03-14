@@ -1,3 +1,4 @@
+
 package testen;
 
 import org.junit.jupiter.api.Assertions;
@@ -6,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import domein.Speler;
 
 class SpelerTest {
+
 	private Speler speler;
 
 	@Test
