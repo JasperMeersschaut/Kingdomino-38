@@ -129,12 +129,14 @@ public class Spel {
 		TegelDTO tegel = null;
 		boolean aangepast = false;
 		for (int i = 0; i < startKolom.size(); i++) {
+			boolean tegelGeldig = false;
 			tegel = startKolom.get(i);
 			if (tegel.tegel().getNummer() == nr) {
 				if (tegel.spelerDTO() == null) {
 					startKolom.set(i, new TegelDTO(tegel.tegel(), speler));
 					aangepast = true;
 				} else {
+					i--;
 					throw new IllegalArgumentException(
 							messages.getString("already_taken_tile") + tegel.spelerDTO().speler().getGebruikersnaam());
 				}
