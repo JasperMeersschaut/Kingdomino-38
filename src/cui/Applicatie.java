@@ -1,6 +1,7 @@
 
 package cui;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -42,8 +43,27 @@ public class Applicatie {
 	private void speelSpel(List<SpelerDTO> spelers) {
 		dc.maakSpelAan(spelers);
 		System.out.println(dc.toonSpelOverzicht());
-		dc.kiesWillekeurigeKoning();
-		System.out.println(dc.toonSpelOverzicht());
+		int loopSize = spelers.size();
+		Collections.shuffle(spelers);
+		SpelerDTO speler;
+		boolean gekozen = false;
+		for (int i = 0; i < loopSize; i++) {
+			speler = spelers.get(0);
+			do {
+				try {
+					System.out.println(dc.toonSpelerKeuze(speler));
+					int nr = scanner.nextInt();
+					dc.kiesTegelStartkolom(speler, nr);
+					System.out.println(dc.toonSpelOverzicht());
+					gekozen = true;
+				} catch (IllegalArgumentException ie) {
+					System.err.println(ie.getMessage());
+				} catch (Exception e) {
+					System.err.println(messages.getString("error_occured"));
+				}
+			} while (!gekozen);
+			spelers.remove(0);
+		}
 	}
 
 }

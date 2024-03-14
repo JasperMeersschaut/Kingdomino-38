@@ -34,7 +34,11 @@ public class DomeinController {
 		return spel.toonSpelOverzicht();
 	}
 
-	public void kiesWillekeurigeKoning() {
-		spel.kiesWillekeurigeKoning();
+	public void kiesTegelStartkolom(SpelerDTO speler, int nr) {
+		spel.kiesTegelStartkolom(speler, nr);
+	}
+
+	public String toonSpelerKeuze(SpelerDTO speler) {
+		return spel.toonSpelerKeuze(speler);
 	}
 }
