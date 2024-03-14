@@ -31,11 +31,11 @@ public class Applicatie {
 		do {
 			keuze = hoofdMenu.toonHoofdMenu();
 			switch (keuze) {
-			case 1 -> registreerMenu.registreerSpeler();
-			case 2 -> {
-				List<SpelerDTO> spelers = spelMenu.vraagSpelersEnKleuren();
-				speelSpel(spelers);
-			}
+				case 1 -> registreerMenu.registreerSpeler();
+				case 2 -> {
+					List<SpelerDTO> spelers = spelMenu.vraagSpelersEnKleuren();
+					speelSpel(spelers);
+				}
 			}
 		} while (keuze != 3);
 	}
@@ -48,21 +48,22 @@ public class Applicatie {
 		SpelerDTO speler;
 		boolean gekozen = false;
 		for (int i = 0; i < loopSize; i++) {
-			speler = spelers.get(0);
-			do {
+			speler = spelers.get(i);
+			do
 				try {
 					System.out.println(dc.toonSpelerKeuze(speler));
 					int nr = scanner.nextInt();
 					dc.kiesTegelStartkolom(speler, nr);
 					System.out.println(dc.toonSpelOverzicht());
 					gekozen = true;
-				} catch (IllegalArgumentException ie) {
+				}
+				catch (IllegalArgumentException ie) {
 					System.err.println(ie.getMessage());
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					System.err.println(messages.getString("error_occured"));
 				}
-			} while (!gekozen);
-			spelers.remove(0);
+			while (!gekozen);
 		}
 	}
 
