@@ -2,6 +2,7 @@
 package domein;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class Speler {
@@ -13,18 +14,18 @@ public class Speler {
 	private static final int MIN_LENGTE_GERUIKERSNAAM = 6;
 	private static final int MIN_LEEFTIJD = 6;
 	private static final int MAX_LEEFTIJD = 150;
-	private ResourceBundle messages;
+	private final ResourceBundle messages;
 
 	public Speler(String gebruikersnaam, int geboortejaar) {
 		this(gebruikersnaam, geboortejaar, 0, 0);
 	}
 
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld) {
+		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
 		setAantalGewonnen(aantalGewonnen);
 		setAantalGespeeld(aantalGespeeld);
-		messages = ResourceBundle.getBundle("messages");
 	}
 
 	public String getGebruikersnaam() {

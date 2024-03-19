@@ -7,23 +7,28 @@ import java.util.Scanner;
 
 public class HoofdMenu {
 
-	private Scanner scanner;
-	private ResourceBundle messages;
+	private final ResourceBundle messages;
+	private final Scanner scanner;
 
 	public HoofdMenu() {
-		scanner = new Scanner(System.in);
 		messages = ResourceBundle.getBundle("messages");
+		scanner = new Scanner(System.in);
 	}
 
-	public int toonHoofdMenu() {
+	public int vraagKeuzeMetHoofdMenu() {
 		int keuze = 0;
 		boolean keuzeGeldig = false;
 		do
 			try {
 				System.out.print(messages.getString("main_menu"));
 				keuze = scanner.nextInt();
+				if (keuze < 1 || keuze > 3)
+					throw new IllegalArgumentException("Kies een geldig getal!");
 				scanner.nextLine();
 				keuzeGeldig = true;
+			}
+			catch (IllegalArgumentException iae) {
+				System.err.println(iae.getMessage());
 			}
 			catch (InputMismatchException ime) {
 				System.err.println(messages.getString("enter_a_number"));

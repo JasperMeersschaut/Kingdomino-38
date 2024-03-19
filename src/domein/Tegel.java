@@ -1,11 +1,11 @@
 
 package domein;
 
-public class Tegel implements Comparable<Tegel> {
+public class Tegel {
 
-	private int nummer;
-	private Vak vakLinks;
-	private Vak vakRechts;
+	private final int nummer;
+	private final Vak vakLinks;
+	private final Vak vakRechts;
 
 	public Tegel(int nummer, Vak vakLinks, Vak vakRechts) {
 		this.nummer = nummer;
@@ -23,11 +23,6 @@ public class Tegel implements Comparable<Tegel> {
 
 	public Vak getVakRechts() {
 		return vakRechts;
-	}
-
-	@Override
-	public int compareTo(Tegel tegel) {
-		return Integer.compare(this.nummer, tegel.nummer);
 	}
 
 }

@@ -5,8 +5,8 @@ import utils.Landschap;
 
 public class Vak {
 
-	private Landschap landschap;
-	private int aantalKronen;
+	private final Landschap landschap;
+	private final int aantalKronen;
 
 	public Vak(Landschap landschap, int aantalKronen) {
 		this.landschap = landschap;

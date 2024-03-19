@@ -2,35 +2,37 @@
 package cui;
 
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import domein.DomeinController;
 import exceptions.GebruikersnaamInGebruikException;
 
-public class RegistreerMenu {
+public class RegistratieMenu {
 
-	private Scanner scanner;
-	private ResourceBundle messages;
-	private DomeinController dc;
+	private final Scanner scanner;
+	private final ResourceBundle messages;
+	private final DomeinController dc;
 
-	public RegistreerMenu(DomeinController dc) {
+	public RegistratieMenu(DomeinController dc) {
 		this.dc = dc;
 		scanner = new Scanner(System.in);
-		messages = ResourceBundle.getBundle("messages");
+		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
 	}
 
 	public void registreerSpeler() {
-		boolean spelerGeldig = false;
+		boolean gebruikersnaamGeldig = false;
+		String gebruikersnaam = null;
+		int geboortejaar;
 		do
 			try {
 				System.out.print(messages.getString("enter_username"));
-				String gebruikersnaam = scanner.nextLine();
+				gebruikersnaam = scanner.nextLine();
 				System.out.print(messages.getString("enter_birth_year"));
-				int geboortejaar = scanner.nextInt();
+				geboortejaar = scanner.nextInt();
 				dc.registreerSpeler(gebruikersnaam, geboortejaar);
-				System.out.printf(messages.getString("registration_success"), gebruikersnaam);
-				spelerGeldig = true;
+				gebruikersnaamGeldig = true;
 			}
 			catch (IllegalArgumentException iae) {
 				System.err.println(iae.getMessage());
@@ -48,7 +50,8 @@ public class RegistreerMenu {
 				System.err.println(messages.getString("error_occurred"));
 				scanner.nextLine();
 			}
-		while (!spelerGeldig);
+		while (!gebruikersnaamGeldig);
+		System.out.printf(messages.getString("registration_success"), gebruikersnaam);
 	}
 
 }

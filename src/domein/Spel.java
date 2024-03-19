@@ -2,6 +2,7 @@
 package domein;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -14,53 +15,106 @@ import utils.TegelMaker;
 
 public class Spel {
 
-	private List<SpelerDTO> spelers;
-	private TegelMaker tegelMaker = new TegelMaker();
-	private List<Tegel> stapel;
-	private List<TegelDTO> startKolom = new ArrayList<>();
-	private List<TegelDTO> eindKolom = new ArrayList<>();
-	private static final int MIN_AANTAL_SPELERS = 3;
-	private static final int MAX_AANTAL_SPELER = 4;
-	private ResourceBundle messages;
+	private final List<SpelerDTO> spelers;
+	private SpelerDTO huidigeSpeler;
+	private final TegelMaker tegelMaker;
+	private List<TegelDTO> stapel;
+	private final List<TegelDTO> startKolom;
+	private final List<TegelDTO> eindKolom;
+	private final ResourceBundle messages;
 
-	public Spel(List<SpelerDTO> spelers) {
-		setSpelers(spelers);
-		stapel = shuffle(tegelMaker.geeftegels());
-		vulKolomAan(startKolom);
-		vulKolomAan(eindKolom);
+	public Spel() {
 		messages = ResourceBundle.getBundle("messages");
+		spelers = new ArrayList<>();
+		tegelMaker = new TegelMaker();
+		stapel = new ArrayList<>();
+		startKolom = new ArrayList<>();
+		eindKolom = new ArrayList<>();
 	}
 
-	private void setSpelers(List<SpelerDTO> spelers) {
-		if (spelers.size() != 3 && spelers.size() != 4)
-			throw new IllegalArgumentException(
-					String.format(messages.getString("nrplayers_toplay"), MIN_AANTAL_SPELERS, MAX_AANTAL_SPELER));
-		this.spelers = spelers;
+	public void voegSpelerToe(SpelerDTO speler) {
+		spelers.add(speler);
 	}
 
-	private List<Tegel> shuffle(List<Tegel> tegels) {
-		Collections.shuffle(tegels);
-		return tegels.subList(0, spelers.size() * 12);
+	public List<SpelerDTO> getSpelers() {
+		return spelers;
 	}
 
-	private void vulKolomAan(List<TegelDTO> kolom) {
-		List<Tegel> kolomTegels = new ArrayList<>();
+	public List<TegelDTO> getStapel() {
+		return stapel;
+	}
+
+	public SpelerDTO getHuidigeSpeler() {
+		return huidigeSpeler;
+	}
+
+	public void kiesVolgendeSpeler() {
+		if (huidigeSpeler == null || spelers.indexOf(huidigeSpeler) == spelers.size())
+			huidigeSpeler = spelers.get(0);
+		else
+			huidigeSpeler = spelers.get(spelers.indexOf(huidigeSpeler) + 1);
+	}
+
+	public List<SpelerDTO> geefBeschikbareSpelers(List<SpelerDTO> alleSpelers) {
+		List<SpelerDTO> beschikbareSpelers = new ArrayList<>(alleSpelers);
+		for (SpelerDTO speler : spelers)
+			for (int index = 0; index < beschikbareSpelers.size(); index++)
+				if (beschikbareSpelers.get(index).equals(speler))
+					beschikbareSpelers.remove(beschikbareSpelers.get(index));
+		return beschikbareSpelers;
+	}
+
+	public List<Kleur> geefBeschikbareKleuren() {
+		List<Kleur> beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
+		for (SpelerDTO speler : spelers)
+			beschikbareKleuren.remove(speler.kleur());
+		return beschikbareKleuren;
+	}
+
+	public void vulStapelAan() {
+		List<TegelDTO> tegelDTOS = new ArrayList<>();
+		for (Tegel tegel : tegelMaker.geeftegels())
+			tegelDTOS.add(new TegelDTO(tegel, null));
+		Collections.shuffle(tegelDTOS);
+		stapel = tegelDTOS.subList(0, spelers.size() * 12);
+	}
+
+	public void vulStartKolomAan() {
+		startKolom.clear();
+		for (TegelDTO tegel : eindKolom)
+			startKolom.add(tegel);
+		eindKolom.clear();
 		for (int index = 1; index <= spelers.size(); index++) {
-			kolomTegels.add(stapel.get(0));
+			eindKolom.add(stapel.get(0));
 			stapel.remove(0);
 		}
-		Collections.sort(kolomTegels);
-		for (Tegel tegel : kolomTegels)
-			kolom.add(new TegelDTO(tegel, null));
+		Collections.sort(eindKolom);
+	}
+
+	public void vulEindKolomAan() {
+		for (int index = 1; index <= spelers.size(); index++) {
+			eindKolom.add(stapel.get(0));
+			stapel.remove(0);
+		}
+		Collections.sort(eindKolom);
+	}
+
+	public void initialiseerStapels() {
+		vulStapelAan();
+		vulEindKolomAan();
+		vulStartKolomAan();
+		Collections.shuffle(spelers);
 	}
 
 	public String toonSpelOverzicht() {
 		String overzicht = "";
-		overzicht += toonMenuTitel("Spelers:");
+		overzicht += toonMenuTitel(messages.getString("players"));
 		overzicht += toonSpelers();
-		overzicht += "\n" + toonMenuTitel("Startkolom:");
+		overzicht += "\n" + toonMenuTitel("Stapel:");
+		overzicht += toonStapel();
+		overzicht += "\n" + toonMenuTitel(messages.getString("startcolumn"));
 		overzicht += toonKolom(startKolom);
-		overzicht += "\n" + toonMenuTitel("Eindkolom:");
+		overzicht += "\n" + toonMenuTitel(messages.getString("endcolumn"));
 		overzicht += toonKolom(eindKolom);
 		return overzicht;
 	}
@@ -72,20 +126,33 @@ public class Spel {
 	}
 
 	private String toonSpelers() {
-		TegelDTO tegelSpelerStartKolom = null;
-		TegelDTO tegelSpelerEindKolom = null;
+		TegelDTO tegelSpelerStartKolom;
+		TegelDTO tegelSpelerEindKolom;
 		String overzichtSpelers = "";
 		for (SpelerDTO speler : spelers) {
 			tegelSpelerStartKolom = geefTegelVanSpeler(speler, startKolom);
 			tegelSpelerEindKolom = geefTegelVanSpeler(speler, eindKolom);
-			overzichtSpelers += String.format("%s - %s%nKoninkrijk:%n%s", speler.speler().getGebruikersnaam(),
+			overzichtSpelers += String.format(messages.getString("kingdom"), speler.speler().getGebruikersnaam(),
 					speler.kleur().toString(),
 					tegelSpelerStartKolom == null
-							? (tegelSpelerEindKolom == null ? "Koning nog niet geplaatst\n\n"
-									: "Koning in eindkolom:\n" + toonTegel(tegelSpelerEindKolom))
-							: "Koning in startkolom:\n" + toonTegel(tegelSpelerStartKolom));
+							? (tegelSpelerEindKolom == null ? messages.getString("king_not_placed")
+									: messages.getString("in_endcolumn") + toonTegel(tegelSpelerEindKolom))
+							: messages.getString("in_startcolumn") + toonTegel(tegelSpelerStartKolom));
 		}
 		return overzichtSpelers;
+	}
+
+	private String toonStapel() {
+		if (stapel.isEmpty())
+			return "De stapel is leeg";
+		String stapel = "";
+		for (TegelDTO tegel : this.stapel) {
+			stapel += String.format("%d", tegel.tegel().getNummer());
+			if (this.stapel.get(this.stapel.size() - 1) != tegel)
+				stapel += " - ";
+		}
+		stapel += "\n\n";
+		return stapel;
 	}
 
 	private TegelDTO geefTegelVanSpeler(SpelerDTO speler, List<TegelDTO> kolom) {
@@ -106,11 +173,11 @@ public class Spel {
 	private String toonTegel(TegelDTO tegelDTO) {
 		String tegelVak = "";
 		boolean heeftKoning = false;
-		Speler spelerOpTegel = null;
+		SpelerDTO spelerOpTegel = null;
 		Kleur kleur = null;
 		if (tegelDTO.spelerDTO() != null) {
-			heeftKoning = tegelDTO.spelerDTO() != null;
-			spelerOpTegel = tegelDTO.spelerDTO().speler();
+			heeftKoning = true;
+			spelerOpTegel = tegelDTO.spelerDTO();
 			kleur = tegelDTO.spelerDTO().kleur();
 		}
 		Tegel tegel = tegelDTO.tegel();
@@ -121,38 +188,33 @@ public class Spel {
 		Landschap lRechts = vRechts.getLandschap();
 		int aantalKronenLinks = vLinks.getAantalKronen();
 		int aantalKronenRechts = vRechts.getAantalKronen();
-		tegelVak += String.format(
-				" ------- %n|       | Nummer: %d%n|   %s   | %s%n|       | %s %d - %s %d%n ------- %n%n", nummer,
-				heeftKoning ? "K" : " ",
-				spelerOpTegel == null ? "Tegel is nog niet gekozen."
-						: String.format("Speler: %s - %s", spelerOpTegel.getGebruikersnaam(), kleur.toString()),
+		tegelVak += String.format(messages.getString("overview_show_tile"), nummer, heeftKoning ? "K" : " ",
+				spelerOpTegel == null ? messages.getString("tile_notyet_chosen")
+						: String.format(messages.getString("player"), spelerOpTegel, kleur.toString()),
 				lLinks.toString(), aantalKronenLinks, lRechts.toString(), aantalKronenRechts);
 		return tegelVak;
 	}
 
-	public void kiesTegelStartkolom(SpelerDTO speler, int nr) {
-		TegelDTO tegel = null;
+	public void kiesTegelStartkolom(int nr) {
+		TegelDTO tegel;
 		boolean aangepast = false;
 		for (int i = 0; i < startKolom.size(); i++) {
-			boolean tegelGeldig = false;
 			tegel = startKolom.get(i);
 			if (tegel.tegel().getNummer() == nr)
 				if (tegel.spelerDTO() == null) {
-					startKolom.set(i, new TegelDTO(tegel.tegel(), speler));
+					startKolom.set(i, new TegelDTO(tegel.tegel(), huidigeSpeler));
 					aangepast = true;
-				} else {
-					i--;
-					throw new IllegalArgumentException(
-							messages.getString("already_taken_tile") + tegel.spelerDTO().speler().getGebruikersnaam());
-				}
+				} else
+					throw new IllegalArgumentException(messages.getString("already_taken_tile") + tegel.spelerDTO());
 		}
 		if (!aangepast)
 			throw new IllegalArgumentException("Ongeldig tegelnummer!");
 	}
 
-	public String toonSpelerKeuze(SpelerDTO speler) {
-		return String.format(messages.getString("turn_to_choose_tiles") + messages.getString("give_number_chosen_tile"),
-				speler.speler().getGebruikersnaam());
+	public int berekenScore(SpelerDTO speler) {
+		int score = 0;
+		// bereken de score
+		return score;
 	}
 
 }

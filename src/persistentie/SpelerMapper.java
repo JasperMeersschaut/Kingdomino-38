@@ -44,6 +44,7 @@ public class SpelerMapper {
 			query.setString(1, gebruikersnaam);
 			try (ResultSet rs = query.executeQuery()) {
 				if (rs.next()) {
+					gebruikersnaam = rs.getString("gebruikersnaam");
 					int geboortejaar = rs.getInt("geboortejaar");
 					int aantalGewonnen = rs.getInt("aantalGewonnen");
 					int aantalGespeeld = rs.getInt("aantalGespeeld");

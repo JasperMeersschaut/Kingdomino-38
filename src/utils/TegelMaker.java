@@ -9,7 +9,7 @@ import domein.Vak;
 
 public class TegelMaker {
 
-	private List<Tegel> tegels;
+	private final List<Tegel> tegels;
 
 	public TegelMaker() {
 		tegels = new ArrayList<>();
