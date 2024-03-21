@@ -213,8 +213,50 @@ public class Spel {
 
 	public int berekenScore(SpelerDTO speler) {
 		int score = 0;
-		// bereken de score
+
+		Vak[][] koninkrijk = speler.koninkrijk();
+
+		boolean[][] bezocht = new boolean[koninkrijk.length][koninkrijk[0].length];
+		for (int i = 0; i < bezocht.length; i++) {
+			for (int j = 0; j < bezocht[0].length; j++) {
+				bezocht[i][j] = false;
+			}
+		}
+		ScorePaar scorePaar = new ScorePaar(0, 0, bezocht);
+
+		for (int i = 0; i < koninkrijk.length; i++) {
+			for (int j = 0; j < koninkrijk[0].length; j++) {
+				if (!scorePaar.bezocht()[i][j]) {
+					scorePaar = dfs(i, j, koninkrijk, new ScorePaar(0, 0, scorePaar.bezocht()));
+					score += scorePaar.typeAantal() * scorePaar.aantalKronen();
+				}
+			}
+		}
 		return score;
+	}
+
+	record ScorePaar(int typeAantal, int aantalKronen, boolean[][] bezocht) {
+	};
+
+	private ScorePaar dfs(int x, int y, Vak[][] koninkrijk, ScorePaar scorePaar) {
+		boolean[][] bezocht = scorePaar.bezocht();
+		bezocht[x][y] = true;
+
+		Vak huidigVak = koninkrijk[x][y];
+		scorePaar = new ScorePaar(scorePaar.typeAantal() + 1, scorePaar.aantalKronen() + huidigVak.getAantalKronen(),
+				bezocht);
+
+		int[][] richtingen = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+		for (int[] paar : richtingen) {
+			int nx = x + paar[0];
+			int ny = y + paar[1];
+			if (nx >= 0 && nx < koninkrijk.length && ny >= 0 && ny < koninkrijk[0].length && !bezocht[nx][ny]
+					&& koninkrijk[nx][ny].getLandschap() == huidigVak.getLandschap()) {
+				dfs(nx, ny, koninkrijk, scorePaar);
+			}
+		}
+		return scorePaar;
 	}
 
 }
