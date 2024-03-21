@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import dto.ScorePaarDTO;
 import dto.SpelerDTO;
 import dto.TegelDTO;
 import utils.Kleur;
@@ -222,12 +223,12 @@ public class Spel {
 				bezocht[i][j] = false;
 			}
 		}
-		ScorePaar scorePaar = new ScorePaar(0, 0, bezocht);
+		ScorePaarDTO scorePaar = new ScorePaarDTO(0, 0, bezocht);
 
 		for (int i = 0; i < koninkrijk.length; i++) {
 			for (int j = 0; j < koninkrijk[0].length; j++) {
 				if (!scorePaar.bezocht()[i][j]) {
-					scorePaar = dfs(i, j, koninkrijk, new ScorePaar(0, 0, scorePaar.bezocht()));
+					scorePaar = dfs(i, j, koninkrijk, new ScorePaarDTO(0, 0, scorePaar.bezocht()));
 					score += scorePaar.typeAantal() * scorePaar.aantalKronen();
 				}
 			}
@@ -235,15 +236,12 @@ public class Spel {
 		return score;
 	}
 
-	record ScorePaar(int typeAantal, int aantalKronen, boolean[][] bezocht) {
-	};
-
-	private ScorePaar dfs(int x, int y, Vak[][] koninkrijk, ScorePaar scorePaar) {
+	private ScorePaarDTO dfs(int x, int y, Vak[][] koninkrijk, ScorePaarDTO scorePaar) {
 		boolean[][] bezocht = scorePaar.bezocht();
 		bezocht[x][y] = true;
 
 		Vak huidigVak = koninkrijk[x][y];
-		scorePaar = new ScorePaar(scorePaar.typeAantal() + 1, scorePaar.aantalKronen() + huidigVak.getAantalKronen(),
+		scorePaar = new ScorePaarDTO(scorePaar.typeAantal() + 1, scorePaar.aantalKronen() + huidigVak.getAantalKronen(),
 				bezocht);
 
 		int[][] richtingen = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
