@@ -251,7 +251,7 @@ public class Spel {
 			int ny = y + paar[1];
 			if (nx >= 0 && nx < koninkrijk.length && ny >= 0 && ny < koninkrijk[0].length && !bezocht[nx][ny]
 					&& koninkrijk[nx][ny].getLandschap() == huidigVak.getLandschap()) {
-				dfs(nx, ny, koninkrijk, scorePaar);
+				scorePaar = dfs(nx, ny, koninkrijk, scorePaar);
 			}
 		}
 		return scorePaar;
