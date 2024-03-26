@@ -117,11 +117,28 @@ public class DomeinController {
 		spel.vulEindKolomAan();
 	}
 
-	public List<Integer> geefScores() {
-		List<Integer> scores = new ArrayList<>();
-		for (SpelerDTO speler : spel.geefSpelers())
-			scores.add(spel.berekenScore(speler));
-		return scores;
+	public List<Integer> toonScoreOverzicht() {
+		List<Integer> spellen = new ArrayList<>();
+		List<String> gebruikersNamen = new ArrayList<>();
+		for (SpelerDTO speler : geefSpelers()){
+			gebruikersNamen.add(speler.gebruikersnaam());
+			if (geefWinnaars().contains(speler)){
+				spelerRepository.updateAantalGewonnen(speler.gebruikersnaam());
+			}
+
+		}
+		spelerRepository.updateAantalGespeeld(gebruikersNamen);
+
+		for (SpelerDTO speler : geefSpelers()){
+
+			Speler spelerX = spelerRepository.geefSpeler(speler.gebruikersnaam());
+			spellen.add(spelerX.getAantalGespeeld());
+			spellen.add(spelerX.getAantalGewonnen());
+
+		}
+
+
+return  spellen;
 	}
 
 	public List<SpelerDTO> geefWinnaars() {

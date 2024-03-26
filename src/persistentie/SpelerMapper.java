@@ -1,11 +1,7 @@
 
 package persistentie;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +13,8 @@ public class SpelerMapper {
 			+ "VALUES (?, ?, ?, ?)";
 	private static final String SELECT_SPELER = "SELECT * FROM Speler WHERE gebruikersnaam = ?";
 	private static final String SELECT_ALL_SPELERS = "SELECT * FROM Speler";
-
+private  static final  String UPDATE_AANTAL_GEWONNEN = "UPDATE Speler SET aantalGewonnen = aantalGewonnen + 1 WHERE gebruikersnaam = ?";
+	private  static final  String UPDATE_AANTAL_GESPEELD = "UPDATE Speler SET aantalGespeeld = aantalGespeeld + 1 WHERE gebruikersnaam = ?";
 	public void voegToe(Speler speler) {
 		Connectie ssh = new Connectie();
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
@@ -84,5 +81,36 @@ public class SpelerMapper {
 		}
 		return spelers;
 	}
+public void updateAantalGewonnen(String gebruikersnaam){
+	Connectie ssh = new Connectie();
+	try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
+		 PreparedStatement query = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN)) {
+		query.setString(1, gebruikersnaam);
+		query.executeUpdate();
+	}
+	catch (SQLException ex) {
+		throw new RuntimeException(ex);
+	}
+	finally {
+		ssh.closeConnection();
+	}
+	}
+	public void updateAantalGespeeld(List<String> gebruikersnaam){
+		Connectie ssh = new Connectie();
+		for (String naam:gebruikersnaam){
+			try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
+				 PreparedStatement query = conn.prepareStatement(UPDATE_AANTAL_GESPEELD)) {
+				query.setString(1, naam);
+				query.executeUpdate();
+			}
+			catch (SQLException ex) {
+				throw new RuntimeException(ex);
+			}
 
+
+		}
+
+			ssh.closeConnection();
+
+	}
 }

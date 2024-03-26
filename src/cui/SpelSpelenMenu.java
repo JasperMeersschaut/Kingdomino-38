@@ -1,12 +1,7 @@
 
 package cui;
 
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 import domein.DomeinController;
 import dto.SpelerDTO;
@@ -164,7 +159,7 @@ public class SpelSpelenMenu {
 	}
 
 	private void toonScoreOverzicht() {
-		List<Integer> scores = dc.geefScores();
+		List<Integer> scores = dc.toonScoreOverzicht();
 		List<SpelerDTO> winnaars = dc.geefWinnaars();
 		List<SpelerDTO> spelers = dc.geefSpelers();
 		int grootsteLengte = 0;
@@ -172,12 +167,13 @@ public class SpelSpelenMenu {
 			if (speler.gebruikersnaam().length() > grootsteLengte)
 				grootsteLengte = speler.gebruikersnaam().length();
 		System.out.print(toonMenuTitel(messages.getString("scores")));
-		System.out.printf("%8s%20s%19s%n", messages.getString("players"), messages.getString("scores"),
+		System.out.printf("%8s%20s%20s%19s%n", messages.getString("players"),messages.getString("amount_played"), messages.getString("amount_won"),
 				messages.getString("winner"));
+
 		for (int index = 0; index < spelers.size(); index++)
-			System.out.printf("%s%s%17s%23s%n", " ".repeat(grootsteLengte - spelers.get(index).gebruikersnaam().length()),
+			System.out.printf("%s%s%17s%17s%23s%n", " ".repeat(grootsteLengte - spelers.get(index).gebruikersnaam().length()),
 					spelers.get(index).gebruikersnaam(),
-					scores.get(index) >= 10 ? scores.get(index).toString() : " " + scores.get(index),
+					scores.get(2*index),scores.get(2*index+1),
 					winnaars.contains(spelers.get(index)) ? "Gewonnen!" : "");
 	}
 

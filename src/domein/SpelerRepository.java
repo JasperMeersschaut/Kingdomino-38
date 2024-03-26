@@ -27,6 +27,16 @@ public class SpelerRepository {
 	public boolean bestaatSpeler(String gebruikersnaam) {
 		return mapper.geefSpeler(gebruikersnaam) != null;
 	}
+	public Speler geefSpeler(String gebruikersnaam) {
+	 	 return mapper.geefSpeler(gebruikersnaam);
+	}
+public void updateAantalGewonnen(String gebruikersnaam){
+		mapper.updateAantalGewonnen(gebruikersnaam);
+}
+public void	updateAantalGespeeld(List<String> gebruikersnaam){
+		mapper.updateAantalGespeeld(gebruikersnaam);
+	}
+
 
 	public List<Speler> geefAlleSpelers() {
 		return mapper.geefAlleSpelers();
