@@ -7,18 +7,17 @@ import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import domein.DomeinController;
-import exceptions.GebruikersnaamInGebruikException;
 
 public class RegistratieMenu {
 
-	private final Scanner scanner;
 	private final ResourceBundle messages;
+	private final Scanner scanner;
 	private final DomeinController dc;
 
 	public RegistratieMenu(DomeinController dc) {
+		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
 		this.dc = dc;
 		scanner = new Scanner(System.in);
-		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
 	}
 
 	public void registreerSpeler() {
@@ -27,9 +26,9 @@ public class RegistratieMenu {
 		int geboortejaar;
 		do
 			try {
-				System.out.print(messages.getString("enter_username"));
+				System.out.print(messages.getString("enter_username") + " ");
 				gebruikersnaam = scanner.nextLine();
-				System.out.print(messages.getString("enter_birth_year"));
+				System.out.print(messages.getString("enter_birth_year") + " ");
 				geboortejaar = scanner.nextInt();
 				dc.registreerSpeler(gebruikersnaam, geboortejaar);
 				gebruikersnaamGeldig = true;
@@ -40,10 +39,6 @@ public class RegistratieMenu {
 			}
 			catch (InputMismatchException ime) {
 				System.err.println(messages.getString("invalid_input"));
-				scanner.nextLine();
-			}
-			catch (GebruikersnaamInGebruikException gige) {
-				System.err.println(gige.getMessage());
 				scanner.nextLine();
 			}
 			catch (Exception e) {

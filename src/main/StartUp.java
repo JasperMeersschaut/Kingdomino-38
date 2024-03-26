@@ -1,13 +1,13 @@
 
 package main;
 
-import cui.Applicatie;
+import cui.HoofdMenu;
 import domein.DomeinController;
 
 public class StartUp {
 
 	public static void main(String[] args) {
-		new Applicatie(new DomeinController()).startApplicatie();
+		new HoofdMenu(new DomeinController()).vraagKeuze();
 	}
 
 }

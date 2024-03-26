@@ -7,7 +7,7 @@ public enum Landschap {
 
 	@Override
 	public String toString() {
-		return this.name().toLowerCase();
+		return this.name().charAt(0) + this.name().substring(1).toLowerCase();
 	}
 
 }
