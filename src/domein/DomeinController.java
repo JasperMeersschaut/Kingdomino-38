@@ -85,7 +85,7 @@ public class DomeinController {
 		beschikbareKleuren.remove(kleurIndex);
 	}
 
-	public void startSpel() {
+	public void speelSpel() {
 		spel.startSpel();
 	}
 
@@ -113,7 +113,7 @@ public class DomeinController {
 		spel.plaatsKoningOpTegel(gekozenTegel);
 	}
 
-	public void vulEindKolomAan() {
+	public void speelRonde() {
 		spel.vulEindKolomAan();
 	}
 

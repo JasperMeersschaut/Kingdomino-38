@@ -1,7 +1,8 @@
 
 package testen;
 
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import domein.Spel;
@@ -10,7 +11,7 @@ import dto.SpelerDTO;
 import utils.Kleur;
 import utils.Landschap;
 
-public class BerekenScoreTest {
+class BerekenScoreTest {
 
 	private SpelerDTO speler;
 
@@ -34,7 +35,7 @@ public class BerekenScoreTest {
 		koningrijk[3][3] = new Vak(Landschap.WATER, 1);
 		koningrijk[4][0] = new Vak(Landschap.MIJN, 2);
 		speler = new SpelerDTO("gebruiker", Kleur.GROEN, koningrijk);
-		Assertions.assertEquals(23, new Spel().berekenScore(speler));
+		assertEquals(23, new Spel().berekenScore(speler));
 	}
 
 }

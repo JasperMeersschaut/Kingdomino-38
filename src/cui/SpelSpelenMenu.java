@@ -24,7 +24,7 @@ public class SpelSpelenMenu {
 	public void speelSpel() {
 		boolean stapelsAangevuld = false;
 		try {
-			dc.startSpel();
+			dc.speelSpel();
 			stapelsAangevuld = true;
 		}
 		catch (IllegalArgumentException iae) {
@@ -152,7 +152,7 @@ public class SpelSpelenMenu {
 
 	private void speelRondes() {
 		do {
-			dc.vulEindKolomAan();
+			dc.speelRonde();
 			System.out.println(toonSpelOverzicht());
 			plaatsKoningenOpTegels();
 		} while (!dc.geefStapel().isEmpty());
