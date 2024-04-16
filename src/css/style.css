@@ -1,0 +1,47 @@
+.titel {
+    -fx-font-family: "Augusta";
+    -fx-font-weight: bold;
+}
+.font {
+    -fx-font-family: "Timeless";
+    -fx-font-weight: bold;
+}
+.hugeText {
+    -fx-fill: gold;
+    -fx-font-size: 78pt;
+    -fx-stroke: black;
+    -fx-stroke-width: 2px;
+}
+.bigText {
+    -fx-font-size: 56pt;
+}
+.mediumText {
+    -fx-font-size: 24pt;
+}
+.smallText {
+    -fx-font-size: 18pt;
+}
+.line {
+    -fx-stroke: gold;
+    -fx-stroke-width: 3px;
+}
+.zandkleur {
+    -fx-background-color: rgb(255,255, 200);
+}
+.error {
+    -fx-text-fill: red;
+}
+.border {
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-background-insets: 0;
+}
+.lijst {
+    -fx-control-inner-background: rgb(255,255, 200);
+    -fx-selection-bar: gold;
+    -fx-selection-bar-non-focused: gold;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}

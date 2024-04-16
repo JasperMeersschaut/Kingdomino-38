@@ -4,157 +4,318 @@ package domein;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import dto.DomeinDTO;
-import dto.SpelerDTO;
-import dto.TegelDTO;
 import exceptions.AantalSpelersOngeldigException;
+import exceptions.GebiedWordtTeGrootException;
+import exceptions.GebruikersnaamAlGekozenException;
+import exceptions.KleurAlGekozenException;
+import exceptions.OngeldigeRichtingException;
+import exceptions.RaaktGeenTegelMetZelfdeLandschapsException;
 import exceptions.TegelAlGekozenException;
+import exceptions.TegelKanNietWeggegooidWordenException;
 import exceptions.TegelNietInKolomException;
+import exceptions.VakBezetException;
 import utils.Kleur;
+import utils.Landschap;
+import utils.Richting;
+import utils.Taal;
 import utils.TegelMaker;
 
 public class Spel {
 
-	private ResourceBundle messages;
-	private List<SpelerDTO> spelers;
-	private List<TegelDTO> stapel;
-	private List<TegelDTO> startKolom;
-	private List<TegelDTO> eindKolom;
-	private SpelerDTO huidigeSpeler;
-	private final TegelMaker tegelMaker;
+	private final ResourceBundle messages;
+	private final List<Speler> beschikbareSpelers;
+	private final List<Kleur> beschikbareKleuren;
+	private final List<Speler> spelers;
+	private List<Tegel> eindKolom;
+	private List<Tegel> stapel;
+	private List<Tegel> startKolom;
+	private Speler huidigeSpeler;
 
-	public Spel() {
-		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+	public Spel(List<Speler> beschikbareSpelers, List<Kleur> beschikbareKleuren) {
+		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		this.beschikbareSpelers = beschikbareSpelers;
+		this.beschikbareKleuren = beschikbareKleuren;
 		spelers = new ArrayList<>();
-		spelers.add(new SpelerDTO("Kjellvdb", Kleur.GROEN, new Vak[5][5]));
-		spelers.add(new SpelerDTO("jasper", Kleur.GEEL, new Vak[5][5]));
-		spelers.add(new SpelerDTO("emielvdb", Kleur.BLAUW, new Vak[5][5]));
-		spelers.add(new SpelerDTO("Anoniem", Kleur.ROOS, new Vak[5][5]));
 		stapel = new ArrayList<>();
 		startKolom = new ArrayList<>();
 		eindKolom = new ArrayList<>();
-		tegelMaker = new TegelMaker();
-		for (Tegel tegel : tegelMaker.geeftegels())
-			stapel.add(new TegelDTO(tegel, null, null));
 	}
 
-	public void voegSpelerToe(SpelerDTO speler) {
+	public List<Speler> getBeschikbareSpelers() {
+		return beschikbareSpelers;
+	}
+
+	public List<Kleur> getBeschikbareKleuren() {
+		return beschikbareKleuren;
+	}
+
+	public void voegSpelerToe(Speler speler, Kleur kleur) {
+		int spelerIndex = beschikbareSpelers.indexOf(speler);
+		int kleurIndex = beschikbareKleuren.indexOf(kleur);
+		if (spelerIndex == -1)
+			throw new GebruikersnaamAlGekozenException(
+					String.format(messages.getString("player_already_chosen"), speler.getGebruikersnaam()));
+		if (kleurIndex == -1)
+			throw new KleurAlGekozenException(String.format(messages.getString("color_already_chosen"), kleur));
+		beschikbareSpelers.remove(spelerIndex);
+		beschikbareKleuren.remove(kleurIndex);
+		speler.setKleur(kleur);
+		speler.setKoninkrijk(new Vak[9][9]);
+		speler.getKoninkrijk()[4][4] = new Vak(Landschap.KASTEEL, -1);
 		spelers.add(speler);
 	}
 
 	public void startSpel() {
 		if (spelers.size() != 3 && spelers.size() != 4)
 			throw new AantalSpelersOngeldigException(messages.getString("invalid_amount_of_players"));
+		stapel.addAll(new TegelMaker().geeftegels());
 		Collections.shuffle(stapel);
-		stapel = stapel.subList(0, spelers.size() * 3); // DE 3 moet een 12 zijn
-		for (int index = 1; index <= spelers.size(); index++) {
-			startKolom.add(stapel.get(0));
-			stapel.remove(0);
-		}
+		stapel = new ArrayList<>(stapel.subList(0, spelers.size() * 12));
+		startKolom = new ArrayList<>(stapel.subList(0, spelers.size()));
+		stapel = new ArrayList<>(stapel.subList(spelers.size(), stapel.size()));
 		Collections.sort(startKolom);
 		Collections.shuffle(spelers);
 		huidigeSpeler = spelers.get(0);
 	}
 
-	public List<SpelerDTO> geefSpelers() {
+	public List<Speler> getSpelers() {
 		return spelers;
 	}
 
-	public SpelerDTO geefHuidigeSpeler() {
-		return huidigeSpeler;
-	}
-
-	public List<TegelDTO> geefStapel() {
-		return stapel;
-	}
-
-	public List<TegelDTO> geefStartKolom() {
+	public List<Tegel> getStartKolom() {
 		return startKolom;
 	}
 
-	public List<TegelDTO> geefEindKolom() {
+	public List<Tegel> getEindKolom() {
 		return eindKolom;
 	}
 
-	public void plaatsKoningOpTegel(int gekozenTegel) {
-		boolean plaatsInStartKolom = eindKolom.isEmpty();
-		TegelDTO tegel;
-		boolean aangepast = false;
-		int indexHuidigeSpeler = -1;
-		for (int index = 0; index < spelers.size(); index++) {
-			tegel = (plaatsInStartKolom ? startKolom.get(index) : eindKolom.get(index));
-			if (tegel.nummer() == gekozenTegel)
-				if (tegel.gebruikersnaam() == null) {
-					aangepast = true;
-					if (plaatsInStartKolom)
-						startKolom.set(index,
-								new TegelDTO(
-										new Tegel(tegel.nummer(), new Vak(tegel.landschapLinks(), tegel.aantalKronenLinks()),
-												new Vak(tegel.landschapRechts(), tegel.aantalKronenRechts())),
-										huidigeSpeler.gebruikersnaam(), huidigeSpeler.kleur()));
-					else {
-						eindKolom.set(index,
-								new TegelDTO(
-										new Tegel(tegel.nummer(), new Vak(tegel.landschapLinks(), tegel.aantalKronenLinks()),
-												new Vak(tegel.landschapRechts(), tegel.aantalKronenRechts())),
-										huidigeSpeler.gebruikersnaam(), huidigeSpeler.kleur()));
-						for (int jndex = 0; jndex < spelers.size(); jndex++)
-							if (startKolom.get(jndex).gebruikersnaam() != null
-									&& startKolom.get(jndex).gebruikersnaam().equals(huidigeSpeler.gebruikersnaam())) {
-								startKolom.set(jndex,
-										new TegelDTO(new Tegel(tegel.nummer(),
-												new Vak(tegel.landschapLinks(), tegel.aantalKronenLinks()),
-												new Vak(tegel.landschapRechts(), tegel.aantalKronenRechts())), null, null));
-								indexHuidigeSpeler = jndex;
-								break;
-							}
-					}
-				} else
-					throw new TegelAlGekozenException(
-							String.format(messages.getString("tile_already_taken"), tegel.gebruikersnaam()));
-		}
-		if (!aangepast)
-			if (plaatsInStartKolom)
-				throw new TegelNietInKolomException(messages.getString("tile_not_in_startcolumn"));
-			else
-				throw new TegelNietInKolomException(messages.getString("tile_not_in_endcolumn"));
-		if (plaatsInStartKolom)
-			huidigeSpeler = spelers
-					.get(spelers.indexOf(huidigeSpeler) == spelers.size() - 1 ? 0 : spelers.indexOf(huidigeSpeler) + 1);
-		else
-			if (indexHuidigeSpeler != spelers.size() - 1)
-				for (int index = 0; index < spelers.size(); index++)
-					if (startKolom.get(indexHuidigeSpeler + 1).gebruikersnaam()
-							.equals(spelers.get(index).gebruikersnaam())) {
-						huidigeSpeler = spelers.get(index);
-						break;
-					}
+	public List<Tegel> getStapel() {
+		return stapel;
 	}
 
-	public void vulEindKolomAan() {
+	public Speler getHuidigeSpeler() {
+		return huidigeSpeler;
+	}
+
+	public void setVolgendeSpelerAlsHuidigeSpeler() {
+		if (eindKolom.isEmpty() && !stapel.isEmpty()) {
+			int indexVoorVolgendeSpeler = spelers.indexOf(huidigeSpeler) + 1;
+			if (indexVoorVolgendeSpeler == spelers.size())
+				huidigeSpeler = startKolom.get(0).getSpelerOpTegel();
+			else
+				huidigeSpeler = spelers.get(indexVoorVolgendeSpeler);
+		} else {
+			boolean alleSpelersHebbenAlGeplaatst = true;
+			for (Tegel tegel : startKolom) {
+				Speler spelerOpTegel = tegel.getSpelerOpTegel();
+				if (spelerOpTegel != null && spelerOpTegel != huidigeSpeler) {
+					huidigeSpeler = spelerOpTegel;
+					alleSpelersHebbenAlGeplaatst = false;
+					break;
+				}
+			}
+			if (alleSpelersHebbenAlGeplaatst && !eindKolom.isEmpty())
+				huidigeSpeler = eindKolom.get(0).getSpelerOpTegel();
+		}
+	}
+
+	public void plaatsKoningOpTegel(String koningVanSpelerString, int gekozenTegel) {
+		Speler koningVanSpeler = null;
+		boolean koningGeplaatst = false;
+		boolean plaatsInStartKolom = eindKolom.isEmpty();
+		for (Speler speler : spelers)
+			if (speler.getGebruikersnaam().equals(koningVanSpelerString)) {
+				koningVanSpeler = speler;
+				break;
+			}
+		for (Tegel tegel : plaatsInStartKolom ? startKolom : eindKolom)
+			if (tegel.getTegelNummer() == gekozenTegel)
+				if (tegel.getSpelerOpTegel() == null) {
+					tegel.setSpelerOpTegel(koningVanSpeler);
+					koningGeplaatst = true;
+					break;
+				} else
+					throw new TegelAlGekozenException(String.format(messages.getString("tile_already_taken"),
+							tegel.getSpelerOpTegel().getGebruikersnaam()));
+		if (!koningGeplaatst)
+			throw new TegelNietInKolomException(
+					messages.getString(plaatsInStartKolom ? "tile_not_in_startcolumn" : "tile_not_in_endcolumn"));
+	}
+
+	public void vulKolommenAan() {
 		if (!eindKolom.isEmpty()) {
 			startKolom.clear();
 			startKolom.addAll(eindKolom);
 			eindKolom.clear();
 		}
-		for (int index = 1; index <= spelers.size(); index++) {
-			eindKolom.add(stapel.get(0));
-			stapel.remove(0);
+		if (!stapel.isEmpty()) {
+			eindKolom = new ArrayList<>(stapel.subList(0, spelers.size()));
+			stapel = new ArrayList<>(stapel.subList(spelers.size(), stapel.size()));
+			Collections.sort(eindKolom);
 		}
-		Collections.sort(eindKolom);
-		for (int index = 0; index < spelers.size(); index++)
-			if (startKolom.get(0).gebruikersnaam().equals(spelers.get(index).gebruikersnaam())) {
-				huidigeSpeler = spelers.get(index);
+	}
+
+	public void legTegelInKoninkrijk(int tegelNummer, String tegelVanSpelerString, String plaats,
+			int richtingTePlaatsen) {
+		Speler tegelVanSpeler = null;
+		Tegel tegelOmTePlaatsen = null;
+		for (Speler speler : spelers)
+			if (speler.getGebruikersnaam().equals(tegelVanSpelerString)) {
+				tegelVanSpeler = speler;
 				break;
+			}
+		if (tegelVanSpeler == null)
+			throw new NullPointerException();
+		for (Tegel tegel : startKolom)
+			if (tegel.getTegelNummer() == tegelNummer) {
+				tegelOmTePlaatsen = tegel;
+				break;
+			}
+		if (tegelOmTePlaatsen == null)
+			throw new NullPointerException();
+		Vak[][] koninkrijk = tegelVanSpeler.getKoninkrijk();
+		int[] richting = Richting.geefRichting(switch (richtingTePlaatsen) {
+			case 1 -> Richting.RECHTS;
+			case 2 -> Richting.LINKS;
+			case 3 -> Richting.BOVEN;
+			case 4 -> Richting.ONDER;
+			default -> null;
+		});
+		if (richting == null)
+			throw new NullPointerException();
+		boolean weggegooid = false;
+		if (plaats.equals(messages.getString("discard"))) {
+			controleerWeggooienMogelijk(tegelVanSpeler, tegelOmTePlaatsen);
+			weggegooid = true;
+		}
+		if (!weggegooid) {
+			int rij = Integer.parseInt(plaats.split("")[0]);
+			int kolom = Integer.parseInt(plaats.split("")[1]);
+			controleerRijKolomRichtingBinnenGebied(rij, kolom, richting, koninkrijk);
+			if (!tegelIsPlaatsbaar(rij, kolom, richting, tegelOmTePlaatsen, koninkrijk))
+				throw new RaaktGeenTegelMetZelfdeLandschapsException(messages.getString("doesnt_touch_right_tile"));
+			koninkrijk[rij][kolom] = tegelOmTePlaatsen.getVakLinks();
+			koninkrijk[rij + richting[0]][kolom + richting[1]] = tegelOmTePlaatsen.getVakRechts();
+			vulVakkenIn(koninkrijk);
+		}
+		for (Tegel tegel : startKolom)
+			if (tegel.getTegelNummer() == tegelNummer) {
+				startKolom.remove(tegel);
+				break;
+			}
+		if (eindKolom.isEmpty() && stapel.isEmpty())
+			setVolgendeSpelerAlsHuidigeSpeler();
+	}
+
+	private void controleerWeggooienMogelijk(Speler tegelVanSpeler, Tegel tegel) {
+		Vak[][] koninkrijk = tegelVanSpeler.getKoninkrijk();
+		boolean tegelKanNogGeplaatsWorden = false;
+		for (int i = 0; i < koninkrijk.length; i++)
+			for (int j = 0; j < koninkrijk[i].length; j++)
+				if (koninkrijk[i][j] == null)
+					for (int[] richting : Richting.geefRichtingen()) {
+						int iBuur = i + richting[0];
+						int jBuur = j + richting[1];
+						if (iBuur >= 0 && iBuur < koninkrijk.length && jBuur >= 0 && jBuur < koninkrijk[iBuur].length
+								&& koninkrijk[iBuur][jBuur] == null && tegelIsPlaatsbaar(i, j, richting, tegel, koninkrijk)) {
+							tegelKanNogGeplaatsWorden = true;
+							break;
+						}
+					}
+		if (tegelKanNogGeplaatsWorden)
+			throw new TegelKanNietWeggegooidWordenException(messages.getString("tile_cannot_be_discarded"));
+	}
+
+	private boolean tegelIsPlaatsbaar(int rij, int kolom, int[] richting, Tegel tegel, Vak[][] koninkrijk) {
+		boolean raaktEenJuisteTegel = false;
+		for (int[] elkeRichting : Richting.geefRichtingen()) {
+			if (rij + elkeRichting[0] >= 0 && rij + elkeRichting[0] < koninkrijk.length && kolom + elkeRichting[1] >= 0
+					&& kolom + elkeRichting[1] < koninkrijk.length) {
+				Vak buurVanLinkseVak = koninkrijk[rij + elkeRichting[0]][kolom + elkeRichting[1]];
+				if (buurVanLinkseVak != null && (buurVanLinkseVak.getLandschap() == tegel.getVakLinks().getLandschap()
+						|| buurVanLinkseVak.getLandschap() == Landschap.KASTEEL)) {
+					raaktEenJuisteTegel = true;
+					break;
+				}
+			}
+			if (rij + richting[0] + elkeRichting[0] >= 0 && rij + richting[0] + elkeRichting[0] < koninkrijk.length
+					&& kolom + richting[1] + elkeRichting[1] >= 0
+					&& kolom + richting[1] + elkeRichting[1] < koninkrijk.length) {
+				Vak buurVanRechtseVak = koninkrijk[rij + richting[0] + elkeRichting[0]][kolom + richting[1]
+						+ elkeRichting[1]];
+				if (buurVanRechtseVak != null && (buurVanRechtseVak.getLandschap() == tegel.getVakRechts().getLandschap()
+						|| buurVanRechtseVak.getLandschap() == Landschap.KASTEEL)) {
+					raaktEenJuisteTegel = true;
+					break;
+				}
+			}
+		}
+		return raaktEenJuisteTegel;
+	}
+
+	private void controleerRijKolomRichtingBinnenGebied(int rij, int kolom, int[] richting, Vak[][] koninkrijk) {
+		if (rij < 0 || rij > 8 || kolom < 0 || kolom > 8)
+			throw new OngeldigeRichtingException(messages.getString("invalid_box_number"));
+		if (rij + richting[0] < 0 || rij + richting[0] >= koninkrijk.length || kolom + richting[1] < 0
+				|| kolom + richting[1] >= koninkrijk.length)
+			throw new OngeldigeRichtingException(messages.getString("invalid_direction_number"));
+		if (koninkrijk[rij][kolom] != null) {
+			if (koninkrijk[rij][kolom].getLandschap() == Landschap.LEEG)
+				throw new GebiedWordtTeGrootException(messages.getString("to_big"));
+			throw new VakBezetException(messages.getString("invalid_box"));
+		}
+		if (koninkrijk[rij + richting[0]][kolom + richting[1]] != null) {
+			if (koninkrijk[rij + richting[0]][kolom + richting[1]].getLandschap() == Landschap.LEEG)
+				throw new GebiedWordtTeGrootException(messages.getString("to_big"));
+			throw new VakBezetException(messages.getString("invalid_direction"));
+		}
+	}
+
+	private void vulVakkenIn(Vak[][] koninkrijk) {
+		int lengteLangsteKolom = -1;
+		int indexEersteIngevuldVakVanKolom = koninkrijk.length;
+		int indexLaatsteIngevuldVakVanKolom = -1;
+		int lengteLangsteRij = -1;
+		int indexEersteIngevuldVakVanRij = koninkrijk.length;
+		int indexLaatsteIngevuldVakVanRij = -1;
+		for (int i = 0; i < koninkrijk.length; i++) {
+			for (int j = 0; j < koninkrijk[i].length; j++) {
+				Vak vak = koninkrijk[i][j];
+				if (vak != null && vak.getLandschap() != Landschap.LEEG) {
+					if (i < indexEersteIngevuldVakVanKolom)
+						indexEersteIngevuldVakVanKolom = i;
+					if (i > indexLaatsteIngevuldVakVanKolom)
+						indexLaatsteIngevuldVakVanKolom = i;
+					if (j < indexEersteIngevuldVakVanRij)
+						indexEersteIngevuldVakVanRij = j;
+					if (j > indexLaatsteIngevuldVakVanRij)
+						indexLaatsteIngevuldVakVanRij = j;
+				}
+			}
+			int lengteKolom = indexLaatsteIngevuldVakVanKolom - indexEersteIngevuldVakVanKolom + 1;
+			if (lengteKolom > lengteLangsteKolom)
+				lengteLangsteKolom = lengteKolom;
+			int lengteRij = indexLaatsteIngevuldVakVanRij - indexEersteIngevuldVakVanRij + 1;
+			if (lengteRij > lengteLangsteRij)
+				lengteLangsteRij = lengteRij;
+		}
+		for (int i = 0; i < koninkrijk.length; i++)
+			for (int j = 0; j < koninkrijk[i].length; j++) {
+				if (i < indexEersteIngevuldVakVanKolom - 5 + lengteLangsteKolom
+						|| i > indexLaatsteIngevuldVakVanKolom + 5 - lengteLangsteKolom)
+					koninkrijk[i][j] = new Vak(Landschap.LEEG, -1);
+				if (j < indexEersteIngevuldVakVanRij - 5 + lengteLangsteRij
+						|| j > indexLaatsteIngevuldVakVanRij + 5 - lengteLangsteRij)
+					koninkrijk[i][j] = new Vak(Landschap.LEEG, -1);
 			}
 	}
 
-	public int berekenScore(SpelerDTO speler) {
+	public int berekenScore(Vak[][] koninkrijk) {
 		int score = 0;
-		Vak[][] koninkrijk = speler.koninkrijk();
 		boolean[][] bezocht = new boolean[koninkrijk.length][koninkrijk[0].length];
 		for (int i = 0; i < bezocht.length; i++)
 			for (int j = 0; j < bezocht[i].length; j++)
@@ -162,7 +323,8 @@ public class Spel {
 		DomeinDTO domein = new DomeinDTO(0, 0, bezocht);
 		for (int i = 0; i < koninkrijk.length; i++)
 			for (int j = 0; j < koninkrijk[i].length; j++)
-				if (koninkrijk[i][j] != null && !domein.bezocht()[i][j]) {
+				if (koninkrijk[i][j] != null && !domein.bezocht()[i][j] && koninkrijk[i][j].getLandschap() != Landschap.LEEG
+						&& koninkrijk[i][j].getLandschap() != Landschap.KASTEEL) {
 					domein = dfs(i, j, koninkrijk, new DomeinDTO(0, 0, domein.bezocht()));
 					score += domein.aantalVanZelfdeType() * domein.aantalKronenInDomein();
 				}
@@ -175,8 +337,7 @@ public class Spel {
 		Vak huidigVak = koninkrijk[x][y];
 		domein = new DomeinDTO(domein.aantalVanZelfdeType() + 1,
 				domein.aantalKronenInDomein() + huidigVak.getAantalKronen(), bezocht);
-		int[][] richtingen = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-		for (int[] richtingsPaar : richtingen) {
+		for (int[] richtingsPaar : Richting.geefRichtingen()) {
 			int nx = x + richtingsPaar[0];
 			int ny = y + richtingsPaar[1];
 			if (nx >= 0 && nx < koninkrijk.length && ny >= 0 && ny < koninkrijk[nx].length && koninkrijk[nx][ny] != null
@@ -186,32 +347,74 @@ public class Spel {
 		return domein;
 	}
 
-	public List<SpelerDTO> geefWinnaars() {
-		List<SpelerDTO> winnaars = new ArrayList<>();
-		int score = 0;
-		int maxScore = 0;
+	public List<Speler> geefWinnaars() {
+		List<Speler> winnaars = new ArrayList<>();
+		int scoreSpeler;
+		int aantalTegelsInGrootsteDomeinSpeler;
+		int aantalKronenSpeler;
+		int scoreWinnaar = 0;
+		int aantalTegelsInGrootsteDomeinWinnaar = 0;
 		int aantalKronenWinnaar = 0;
-		for (SpelerDTO speler : spelers) {
-			score = berekenScore(speler);
-			if (score > maxScore) {
-				maxScore = score;
-				aantalKronenWinnaar = telAantalKronen(speler);
+		for (Speler speler : spelers) {
+			scoreSpeler = berekenScore(speler.getKoninkrijk());
+			aantalTegelsInGrootsteDomeinSpeler = telAantalTegelsInGrootsteDomein(speler.getKoninkrijk());
+			aantalKronenSpeler = telAantalKronen(speler.getKoninkrijk());
+			boolean hogereScore = scoreSpeler > scoreWinnaar;
+			boolean meerTegelsInGrootsteDomein = scoreSpeler == scoreWinnaar
+					&& aantalTegelsInGrootsteDomeinSpeler > aantalTegelsInGrootsteDomeinWinnaar;
+			boolean meerKronenInKoninkrijk = scoreSpeler == scoreWinnaar
+					&& aantalTegelsInGrootsteDomeinSpeler == aantalTegelsInGrootsteDomeinWinnaar
+					&& aantalKronenSpeler > aantalKronenWinnaar;
+			boolean zelfdeScoreEnAantalTegelsInGrootsteDomeinEnAantalKronen = scoreSpeler == scoreWinnaar
+					&& aantalTegelsInGrootsteDomeinSpeler == aantalTegelsInGrootsteDomeinWinnaar
+					&& aantalKronenSpeler == aantalKronenWinnaar;
+			if (hogereScore || meerTegelsInGrootsteDomein || meerKronenInKoninkrijk) {
+				scoreWinnaar = scoreSpeler;
+				aantalTegelsInGrootsteDomeinWinnaar = aantalTegelsInGrootsteDomeinSpeler;
+				aantalKronenWinnaar = aantalKronenSpeler;
 				winnaars.clear();
 				winnaars.add(speler);
 			} else
-				if (score == maxScore && aantalKronenWinnaar == telAantalKronen(speler))
+				if (zelfdeScoreEnAantalTegelsInGrootsteDomeinEnAantalKronen)
 					winnaars.add(speler);
 		}
 		return winnaars;
 	}
 
-	private int telAantalKronen(SpelerDTO speler) {
+	private int telAantalTegelsInGrootsteDomein(Vak[][] koninkrijk) {
+		int aantalTegelsInHuidigDomein;
+		int aantalTegelsInGrootsteDomein = 0;
+		boolean[][] bezocht = new boolean[koninkrijk.length][koninkrijk[0].length];
+		for (int i = 0; i < bezocht.length; i++)
+			for (int j = 0; j < bezocht[i].length; j++)
+				bezocht[i][j] = false;
+		DomeinDTO domein = new DomeinDTO(0, 0, bezocht);
+		for (int i = 0; i < koninkrijk.length; i++)
+			for (int j = 0; j < koninkrijk[i].length; j++)
+				if (koninkrijk[i][j] != null && !domein.bezocht()[i][j] && koninkrijk[i][j].getLandschap() != Landschap.LEEG
+						&& koninkrijk[i][j].getLandschap() != Landschap.KASTEEL) {
+					domein = dfs(i, j, koninkrijk, new DomeinDTO(0, 0, domein.bezocht()));
+					aantalTegelsInHuidigDomein = domein.aantalVanZelfdeType();
+					if (aantalTegelsInHuidigDomein > aantalTegelsInGrootsteDomein)
+						aantalTegelsInGrootsteDomein = domein.aantalVanZelfdeType();
+				}
+		return aantalTegelsInGrootsteDomein;
+	}
+
+	private int telAantalKronen(Vak[][] koninkrijk) {
 		int aantalKronen = 0;
-		for (int rij = 0; rij < speler.koninkrijk().length; rij++)
-			for (int kolom = 0; kolom < speler.koninkrijk()[rij].length; kolom++)
-				if (speler.koninkrijk()[rij][kolom] != null)
-					aantalKronen += speler.koninkrijk()[rij][kolom].getAantalKronen();
+		for (Vak[] rij : koninkrijk)
+			for (Vak vak : rij)
+				if (vak != null && vak.getLandschap() != Landschap.LEEG && vak.getLandschap() != Landschap.KASTEEL)
+					aantalKronen += vak.getAantalKronen();
 		return aantalKronen;
+	}
+
+	public Vak[][] geefKoninkrijk(String gebruikersnaam) {
+		for (Speler speler : spelers)
+			if (speler.getGebruikersnaam().equals(gebruikersnaam))
+				return speler.getKoninkrijk();
+		return null;
 	}
 
 }

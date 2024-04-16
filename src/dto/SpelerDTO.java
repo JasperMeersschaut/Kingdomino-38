@@ -1,8 +1,13 @@
 
 package dto;
 
-import domein.Vak;
-import utils.Kleur;
+import domein.Speler;
 
-public record SpelerDTO(String gebruikersnaam, Kleur kleur, Vak[][] koninkrijk) {
+public record SpelerDTO(String gebruikersnaam, int geboortejaar, String kleur) {
+
+	public SpelerDTO(Speler speler) {
+		this(speler.getGebruikersnaam(), speler.getGeboortejaar(),
+				speler.getKleur() == null ? null : speler.getKleur().toString());
+	}
+
 }

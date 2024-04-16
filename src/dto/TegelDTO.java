@@ -2,20 +2,15 @@
 package dto;
 
 import domein.Tegel;
-import utils.Kleur;
-import utils.Landschap;
 
-public record TegelDTO(int nummer, Landschap landschapLinks, int aantalKronenLinks, Landschap landschapRechts,
-		int aantalKronenRechts, String gebruikersnaam, Kleur kleur) implements Comparable<TegelDTO> {
+public record TegelDTO(int nummer, String landschapLinks, int aantalKronenLinks, String landschapRechts,
+		int aantalKronenRechts, String spelerOpTegel, String kleur) {
 
-	public TegelDTO(Tegel tegel, String gebruikersnaam, Kleur kleur) {
-		this(tegel.getNummer(), tegel.getVakLinks().getLandschap(), tegel.getVakLinks().getAantalKronen(),
-				tegel.getVakRechts().getLandschap(), tegel.getVakRechts().getAantalKronen(), gebruikersnaam, kleur);
-	}
-
-	@Override
-	public int compareTo(TegelDTO tegel) {
-		return Integer.compare(this.nummer, tegel.nummer);
+	public TegelDTO(Tegel tegel) {
+		this(tegel.getTegelNummer(), tegel.getVakLinks().getLandschap().toString(), tegel.getVakLinks().getAantalKronen(),
+				tegel.getVakRechts().getLandschap().toString(), tegel.getVakRechts().getAantalKronen(),
+				tegel.getSpelerOpTegel() == null ? null : tegel.getSpelerOpTegel().getGebruikersnaam(),
+				tegel.getSpelerOpTegel() == null ? null : tegel.getSpelerOpTegel().getKleur().toString());
 	}
 
 }

@@ -1,7 +1,11 @@
 
 package persistentie;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +13,12 @@ import domein.Speler;
 
 public class SpelerMapper {
 
-	private static final String INSERT_SPELER = "INSERT INTO Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld)"
-			+ "VALUES (?, ?, ?, ?)";
+	private static final String INSERT_SPELER = "INSERT INTO Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld) VALUES (?, ?, ?, ?)";
 	private static final String SELECT_SPELER = "SELECT * FROM Speler WHERE gebruikersnaam = ?";
 	private static final String SELECT_ALL_SPELERS = "SELECT * FROM Speler";
-private  static final  String UPDATE_AANTAL_GEWONNEN = "UPDATE Speler SET aantalGewonnen = aantalGewonnen + 1 WHERE gebruikersnaam = ?";
-	private  static final  String UPDATE_AANTAL_GESPEELD = "UPDATE Speler SET aantalGespeeld = aantalGespeeld + 1 WHERE gebruikersnaam = ?";
+	private static final String UPDATE_AANTAL_GEWONNEN = "UPDATE Speler SET aantalGewonnen = aantalGewonnen + 1 WHERE gebruikersnaam = ?";
+	private static final String UPDATE_AANTAL_GESPEELD = "UPDATE Speler SET aantalGespeeld = aantalGespeeld + 1 WHERE gebruikersnaam = ?";
+
 	public void voegToe(Speler speler) {
 		Connectie ssh = new Connectie();
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
@@ -81,36 +85,32 @@ private  static final  String UPDATE_AANTAL_GEWONNEN = "UPDATE Speler SET aantal
 		}
 		return spelers;
 	}
-public void updateAantalGewonnen(String gebruikersnaam){
-	Connectie ssh = new Connectie();
-	try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-		 PreparedStatement query = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN)) {
-		query.setString(1, gebruikersnaam);
-		query.executeUpdate();
-	}
-	catch (SQLException ex) {
-		throw new RuntimeException(ex);
-	}
-	finally {
-		ssh.closeConnection();
-	}
-	}
-	public void updateAantalGespeeld(List<String> gebruikersnaam){
+
+	public void updateAantalGewonnenEnAantalGespeeld(List<List<Speler>> spelers) {
 		Connectie ssh = new Connectie();
-		for (String naam:gebruikersnaam){
-			try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-				 PreparedStatement query = conn.prepareStatement(UPDATE_AANTAL_GESPEELD)) {
-				query.setString(1, naam);
-				query.executeUpdate();
+		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
+				PreparedStatement queryUpdateAantalGespeeld = conn.prepareStatement(UPDATE_AANTAL_GESPEELD)) {
+			for (Speler speler : spelers.get(0)) {
+				queryUpdateAantalGespeeld.setString(1, speler.getGebruikersnaam());
+				queryUpdateAantalGespeeld.executeUpdate();
 			}
-			catch (SQLException ex) {
-				throw new RuntimeException(ex);
-			}
-
-
 		}
-
+		catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
+				PreparedStatement queryUpdateAantalGewonnen = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN)) {
+			for (Speler speler : spelers.get(1)) {
+				queryUpdateAantalGewonnen.setString(1, speler.getGebruikersnaam());
+				queryUpdateAantalGewonnen.executeUpdate();
+			}
+		}
+		catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
+		finally {
 			ssh.closeConnection();
-
+		}
 	}
+
 }

@@ -7,13 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import domein.Spel;
 import domein.Vak;
-import dto.SpelerDTO;
-import utils.Kleur;
 import utils.Landschap;
 
 class BerekenScoreTest {
-
-	private SpelerDTO speler;
 
 	@Test
 	void berekenScore_gegevensZoalsFoto_BerekentScore() {
@@ -34,8 +30,7 @@ class BerekenScoreTest {
 		koningrijk[3][2] = new Vak(Landschap.WATER, 0);
 		koningrijk[3][3] = new Vak(Landschap.WATER, 1);
 		koningrijk[4][0] = new Vak(Landschap.MIJN, 2);
-		speler = new SpelerDTO("gebruiker", Kleur.GROEN, koningrijk);
-		assertEquals(23, new Spel().berekenScore(speler));
+		assertEquals(23, new Spel(null, null).berekenScore(koningrijk));
 	}
 
 }

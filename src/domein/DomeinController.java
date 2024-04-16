@@ -2,31 +2,21 @@
 package domein;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import dto.SpelerDTO;
 import dto.TegelDTO;
-import exceptions.GebruikersnaamAlGekozenException;
-import exceptions.GebruikersnaamBestaatNietException;
-import exceptions.KleurAlGekozenException;
-import exceptions.KleurBestaatNietException;
+import dto.VakDTO;
 import utils.Kleur;
 
 public class DomeinController {
 
-	private final ResourceBundle messages;
-	private Spel spel;
-	private List<SpelerDTO> bechikbareSpelers;
-	private List<Kleur> beschikbareKleuren;
-	private static SpelerRepository spelerRepository;
+	private final SpelerRepository spelerRepository;
+	private Spel huidigSpel;
 
 	public DomeinController() {
-		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
 		spelerRepository = new SpelerRepository();
-		bechikbareSpelers = new ArrayList<>();
-		beschikbareKleuren = new ArrayList<>();
 	}
 
 	public void registreerSpeler(String gebruikersnaam, int geboortejaar) {
@@ -34,115 +24,106 @@ public class DomeinController {
 	}
 
 	public void maakSpelAan() {
-		spel = new Spel();
-		bechikbareSpelers.clear();
-		List<Speler> alleSpelers = spelerRepository.geefAlleSpelers();
-		for (Speler speler : alleSpelers)
-			bechikbareSpelers.add(new SpelerDTO(speler.getGebruikersnaam(), null, null));
-		beschikbareKleuren.clear();
-		Kleur[] alleKleuren = Kleur.values();
-		for (Kleur kleur : alleKleuren)
-			beschikbareKleuren.add(kleur);
+		huidigSpel = new Spel(spelerRepository.geefAlleSpelers(), new ArrayList<>(Arrays.asList(Kleur.values())));
 	}
 
 	public List<SpelerDTO> geefBeschikbareSpelers() {
-		return bechikbareSpelers;
+		List<SpelerDTO> beschikbareSpelers = new ArrayList<>();
+		for (Speler speler : huidigSpel.getBeschikbareSpelers())
+			beschikbareSpelers.add(new SpelerDTO(speler));
+		return beschikbareSpelers;
 	}
 
-	public List<Kleur> geefBeschikbareKleuren() {
-		return beschikbareKleuren;
+	public List<String> geefBeschikbareKleuren() {
+		List<String> geefBeschikbareKleuren = new ArrayList<>();
+		for (Kleur kleur : huidigSpel.getBeschikbareKleuren())
+			geefBeschikbareKleuren.add(kleur.toString());
+		return geefBeschikbareKleuren;
 	}
 
 	public void voegSpelerToeAanSpel(String gebruikersnaam, String kleur) {
-		if (!spelerRepository.bestaatSpeler(gebruikersnaam))
-			throw new GebruikersnaamBestaatNietException(
-					String.format(messages.getString("player_doenst_exist"), gebruikersnaam));
-		if (!Kleur.bestaatKleur(kleur))
-			throw new KleurBestaatNietException(String.format(messages.getString("color_doenst_exist"), kleur));
-		int spelerIndex = -1;
-		boolean spelerGevonden = false;
-		for (int index = 0; index < bechikbareSpelers.size(); index++)
-			if (!spelerGevonden
-					&& bechikbareSpelers.get(index).gebruikersnaam().toLowerCase().equals(gebruikersnaam.toLowerCase())) {
-				spelerGevonden = true;
-				spelerIndex = index;
-			}
-		if (!spelerGevonden)
-			throw new GebruikersnaamAlGekozenException(
-					String.format(messages.getString("player_already_chosen"), gebruikersnaam));
-		int kleurIndex = -1;
-		boolean kleurVerwijderd = false;
-		for (int index = 0; index < beschikbareKleuren.size(); index++)
-			if (!kleurVerwijderd && beschikbareKleuren.get(index).toString().toLowerCase().equals(kleur.toLowerCase())) {
-				kleurVerwijderd = true;
-				kleurIndex = index;
-			}
-		if (!kleurVerwijderd)
-			throw new KleurAlGekozenException(String.format(messages.getString("color_already_chosen"), kleur));
-		Vak[][] koninkrijk = new Vak[5][5];
-		spel.voegSpelerToe(new SpelerDTO(gebruikersnaam, Kleur.valueOf(kleur.toUpperCase()), koninkrijk));
-		bechikbareSpelers.remove(spelerIndex);
-		beschikbareKleuren.remove(kleurIndex);
+		huidigSpel.voegSpelerToe(spelerRepository.geefSpeler(gebruikersnaam), Kleur.geefKleur(kleur));
 	}
 
-	public void speelSpel() {
-		spel.startSpel();
+	public void startSpel() {
+		huidigSpel.startSpel();
 	}
 
 	public List<SpelerDTO> geefSpelers() {
-		return spel.geefSpelers();
-	}
-
-	public SpelerDTO geefHuidigeSpeler() {
-		return spel.geefHuidigeSpeler();
-	}
-
-	public List<TegelDTO> geefStapel() {
-		return spel.geefStapel();
+		List<SpelerDTO> spelers = new ArrayList<>();
+		for (Speler speler : huidigSpel.getSpelers())
+			spelers.add(new SpelerDTO(speler));
+		return spelers;
 	}
 
 	public List<TegelDTO> geefStartKolom() {
-		return spel.geefStartKolom();
+		List<TegelDTO> startKolom = new ArrayList<>();
+		for (Tegel tegel : huidigSpel.getStartKolom())
+			startKolom.add(new TegelDTO(tegel));
+		return startKolom;
 	}
 
 	public List<TegelDTO> geefEindKolom() {
-		return spel.geefEindKolom();
+		List<TegelDTO> eindKolom = new ArrayList<>();
+		for (Tegel tegel : huidigSpel.getEindKolom())
+			eindKolom.add(new TegelDTO(tegel));
+		return eindKolom;
 	}
 
-	public void plaatsKoningOpTegel(int gekozenTegel) {
-		spel.plaatsKoningOpTegel(gekozenTegel);
+	public List<TegelDTO> geefStapel() {
+		List<TegelDTO> stapel = new ArrayList<>();
+		for (Tegel tegel : huidigSpel.getStapel())
+			stapel.add(new TegelDTO(tegel));
+		return stapel;
 	}
 
-	public void speelRonde() {
-		spel.vulEindKolomAan();
+	public SpelerDTO geefHuidigeSpeler() {
+		return new SpelerDTO(huidigSpel.getHuidigeSpeler());
 	}
 
-	public List<Integer> toonScoreOverzicht() {
-		List<Integer> spellen = new ArrayList<>();
-		List<String> gebruikersNamen = new ArrayList<>();
-		for (SpelerDTO speler : geefSpelers()){
-			gebruikersNamen.add(speler.gebruikersnaam());
-			if (geefWinnaars().contains(speler)){
-				spelerRepository.updateAantalGewonnen(speler.gebruikersnaam());
-			}
+	public void plaatsKoningOpTegel(SpelerDTO speler, int gekozenTegel) {
+		huidigSpel.plaatsKoningOpTegel(speler.gebruikersnaam(), gekozenTegel);
+		huidigSpel.setVolgendeSpelerAlsHuidigeSpeler();
+	}
 
+	public void vulKolommenAan() {
+		huidigSpel.vulKolommenAan();
+	}
+
+	public List<List<Integer>> geefScoreOverzicht() {
+		List<List<Integer>> scores = new ArrayList<>(Arrays.asList(new ArrayList<>(), new ArrayList<>()));
+		List<List<Speler>> spelers = new ArrayList<>(Arrays.asList(new ArrayList<>(), new ArrayList<>()));
+		for (Speler speler : huidigSpel.getSpelers()) {
+			scores.get(0).add(speler.getAantalGespeeld() + 1);
+			spelers.get(0).add(speler);
+			if (huidigSpel.geefWinnaars().contains(speler)) {
+				scores.get(1).add(speler.getAantalGewonnen() + 1);
+				spelers.get(1).add(speler);
+			} else
+				scores.get(1).add(speler.getAantalGewonnen());
 		}
-		spelerRepository.updateAantalGespeeld(gebruikersNamen);
-
-		for (SpelerDTO speler : geefSpelers()){
-
-			Speler spelerX = spelerRepository.geefSpeler(speler.gebruikersnaam());
-			spellen.add(spelerX.getAantalGespeeld());
-			spellen.add(spelerX.getAantalGewonnen());
-
-		}
-
-
-return  spellen;
+		spelerRepository.updateAantalGewonnenEnAantalGespeeld(spelers);
+		return scores;
 	}
 
 	public List<SpelerDTO> geefWinnaars() {
-		return spel.geefWinnaars();
+		List<SpelerDTO> winnaars = new ArrayList<>();
+		for (Speler speler : huidigSpel.geefWinnaars())
+			winnaars.add(new SpelerDTO(speler));
+		return winnaars;
+	}
+
+	public VakDTO[][] geefKoninkrijk(SpelerDTO speler) {
+		Vak[][] koninkrijk = huidigSpel.geefKoninkrijk(speler.gebruikersnaam());
+		VakDTO[][] koninkrijkDTO = new VakDTO[koninkrijk.length][koninkrijk[0].length];
+		for (int i = 0; i < koninkrijk.length; i++)
+			for (int j = 0; j < koninkrijk[i].length; j++)
+				koninkrijkDTO[i][j] = new VakDTO(koninkrijk[i][j]);
+		return koninkrijkDTO;
+	}
+
+	public void legTegelInKoninkrijk(TegelDTO tegel, SpelerDTO huidigeSpeler, String plaats, int richting) {
+		huidigSpel.legTegelInKoninkrijk(tegel.nummer(), huidigeSpeler.gebruikersnaam(), plaats, richting);
 	}
 
 }

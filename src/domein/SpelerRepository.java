@@ -2,9 +2,9 @@
 package domein;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
+import exceptions.GebruikersnaamBestaatNietException;
 import exceptions.GebruikersnaamInGebruikException;
 import persistentie.SpelerMapper;
 
@@ -14,7 +14,7 @@ public class SpelerRepository {
 	private final SpelerMapper mapper;
 
 	public SpelerRepository() {
-		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+		messages = ResourceBundle.getBundle("messages");
 		mapper = new SpelerMapper();
 	}
 
@@ -24,22 +24,23 @@ public class SpelerRepository {
 		mapper.voegToe(speler);
 	}
 
-	public boolean bestaatSpeler(String gebruikersnaam) {
+	private boolean bestaatSpeler(String gebruikersnaam) {
 		return mapper.geefSpeler(gebruikersnaam) != null;
 	}
-	public Speler geefSpeler(String gebruikersnaam) {
-	 	 return mapper.geefSpeler(gebruikersnaam);
-	}
-public void updateAantalGewonnen(String gebruikersnaam){
-		mapper.updateAantalGewonnen(gebruikersnaam);
-}
-public void	updateAantalGespeeld(List<String> gebruikersnaam){
-		mapper.updateAantalGespeeld(gebruikersnaam);
-	}
 
+	public Speler geefSpeler(String gebruikersnaam) {
+		if (!bestaatSpeler(gebruikersnaam))
+			throw new GebruikersnaamBestaatNietException(
+					String.format(messages.getString("player_doenst_exist"), gebruikersnaam));
+		return mapper.geefSpeler(gebruikersnaam);
+	}
 
 	public List<Speler> geefAlleSpelers() {
 		return mapper.geefAlleSpelers();
+	}
+
+	public void updateAantalGewonnenEnAantalGespeeld(List<List<Speler>> spelers) {
+		mapper.updateAantalGewonnenEnAantalGespeeld(spelers);
 	}
 
 }

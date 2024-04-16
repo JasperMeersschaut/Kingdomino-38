@@ -2,11 +2,11 @@
 package cui;
 
 import java.util.InputMismatchException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import domein.DomeinController;
+import utils.Taal;
 
 public class RegistratieMenu {
 
@@ -15,7 +15,7 @@ public class RegistratieMenu {
 	private final DomeinController dc;
 
 	public RegistratieMenu(DomeinController dc) {
-		messages = ResourceBundle.getBundle("messages", Locale.getDefault());
+		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
 		this.dc = dc;
 		scanner = new Scanner(System.in);
 	}
@@ -30,6 +30,7 @@ public class RegistratieMenu {
 				gebruikersnaam = scanner.nextLine();
 				System.out.print(messages.getString("enter_birth_year") + " ");
 				geboortejaar = scanner.nextInt();
+				System.out.println();
 				dc.registreerSpeler(gebruikersnaam, geboortejaar);
 				gebruikersnaamGeldig = true;
 			}
@@ -39,6 +40,10 @@ public class RegistratieMenu {
 			}
 			catch (InputMismatchException ime) {
 				System.err.println(messages.getString("invalid_input"));
+				scanner.nextLine();
+			}
+			catch (RuntimeException re) {
+				System.err.println(messages.getString("no_connection"));
 				scanner.nextLine();
 			}
 			catch (Exception e) {
