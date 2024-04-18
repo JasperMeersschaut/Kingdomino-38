@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 import domein.DomeinController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -157,8 +159,7 @@ public class RegistratieMenuScherm extends GridPane {
 			if (textFieldGebruikersnaam.getText().isBlank())
 				throw new Exception();
 			gebruikersnaamError.setText("");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			gebruikersnaamError.setText(messages.getString("invalid_input"));
 		}
 	}
@@ -169,8 +170,7 @@ public class RegistratieMenuScherm extends GridPane {
 			if (Integer.parseInt(textFieldGeboortejaar.getText()) < 0)
 				throw new Exception();
 			geboortejaarError.setText("");
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			geboortejaarError.setText(messages.getString("invalid_input"));
 		}
 		if (textFieldGeboortejaar.getText().isBlank())
@@ -181,22 +181,24 @@ public class RegistratieMenuScherm extends GridPane {
 		try {
 			dc.registreerSpeler(textFieldGebruikersnaam.getText(), Integer.parseInt(textFieldGeboortejaar.getText()));
 			registratieMelding.getStyleClass().remove("error");
-			registratieMelding
-					.setText(String.format(messages.getString("registration_success"), textFieldGebruikersnaam.getText()));
+			registratieMelding.setText(
+					String.format(messages.getString("registration_success"), textFieldGebruikersnaam.getText()));
 			textFieldGebruikersnaam.clear();
 			textFieldGeboortejaar.clear();
-		}
-		catch (NumberFormatException nfe) {
+		} catch (NumberFormatException nfe) {
 			registratieMelding.setText(messages.getString("invalid_input"));
-		}
-		catch (IllegalArgumentException iae) {
+		} catch (IllegalArgumentException iae) {
 			registratieMelding.setText(iae.getMessage());
-		}
-		catch (RuntimeException re) {
+		} catch (RuntimeException re) {
 			registratieMelding.setText(messages.getString("no_connection"));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			registratieMelding.setText(messages.getString("error_occurred"));
+		} finally {
+			if (!textFieldGeboortejaar.getText().isEmpty() && !textFieldGebruikersnaam.getText().isEmpty()) {
+				Alert a = new Alert(AlertType.ERROR);
+				a.setContentText("Er is iets misgelopen.");
+				a.show();
+			}
 		}
 	}
 
