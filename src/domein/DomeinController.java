@@ -4,18 +4,24 @@ package domein;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import dto.SpelerDTO;
 import dto.TegelDTO;
 import dto.VakDTO;
+import exceptions.GebruikersnaamAlGekozenException;
+import exceptions.KleurAlGekozenException;
 import utils.Kleur;
+import utils.Taal;
 
 public class DomeinController {
 
+	private final ResourceBundle messages;
 	private final SpelerRepository spelerRepository;
 	private Spel huidigSpel;
 
 	public DomeinController() {
+		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
 		spelerRepository = new SpelerRepository();
 	}
 
@@ -24,25 +30,34 @@ public class DomeinController {
 	}
 
 	public void maakSpelAan() {
-		huidigSpel = new Spel(spelerRepository.geefAlleSpelers(), new ArrayList<>(Arrays.asList(Kleur.values())));
+		huidigSpel = new Spel();
 	}
 
 	public List<SpelerDTO> geefBeschikbareSpelers() {
 		List<SpelerDTO> beschikbareSpelers = new ArrayList<>();
-		for (Speler speler : huidigSpel.getBeschikbareSpelers())
+		for (Speler speler : spelerRepository.getBeschikbareSpelers())
 			beschikbareSpelers.add(new SpelerDTO(speler));
 		return beschikbareSpelers;
 	}
 
 	public List<String> geefBeschikbareKleuren() {
 		List<String> geefBeschikbareKleuren = new ArrayList<>();
-		for (Kleur kleur : huidigSpel.getBeschikbareKleuren())
+		for (Kleur kleur : spelerRepository.getBeschikbareKleuren())
 			geefBeschikbareKleuren.add(kleur.toString());
 		return geefBeschikbareKleuren;
 	}
 
-	public void voegSpelerToeAanSpel(String gebruikersnaam, String kleur) {
-		huidigSpel.voegSpelerToe(spelerRepository.geefSpeler(gebruikersnaam), Kleur.geefKleur(kleur));
+	public void voegSpelerToeAanSpel(String gebruikersnaam, String kleurString) {
+		Speler speler = spelerRepository.geefSpeler(gebruikersnaam);
+		Kleur kleur = Kleur.geefKleur(kleurString);
+		if (!spelerRepository.getBeschikbareSpelers().contains(speler))
+			throw new GebruikersnaamAlGekozenException(
+					String.format(messages.getString("player_already_chosen"), speler.getGebruikersnaam()));
+		if (!spelerRepository.getBeschikbareKleuren().contains(kleur))
+			throw new KleurAlGekozenException(String.format(messages.getString("color_already_chosen"), kleur));
+		spelerRepository.verwijderSpeler(speler);
+		spelerRepository.verwijderKleur(kleur);
+		huidigSpel.voegSpelerToe(speler, kleur);
 	}
 
 	public void startSpel() {

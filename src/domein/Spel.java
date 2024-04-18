@@ -9,8 +9,6 @@ import java.util.ResourceBundle;
 import dto.DomeinDTO;
 import exceptions.AantalSpelersOngeldigException;
 import exceptions.GebiedWordtTeGrootException;
-import exceptions.GebruikersnaamAlGekozenException;
-import exceptions.KleurAlGekozenException;
 import exceptions.OngeldigeRichtingException;
 import exceptions.RaaktGeenTegelMetZelfdeLandschapsException;
 import exceptions.TegelAlGekozenException;
@@ -26,18 +24,14 @@ import utils.TegelMaker;
 public class Spel {
 
 	private final ResourceBundle messages;
-	private final List<Speler> beschikbareSpelers;
-	private final List<Kleur> beschikbareKleuren;
 	private final List<Speler> spelers;
 	private List<Tegel> startKolom;
 	private List<Tegel> eindKolom;
 	private List<Tegel> stapel;
 	private Speler huidigeSpeler;
 
-	public Spel(List<Speler> beschikbareSpelers, List<Kleur> beschikbareKleuren) {
+	public Spel() {
 		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
-		this.beschikbareSpelers = beschikbareSpelers;
-		this.beschikbareKleuren = beschikbareKleuren;
 		spelers = new ArrayList<>();
 		stapel = new ArrayList<>();
 		startKolom = new ArrayList<>();
@@ -72,15 +66,6 @@ public class Spel {
 	}
 
 	public void voegSpelerToe(Speler speler, Kleur kleur) {
-		int spelerIndex = beschikbareSpelers.indexOf(speler);
-		int kleurIndex = beschikbareKleuren.indexOf(kleur);
-		if (spelerIndex == -1)
-			throw new GebruikersnaamAlGekozenException(
-					String.format(messages.getString("player_already_chosen"), speler.getGebruikersnaam()));
-		if (kleurIndex == -1)
-			throw new KleurAlGekozenException(String.format(messages.getString("color_already_chosen"), kleur));
-		beschikbareSpelers.remove(spelerIndex);
-		beschikbareKleuren.remove(kleurIndex);
 		speler.setKleur(kleur);
 		speler.setKoninkrijk(new Vak[9][9]);
 		speler.getKoninkrijk()[4][4] = new Vak(Landschap.KASTEEL, -1);

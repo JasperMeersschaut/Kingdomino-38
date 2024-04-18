@@ -30,7 +30,7 @@ class BerekenScoreTest {
 		koningrijk[3][2] = new Vak(Landschap.WATER, 0);
 		koningrijk[3][3] = new Vak(Landschap.WATER, 1);
 		koningrijk[4][0] = new Vak(Landschap.MIJN, 2);
-		assertEquals(23, new Spel(null, null).berekenScore(koningrijk));
+		assertEquals(23, new Spel().berekenScore(koningrijk));
 	}
 
 }

@@ -1,21 +1,45 @@
 
 package domein;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import exceptions.GebruikersnaamBestaatNietException;
 import exceptions.GebruikersnaamInGebruikException;
 import persistentie.SpelerMapper;
+import utils.Kleur;
+import utils.Taal;
 
 public class SpelerRepository {
 
 	private final ResourceBundle messages;
 	private final SpelerMapper mapper;
+	private final List<Speler> beschikbareSpelers;
+	private final List<Kleur> beschikbareKleuren;
 
 	public SpelerRepository() {
-		messages = ResourceBundle.getBundle("messages");
+		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
 		mapper = new SpelerMapper();
+		this.beschikbareSpelers = geefAlleSpelers();
+		this.beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
+	}
+
+	public List<Speler> getBeschikbareSpelers() {
+		return beschikbareSpelers;
+	}
+
+	public List<Kleur> getBeschikbareKleuren() {
+		return beschikbareKleuren;
+	}
+
+	public void verwijderSpeler(Speler speler) {
+		this.beschikbareSpelers.remove(speler);
+	}
+
+	public void verwijderKleur(Kleur kleur) {
+		this.beschikbareKleuren.remove(kleur);
 	}
 
 	public void voegToe(Speler speler) {
