@@ -38,13 +38,6 @@ public class Spel {
 		eindKolom = new ArrayList<>();
 	}
 
-	public List<Speler> getBeschikbareSpelers() {
-		return beschikbareSpelers;
-	}
-
-	public List<Kleur> getBeschikbareKleuren() {
-		return beschikbareKleuren;
-	}
 	public List<Speler> getSpelers() {
 		return spelers;
 	}
