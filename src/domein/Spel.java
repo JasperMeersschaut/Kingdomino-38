@@ -29,9 +29,9 @@ public class Spel {
 	private final List<Speler> beschikbareSpelers;
 	private final List<Kleur> beschikbareKleuren;
 	private final List<Speler> spelers;
+	private List<Tegel> startKolom;
 	private List<Tegel> eindKolom;
 	private List<Tegel> stapel;
-	private List<Tegel> startKolom;
 	private Speler huidigeSpeler;
 
 	public Spel(List<Speler> beschikbareSpelers, List<Kleur> beschikbareKleuren) {
@@ -50,6 +50,25 @@ public class Spel {
 
 	public List<Kleur> getBeschikbareKleuren() {
 		return beschikbareKleuren;
+	}
+	public List<Speler> getSpelers() {
+		return spelers;
+	}
+
+	public List<Tegel> getStartKolom() {
+		return startKolom;
+	}
+
+	public List<Tegel> getEindKolom() {
+		return eindKolom;
+	}
+
+	public List<Tegel> getStapel() {
+		return stapel;
+	}
+
+	public Speler getHuidigeSpeler() {
+		return huidigeSpeler;
 	}
 
 	public void voegSpelerToe(Speler speler, Kleur kleur) {
@@ -81,25 +100,6 @@ public class Spel {
 		huidigeSpeler = spelers.get(0);
 	}
 
-	public List<Speler> getSpelers() {
-		return spelers;
-	}
-
-	public List<Tegel> getStartKolom() {
-		return startKolom;
-	}
-
-	public List<Tegel> getEindKolom() {
-		return eindKolom;
-	}
-
-	public List<Tegel> getStapel() {
-		return stapel;
-	}
-
-	public Speler getHuidigeSpeler() {
-		return huidigeSpeler;
-	}
 
 	public void setVolgendeSpelerAlsHuidigeSpeler() {
 		if (eindKolom.isEmpty() && !stapel.isEmpty()) {
