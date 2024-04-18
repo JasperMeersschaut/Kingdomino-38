@@ -1,7 +1,9 @@
 Ontwerpen:
 - DCD aanpassen
+
 Analyse:
 - UC5 analyseren
+
 Programeren:
 - Buttons enzo beter plaatsen op de applicatie (gewoon mooier maken)
 - Lettertypes aanpassen zodat de errors op de applicatie nog binnen het scherm vallen
