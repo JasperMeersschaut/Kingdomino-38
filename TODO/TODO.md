@@ -2,7 +2,9 @@ Ontwerpen:
 - DCD aanpassen
 
 Analyse:
-- UC5 analyseren
+- UC5 AD verbeteren [x]
+- UC5 Domein uitbreiden []
+- UC5 SSD verbeteren []
 
 Programeren:
 - Buttons enzo beter plaatsen op de applicatie (gewoon mooier maken)
