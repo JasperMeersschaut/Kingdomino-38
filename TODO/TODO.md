@@ -1,12 +1,8 @@
-Ontwerpen:
 
-- DCD aanpassen
 
 Analyse:
-
-- [x] UC5 AD verbeteren
-- [x] UC5 Domein uitbreiden
-- [x] UC5 SSD verbeteren
+- [] UC5 domeinObject koninkrijk toevoegen
+- [] UC5 SSD aanpassen
 
 Programeren:
 
