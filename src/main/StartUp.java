@@ -24,7 +24,6 @@ public class StartUp extends Application {
 		scherm.setTitle("Kingdomino");
 		Image logo = new Image(getClass().getResourceAsStream("/images/logo.jpg"));
 		scherm.getIcons().add(logo);
-//		scherm.initStyle(StageStyle.UNDECORATED);
 		scherm.show();
 		scherm.setMaximized(true);
 	}
