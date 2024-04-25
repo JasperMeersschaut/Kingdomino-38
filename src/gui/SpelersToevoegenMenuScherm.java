@@ -7,7 +7,9 @@ import java.util.ResourceBundle;
 
 import domein.DomeinController;
 import dto.SpelerDTO;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -15,6 +17,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
@@ -22,14 +26,16 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Taal;
 
-public class SpelersToevoegenMenuScherm extends GridPane {
+public class SpelersToevoegenMenuScherm extends StackPane {
 
+	private final GridPane gridPane;
 	private final ResourceBundle messages;
 	private final DomeinController dc;
 	private final Stage scherm;
@@ -51,8 +57,10 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 	private Label melding3;
 	private Label melding4;
 	private Label spelMelding;
+	private ImageView imageLoader = new ImageView(new Image(getClass().getResourceAsStream("/images/Loader.gif")));
 
 	public SpelersToevoegenMenuScherm(DomeinController dc, Stage scherm) {
+		gridPane = new GridPane();
 		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
 		this.dc = dc;
 		this.scherm = scherm;
@@ -63,23 +71,23 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		scherm.setWidth(1500);
 		scherm.centerOnScreen();
 		getStyleClass().add("zandkleur");
-		getColumnConstraints().add(new ColumnConstraints(350));
-		getColumnConstraints().add(new ColumnConstraints(350));
-		getColumnConstraints().add(new ColumnConstraints(350));
-		getColumnConstraints().add(new ColumnConstraints(450));
-		getRowConstraints().add(new RowConstraints(135));
+		gridPane.getColumnConstraints().add(new ColumnConstraints(350));
+		gridPane.getColumnConstraints().add(new ColumnConstraints(350));
+		gridPane.getColumnConstraints().add(new ColumnConstraints(350));
+		gridPane.getColumnConstraints().add(new ColumnConstraints(450));
+		gridPane.getRowConstraints().add(new RowConstraints(135));
 		for (int i = 0; i < 5; i++)
-			getRowConstraints().add(new RowConstraints(108));
+			gridPane.getRowConstraints().add(new RowConstraints(108));
 		VBox menu = bouwMenu();
-		add(menu, 0, 0, 4, 1);
+		gridPane.add(menu, 0, 0, 4, 1);
 		gebruiker1 = bouwLabel(messages.getString("fx_player") + " 1: ______");
-		add(gebruiker1, 1, 1, 1, 1);
+		gridPane.add(gebruiker1, 1, 1, 1, 1);
 		gebruiker2 = bouwLabel(messages.getString("fx_player") + " 2: ______");
-		add(gebruiker2, 1, 2, 1, 1);
+		gridPane.add(gebruiker2, 1, 2, 1, 1);
 		gebruiker3 = bouwLabel(messages.getString("fx_player") + " 3: ______");
-		add(gebruiker3, 1, 3, 1, 1);
+		gridPane.add(gebruiker3, 1, 3, 1, 1);
 		gebruiker4 = bouwLabel(messages.getString("fx_player") + " 4: ______");
-		add(gebruiker4, 1, 4, 1, 1);
+		gridPane.add(gebruiker4, 1, 4, 1, 1);
 		kleur1 = maakComboBox();
 		kleur1.setOnMouseClicked(event -> {
 			kleur1.getItems().clear();
@@ -88,7 +96,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		VBox kleur1Box = new VBox();
 		kleur1Box.getChildren().add(kleur1);
 		kleur1Box.setAlignment(Pos.CENTER);
-		add(kleur1Box, 2, 1, 1, 1);
+		gridPane.add(kleur1Box, 2, 1, 1, 1);
 		kleur2 = maakComboBox();
 		kleur2.setOnMouseClicked(event -> {
 			kleur2.getItems().clear();
@@ -97,7 +105,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		VBox kleur2Box = new VBox();
 		kleur2Box.getChildren().add(kleur2);
 		kleur2Box.setAlignment(Pos.CENTER);
-		add(kleur2Box, 2, 2, 1, 1);
+		gridPane.add(kleur2Box, 2, 2, 1, 1);
 		kleur3 = maakComboBox();
 		kleur3.setOnMouseClicked(event -> {
 			kleur3.getItems().clear();
@@ -106,7 +114,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		VBox kleur3Box = new VBox();
 		kleur3Box.getChildren().add(kleur3);
 		kleur3Box.setAlignment(Pos.CENTER);
-		add(kleur3Box, 2, 3, 1, 1);
+		gridPane.add(kleur3Box, 2, 3, 1, 1);
 		kleur4 = maakComboBox();
 		kleur4.setOnMouseClicked(event -> {
 			kleur4.getItems().clear();
@@ -115,7 +123,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		VBox kleur4Box = new VBox();
 		kleur4Box.getChildren().add(kleur4);
 		kleur4Box.setAlignment(Pos.CENTER);
-		add(kleur4Box, 2, 4, 1, 1);
+		gridPane.add(kleur4Box, 2, 4, 1, 1);
 		voegSpeler1Toe = bouwKnop();
 		voegSpeler1Toe.setOnAction(event -> voegSpelerToe(1));
 		VBox voegSpeler1ToeBox = new VBox();
@@ -126,7 +134,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		melding1.setWrapText(true);
 		melding1.getStyleClass().addAll("font", "smallText", "error");
 		voegSpeler1ToeBox.getChildren().add(melding1);
-		add(voegSpeler1ToeBox, 3, 1, 1, 1);
+		gridPane.add(voegSpeler1ToeBox, 3, 1, 1, 1);
 		voegSpeler2Toe = bouwKnop();
 		voegSpeler2Toe.setOnAction(event -> voegSpelerToe(2));
 		VBox voegSpeler2ToeBox = new VBox();
@@ -137,7 +145,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		melding2.setWrapText(true);
 		melding2.getStyleClass().addAll("font", "smallText", "error");
 		voegSpeler2ToeBox.getChildren().add(melding2);
-		add(voegSpeler2ToeBox, 3, 2, 1, 1);
+		gridPane.add(voegSpeler2ToeBox, 3, 2, 1, 1);
 		voegSpeler3Toe = bouwKnop();
 		voegSpeler3Toe.setOnAction(event -> voegSpelerToe(3));
 		VBox voegSpeler3ToeBox = new VBox();
@@ -148,7 +156,7 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		melding3.setWrapText(true);
 		melding3.getStyleClass().addAll("font", "smallText", "error");
 		voegSpeler3ToeBox.getChildren().add(melding3);
-		add(voegSpeler3ToeBox, 3, 3, 1, 1);
+		gridPane.add(voegSpeler3ToeBox, 3, 3, 1, 1);
 		voegSpeler4Toe = bouwKnop();
 		voegSpeler4Toe.setOnAction(event -> voegSpelerToe(4));
 		VBox voegSpeler4ToeBox = new VBox();
@@ -159,16 +167,19 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 		melding4.setWrapText(true);
 		melding4.getStyleClass().addAll("font", "smallText", "error");
 		voegSpeler4ToeBox.getChildren().add(melding4);
-		add(voegSpeler4ToeBox, 3, 4, 1, 1);
+		gridPane.add(voegSpeler4ToeBox, 3, 4, 1, 1);
 		VBox spelersOverzicht = bouwSpelersOverzicht();
-		add(spelersOverzicht, 0, 1, 1, 5);
+		gridPane.add(spelersOverzicht, 0, 1, 1, 5);
 		VBox startSpel = bouwKnopStartSpel();
-		add(startSpel, 2, 5, 1, 1);
+		gridPane.add(startSpel, 2, 5, 1, 1);
 		spelMelding = new Label("");
 		spelMelding.setAlignment(Pos.CENTER);
 		spelMelding.setWrapText(true);
 		spelMelding.getStyleClass().addAll("font", "smallText", "error");
-		add(spelMelding, 3, 5, 1, 1);
+		gridPane.add(spelMelding, 3, 5, 1, 1);
+		imageLoader.setVisible(false);
+
+		getChildren().addAll(gridPane, imageLoader);
 	}
 
 	private VBox bouwMenu() {
@@ -308,45 +319,64 @@ public class SpelersToevoegenMenuScherm extends GridPane {
 	}
 
 	private void voegSpelerToe(int index) {
+
 		List<Label> spelers = List.of(gebruiker1, gebruiker2, gebruiker3, gebruiker4);
 		List<ComboBox<String>> kleuren = List.of(kleur1, kleur2, kleur3, kleur4);
 		List<Button> knoppen = List.of(voegSpeler1Toe, voegSpeler2Toe, voegSpeler3Toe, voegSpeler4Toe);
 		List<Label> meldingen = List.of(melding1, melding2, melding3, melding4);
-		try {
-			if (spelers.get(index - 1).getText().length() < 11)
-				throw new IllegalArgumentException(String.format(messages.getString("fx_player_empty"), index));
-			if (kleuren.get(index - 1).getValue() == null)
-				throw new IllegalArgumentException(messages.getString("fx_color_empty"));
-			dc.voegSpelerToeAanSpel(spelers.get(index - 1).getText().substring(10), kleuren.get(index - 1).getValue());
-			spelers.get(index - 1).setDisable(true);
-			kleuren.get(index - 1).setDisable(true);
-			getChildren().remove(knoppen.get(index - 1).getParent());
-			updateLijst();
-			Label spelerToegevoegd = meldingen.get(index - 1);
-			spelerToegevoegd.getStyleClass().remove("error");
-			spelerToegevoegd.setText(
-					String.format(messages.getString("fx_player_added"), spelers.get(index - 1).getText().substring(10)));
-			VBox spelerToegevoegdBox = new VBox();
-			spelerToegevoegdBox.setAlignment(Pos.CENTER);
-			spelerToegevoegdBox.getChildren().add(meldingen.get(index - 1));
-			add(spelerToegevoegdBox, 3, index, 1, 1);
-		}
-		catch (IllegalArgumentException iae) {
-			meldingen.get(index - 1).setText(iae.getMessage());
-		}
-		catch (Exception e) {
-			meldingen.get(index - 1).setText(messages.getString("error_occurred"));
-		}
+		imageLoader.setVisible(true);
+		Task<Void> startTask = new Task<>() {
+			@Override
+			protected Void call() throws Exception {
+				try {
+					Platform.runLater(() -> {
+						if (spelers.get(index - 1).getText().length() < 11)
+							throw new IllegalArgumentException(
+									String.format(messages.getString("fx_player_empty"), index));
+						if (kleuren.get(index - 1).getValue() == null)
+							throw new IllegalArgumentException(messages.getString("fx_color_empty"));
+					});
+					dc.voegSpelerToeAanSpel(spelers.get(index - 1).getText().substring(10),
+							kleuren.get(index - 1).getValue());
+					Platform.runLater(() -> {
+						spelers.get(index - 1).setDisable(true);
+						kleuren.get(index - 1).setDisable(true);
+						getChildren().remove(knoppen.get(index - 1).getParent());
+						updateLijst();
+						Label spelerToegevoegd = meldingen.get(index - 1);
+						spelerToegevoegd.getStyleClass().remove("error");
+						spelerToegevoegd.setText(String.format(messages.getString("fx_player_added"),
+								spelers.get(index - 1).getText().substring(10)));
+						VBox spelerToegevoegdBox = new VBox();
+						spelerToegevoegdBox.setAlignment(Pos.CENTER);
+						spelerToegevoegdBox.getChildren().add(meldingen.get(index - 1));
+						gridPane.add(spelerToegevoegdBox, 3, index, 1, 1);
+					});
+
+				} catch (IllegalArgumentException iae) {
+					Platform.runLater(() -> meldingen.get(index - 1).setText(iae.getMessage()));
+				} catch (Exception e) {
+					Platform.runLater(() -> meldingen.get(index - 1).setText(messages.getString("error_occurred")));
+				}
+				return null;
+			}
+		};
+		startTask.setOnSucceeded(event -> {
+			imageLoader.setVisible(false);
+		});
+		startTask.setOnFailed(event -> {
+			imageLoader.setVisible(false);
+		});
+		new Thread(startTask).start();
+
 	}
 
 	private void startSpel() {
 		try {
 			getScene().setRoot(new SpelSpelenMenuScherm(dc, scherm));
-		}
-		catch (IllegalArgumentException iae) {
+		} catch (IllegalArgumentException iae) {
 			spelMelding.setText(iae.getMessage());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			spelMelding.setText(messages.getString("error_occurred"));
 		}
 	}

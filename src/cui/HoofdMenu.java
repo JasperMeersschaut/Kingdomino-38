@@ -10,14 +10,31 @@ import utils.Taal;
 
 public class HoofdMenu {
 
-	private final ResourceBundle messages;
+	private ResourceBundle messages;
 	private final Scanner scanner;
-	private final DomeinController dc;
+	private DomeinController dc;
 
 	public HoofdMenu(DomeinController dc) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
 		scanner = new Scanner(System.in);
 		this.dc = dc;
+	}
+
+	public void vraagTaal() {
+		int keuze;
+		boolean keuzeGeldig;
+		do {
+			keuze = vraagKeuzeMetHoofdMenu(
+					"In which language would you like to play this game?\n1. Dutch\n2. English\n3. French\nPlease indicate your choice:");
+			System.out.println();
+			switch (keuze) {
+				case 1 -> Taal.setTaal("BE");
+				case 2 -> Taal.setTaal("EN");
+				case 3 -> Taal.setTaal("FR");
+			}
+			keuzeGeldig = keuze >= 1 && keuze <= 3;
+		} while (!keuzeGeldig);
+		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		vraagKeuze();
 	}
 
 	public void vraagKeuze() {

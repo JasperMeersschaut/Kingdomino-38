@@ -5,6 +5,7 @@ import domein.DomeinController;
 import gui.WelkomScherm;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -21,6 +22,9 @@ public class StartUp extends Application {
 		scherm.setScene(scene);
 		scherm.setResizable(false);
 		scherm.setTitle("Kingdomino");
+		Image logo = new Image(getClass().getResourceAsStream("/images/logo.jpg"));
+		scherm.getIcons().add(logo);
+//		scherm.initStyle(StageStyle.UNDECORATED);
 		scherm.show();
 	}
 
