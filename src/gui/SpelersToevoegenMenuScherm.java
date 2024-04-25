@@ -68,7 +68,6 @@ public class SpelersToevoegenMenuScherm extends StackPane {
 	}
 
 	private void bouwScherm() {
-		scherm.setWidth(1500);
 		scherm.centerOnScreen();
 		getStyleClass().add("zandkleur");
 		gridPane.getColumnConstraints().add(new ColumnConstraints(350));

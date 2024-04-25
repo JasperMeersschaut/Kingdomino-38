@@ -2,6 +2,7 @@
 package gui;
 
 import domein.DomeinController;
+import javafx.scene.Cursor;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -21,5 +22,7 @@ public class SpelSpelenMenuScherm extends Pane {
 		scherm.centerOnScreen();
 		getStyleClass().add("zandkleur");
 	}
+	
+
 
 }

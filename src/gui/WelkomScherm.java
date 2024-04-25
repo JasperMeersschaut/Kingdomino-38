@@ -25,7 +25,7 @@ public class WelkomScherm extends StackPane {
 	private void bouwScherm() {
 		scherm.centerOnScreen();
 		ImageView imageViewWelkom = new ImageView(new Image(getClass().getResourceAsStream("/images/kingdomino.jpg")));
-		imageViewWelkom.setFitWidth(1200);
+		imageViewWelkom.fitWidthProperty().bind(this.scherm.widthProperty());
 		imageViewWelkom.setPreserveRatio(true);
 		HBox talenBox = geefVlaggen();
 		talenBox.setAlignment(Pos.BOTTOM_CENTER);

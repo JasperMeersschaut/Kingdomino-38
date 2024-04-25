@@ -66,8 +66,10 @@ public class Spel {
 	}
 
 	public void startSpel() {
+		
 		if (spelers.size() != 3 && spelers.size() != 4)
 			throw new AantalSpelersOngeldigException(messages.getString("invalid_amount_of_players"));
+			
 		stapel.addAll(new TegelMaker().geeftegels());
 		Collections.shuffle(stapel);
 		stapel = new ArrayList<>(stapel.subList(0, spelers.size() * 12));
