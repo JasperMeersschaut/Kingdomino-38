@@ -11,11 +11,15 @@ import javafx.stage.Stage;
 
 public class StartUp extends Application {
 
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	@Override
 	public void start(Stage scherm) {
 		DomeinController dc = new DomeinController();
 		WelkomScherm root = new WelkomScherm(dc, scherm);
-		Scene scene = new Scene(root, 1920, 720);
+		Scene scene = new Scene(root, 0, 0);
 		scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 		Font.loadFont(getClass().getResourceAsStream("/fonts/Augusta.ttf"), 10);
 		Font.loadFont(getClass().getResourceAsStream("/fonts/Timeless.ttf"), 10);
@@ -26,10 +30,6 @@ public class StartUp extends Application {
 		scherm.getIcons().add(logo);
 		scherm.show();
 		scherm.setMaximized(true);
-	}
-
-	public static void main(String[] args) {
-		launch(args);
 	}
 
 }

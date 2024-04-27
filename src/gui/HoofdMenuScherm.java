@@ -102,7 +102,7 @@ public class HoofdMenuScherm extends BorderPane {
 	}
 
 	private void gaNaarRegistratieMenuScherm() {
-		this.getScene().setRoot(new RegistratieMenuScherm(dc, scherm));
+		this.getScene().setRoot(new RegistratieScherm(dc, scherm));
 	}
 
 	private void gaNaarSpelersToevoegenScherm() {
@@ -115,7 +115,7 @@ public class HoofdMenuScherm extends BorderPane {
 			speelSpelKnop.setText(messages.getString("no_connection"));
 		}
 		if (spelAangemaakt)
-			this.getScene().setRoot(new SpelersToevoegenMenuScherm(dc, scherm));
+			this.getScene().setRoot(new SpelersToevoegenScherm(dc, scherm));
 	}
 
 }

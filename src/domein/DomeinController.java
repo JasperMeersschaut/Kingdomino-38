@@ -141,4 +141,8 @@ public class DomeinController {
 		huidigSpel.legTegelInKoninkrijk(tegel.nummer(), huidigeSpeler.gebruikersnaam(), plaats, richting);
 	}
 
+	public void gooiWeg(TegelDTO tegel, SpelerDTO speler) {
+		huidigSpel.gooiWeg(tegel.nummer(), speler.gebruikersnaam());
+	}
+
 }

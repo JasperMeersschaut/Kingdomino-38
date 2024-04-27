@@ -66,10 +66,25 @@ public class Spel {
 	}
 
 	public void startSpel() {
-		
+		//
+		Speler test1 = new Speler("Kjellvdb", 2000);
+		test1.setKleur(Kleur.GROEN);
+		test1.setKoninkrijk(new Vak[9][9]);
+		test1.getKoninkrijk()[4][4] = new Vak(Landschap.KASTEEL, -1);
+		spelers.add(test1);
+		Speler test2 = new Speler("Jasper", 2000);
+		test2.setKleur(Kleur.BLAUW);
+		test2.setKoninkrijk(new Vak[9][9]);
+		test2.getKoninkrijk()[4][4] = new Vak(Landschap.KASTEEL, -1);
+		spelers.add(test2);
+		Speler test3 = new Speler("Emielvdb", 2000);
+		test3.setKleur(Kleur.GEEL);
+		test3.setKoninkrijk(new Vak[9][9]);
+		test3.getKoninkrijk()[4][4] = new Vak(Landschap.KASTEEL, -1);
+		spelers.add(test3);
+		//
 		if (spelers.size() != 3 && spelers.size() != 4)
 			throw new AantalSpelersOngeldigException(messages.getString("invalid_amount_of_players"));
-			
 		stapel.addAll(new TegelMaker().geeftegels());
 		Collections.shuffle(stapel);
 		stapel = new ArrayList<>(stapel.subList(0, spelers.size() * 12));
@@ -79,7 +94,6 @@ public class Spel {
 		Collections.shuffle(spelers);
 		huidigeSpeler = spelers.get(0);
 	}
-
 
 	public void setVolgendeSpelerAlsHuidigeSpeler() {
 		if (eindKolom.isEmpty() && !stapel.isEmpty()) {
@@ -167,24 +181,17 @@ public class Spel {
 		});
 		if (richting == null)
 			throw new NullPointerException();
-		boolean weggegooid = false;
-		if (plaats.equals(messages.getString("discard"))) {
-			controleerWeggooienMogelijk(tegelVanSpeler, tegelOmTePlaatsen);
-			weggegooid = true;
-		}
-		if (!weggegooid) {
-			int rij = Integer.parseInt(plaats.split("")[0]);
-			int kolom = Integer.parseInt(plaats.split("")[1]);
-			controleerRijKolomRichtingBinnenGebied(rij, kolom, richting, koninkrijk);
-			if (!tegelIsPlaatsbaar(rij, kolom, richting, tegelOmTePlaatsen, koninkrijk))
-				throw new RaaktGeenTegelMetZelfdeLandschapsException(messages.getString("doesnt_touch_right_tile"));
-			koninkrijk[rij][kolom] = tegelOmTePlaatsen.getVakLinks();
-			koninkrijk[rij + richting[0]][kolom + richting[1]] = tegelOmTePlaatsen.getVakRechts();
-			vulVakkenIn(koninkrijk);
-		}
+		int rij = Integer.parseInt(plaats.split("")[0]);
+		int kolom = Integer.parseInt(plaats.split("")[1]);
+		controleerRijKolomRichtingBinnenGebied(rij, kolom, richting, koninkrijk);
+		if (!tegelIsPlaatsbaar(rij, kolom, richting, tegelOmTePlaatsen, koninkrijk))
+			throw new RaaktGeenTegelMetZelfdeLandschapsException(messages.getString("doesnt_touch_right_tile"));
+		koninkrijk[rij][kolom] = tegelOmTePlaatsen.getVakLinks();
+		koninkrijk[rij + richting[0]][kolom + richting[1]] = tegelOmTePlaatsen.getVakRechts();
+		vulVakkenIn(koninkrijk);
 		for (Tegel tegel : startKolom)
-			if (tegel.getTegelNummer() == tegelNummer) {
-				startKolom.remove(tegel);
+			if (tegel.getSpelerOpTegel() != null && tegel.getSpelerOpTegel().equals(tegelVanSpeler)) {
+				tegel.setSpelerOpTegel(null);
 				break;
 			}
 		if (eindKolom.isEmpty() && stapel.isEmpty())
@@ -395,6 +402,29 @@ public class Spel {
 			if (speler.getGebruikersnaam().equals(gebruikersnaam))
 				return speler.getKoninkrijk();
 		return null;
+	}
+
+	public void gooiWeg(int tegelNummer, String gebruikersnaam) {
+		Speler tegelVanSpeler = null;
+		Tegel tegelOmTePlaatsen = null;
+		for (Speler speler : spelers)
+			if (speler.getGebruikersnaam().equals(gebruikersnaam)) {
+				tegelVanSpeler = speler;
+				break;
+			}
+		for (Tegel tegel : startKolom)
+			if (tegel.getTegelNummer() == tegelNummer) {
+				tegelOmTePlaatsen = tegel;
+				break;
+			}
+		controleerWeggooienMogelijk(tegelVanSpeler, tegelOmTePlaatsen);
+		for (Tegel tegel : startKolom)
+			if (tegel.getTegelNummer() == tegelNummer) {
+				startKolom.remove(tegel);
+				break;
+			}
+		if (eindKolom.isEmpty() && stapel.isEmpty())
+			setVolgendeSpelerAlsHuidigeSpeler();
 	}
 
 }

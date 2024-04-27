@@ -69,7 +69,7 @@ public class WelkomScherm extends StackPane {
 
 	private void gaNaarHoofdMenuScherm() {
 		setCursor(Cursor.DEFAULT);
-		this.getScene().setRoot(new HoofdMenuScherm(dc, scherm));
+		getScene().setRoot(new HoofdMenuScherm(dc, scherm));
 	}
 
 }

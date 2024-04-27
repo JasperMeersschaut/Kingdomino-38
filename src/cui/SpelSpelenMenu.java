@@ -58,7 +58,7 @@ public class SpelSpelenMenu {
 				}
 				if (!dc.geefEindKolom().isEmpty() || (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty())) {
 					for (TegelDTO tegel : dc.geefStartKolom())
-						if (tegel.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
+						if (tegel.spelerOpTegel() != null && tegel.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
 							vorigeTegel = tegel;
 					legTegelInKoninkrijk(vorigeTegel, huidigeSpeler);
 				}
@@ -88,7 +88,7 @@ public class SpelSpelenMenu {
 				System.out.printf(messages.getString("which_box_to_place") + " ", toonTegel(tegel));
 				plaats = scanner.next();
 				if (plaats.equals("weggooien") || plaats.equals("discard") || plaats.equals("défausse")) {
-					dc.legTegelInKoninkrijk(tegel, huidigeSpeler, plaats, 1);
+					dc.gooiWeg(tegel, huidigeSpeler);
 					System.out.println(messages.getString("tile_discarded"));
 					break;
 				}
