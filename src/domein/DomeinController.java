@@ -121,6 +121,10 @@ public class DomeinController {
 		return scores;
 	}
 
+	public int berekenScore(SpelerDTO speler) {
+		return huidigSpel.berekenScore(huidigSpel.geefKoninkrijk(speler.gebruikersnaam()));
+	}
+
 	public List<SpelerDTO> geefWinnaars() {
 		List<SpelerDTO> winnaars = new ArrayList<>();
 		for (Speler speler : huidigSpel.geefWinnaars())
