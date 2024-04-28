@@ -5,10 +5,12 @@ import domein.DomeinController;
 import dto.SpelerDTO;
 import dto.TegelDTO;
 import dto.VakDTO;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import utils.Kleur;
@@ -69,21 +71,27 @@ public class KoninkrijkScherm extends GridPane {
 							String.format("/images/dominotegel/tegel_%02d_voorkant.png", tegel.nummer()))));
 					tegelView.setPreserveRatio(true);
 					tegelView.setFitHeight(90);
+					HBox tegelTeLeggen = new HBox();
+					tegelTeLeggen.setAlignment(Pos.TOP_LEFT);
 					if (richting.equals(Richting.RECHTS)) {
 						tegelView.setRotate(0);
-						add(tegelView, finalJ, finalI, 2, 1);
+						tegelTeLeggen.getChildren().add(tegelView);
+						add(tegelTeLeggen, finalJ, finalI, 2, 1);
 					}
 					if (richting.equals(Richting.ONDER)) {
 						tegelView.setRotate(90);
-						add(tegelView, finalJ, finalI, 1, 2);
+						tegelTeLeggen.getChildren().add(tegelView);
+						add(tegelTeLeggen, finalJ, finalI, 1, 2);
 					}
 					if (richting.equals(Richting.LINKS)) {
 						tegelView.setRotate(180);
-						add(tegelView, finalJ - 1, finalI, 2, 1);
+						tegelTeLeggen.getChildren().add(tegelView);
+						add(tegelTeLeggen, finalJ - 1, finalI, 2, 1);
 					}
 					if (richting.equals(Richting.BOVEN)) {
 						tegelView.setRotate(270);
-						add(tegelView, finalJ, finalI - 1, 1, 2);
+						tegelTeLeggen.getChildren().add(tegelView);
+						add(tegelTeLeggen, finalJ, finalI - 1, 1, 2);
 					}
 					getChildren().forEach(c -> {
 						if (c instanceof Pane p)

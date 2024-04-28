@@ -56,6 +56,11 @@ public class SpelSpelenScherm extends GridPane {
 		getRowConstraints().addAll(row, new RowConstraints(scherm.getHeight() - 680), row);
 		legKoninkrijken();
 		legTegels();
+		setOnMouseEntered(event -> {
+			if (!dc.geefEindKolom().isEmpty() && dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null))
+				dc.vulKolommenAan();
+			refresh();
+		});
 	}
 
 	private void legKoninkrijken() {
@@ -151,9 +156,8 @@ public class SpelSpelenScherm extends GridPane {
 					koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));
 					tegelTeLeggen = dc.geefStartKolom().stream()
 							.filter(t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
-							.findFirst().get();
-					if ((isStartKolom ? dc.geefStartKolom() : dc.geefEindKolom()).stream()
-							.allMatch(t -> t.spelerOpTegel() != null))
+							.findAny().get();
+					if (isStartKolom && dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() != null))
 						dc.vulKolommenAan();
 					refresh();
 					if (!isStartKolom)
