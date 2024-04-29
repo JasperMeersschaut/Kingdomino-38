@@ -11,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import utils.Kleur;
 import utils.Landschap;
@@ -36,11 +35,11 @@ public class KoninkrijkScherm extends GridPane {
 		setGridLinesVisible(true);
 		VakDTO[][] koninkrijk = dc.geefKoninkrijk(speler);
 		ColumnConstraints columnConstraints = new ColumnConstraints();
-		columnConstraints.setMinWidth(90);
-		columnConstraints.setMaxWidth(90);
+		columnConstraints.setMinWidth(85);
+		columnConstraints.setMaxWidth(85);
 		RowConstraints rowConstraints = new RowConstraints();
-		rowConstraints.setMinHeight(90);
-		rowConstraints.setMaxHeight(90);
+		rowConstraints.setMinHeight(85);
+		rowConstraints.setMaxHeight(85);
 		for (int i = 0; i < koninkrijk.length; i++)
 			getColumnConstraints().add(columnConstraints);
 		for (int j = 0; j < koninkrijk[0].length; j++)
@@ -54,7 +53,7 @@ public class KoninkrijkScherm extends GridPane {
 		ImageView kasteel = new ImageView(
 				new Image(getClass().getResourceAsStream(String.format("/images/starttegels/starttegel_%s.png", kleur))));
 		kasteel.setPreserveRatio(true);
-		kasteel.setFitHeight(90);
+		kasteel.setFitHeight(85);
 		add(kasteel, 4, 4);
 		bouwGeschaaldKoninkrijk();
 	}
@@ -89,64 +88,68 @@ public class KoninkrijkScherm extends GridPane {
 		return geschaaldKoninkrijk;
 	}
 
-	public void setListeners(TegelDTO tegel, Richting richting) {
-		for (int i = 0; i < dc.geefKoninkrijk(speler).length; i++)
-			for (int j = 0; j < dc.geefKoninkrijk(speler)[0].length; j++) {
+	public void legTegelInKoninkrijk(TegelDTO tegel, SpelerDTO speler, int i, int j, Richting richting) {
+		ImageView tegelViewSmall = new ImageView(new Image(getClass()
+				.getResourceAsStream(String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))));
+		ImageView tegelViewLarge = new ImageView(new Image(getClass()
+				.getResourceAsStream(String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))));
+		tegelViewSmall.setPreserveRatio(true);
+		tegelViewSmall.setFitHeight(33);
+		tegelViewLarge.setPreserveRatio(true);
+		tegelViewLarge.setFitHeight(85);
+		setHalignment(tegelViewSmall, HPos.CENTER);
+		setValignment(tegelViewSmall, VPos.CENTER);
+		setHalignment(tegelViewLarge, HPos.CENTER);
+		setValignment(tegelViewLarge, VPos.CENTER);
+		if (richting.equals(Richting.RECHTS)) {
+			tegelViewSmall.setRotate(0);
+			tegelViewLarge.setRotate(0);
+			geschaaldKoninkrijk.add(tegelViewSmall, j, i, 2, 1);
+			add(tegelViewLarge, j, i, 2, 1);
+		}
+		if (richting.equals(Richting.ONDER)) {
+			tegelViewSmall.setRotate(90);
+			tegelViewLarge.setRotate(90);
+			geschaaldKoninkrijk.add(tegelViewSmall, j, i, 1, 2);
+			add(tegelViewLarge, j, i, 1, 2);
+		}
+		if (richting.equals(Richting.LINKS)) {
+			tegelViewSmall.setRotate(180);
+			tegelViewLarge.setRotate(180);
+			geschaaldKoninkrijk.add(tegelViewSmall, j - 1, i, 2, 1);
+			add(tegelViewLarge, j - 1, i, 2, 1);
+		}
+		if (richting.equals(Richting.BOVEN)) {
+			tegelViewSmall.setRotate(270);
+			tegelViewLarge.setRotate(270);
+			geschaaldKoninkrijk.add(tegelViewSmall, j, i - 1, 1, 2);
+			add(tegelViewLarge, j, i - 1, 1, 2);
+		}
+		plaatsKruisjes();
+		getScene().setRoot(spelSpelenScherm);
+	}
+
+	private void plaatsKruisjes() {
+		VakDTO[][] koninkrijk = dc.geefKoninkrijk(speler);
+		for (int i = 0; i < koninkrijk.length; i++)
+			for (int j = 0; j < koninkrijk[0].length; j++) {
 				int finalI = i;
 				int finalJ = j;
-				Pane vak = new Pane();
-				vak.setPrefSize(90, 90);
-				vak.setOnMouseClicked(event -> {
-					dc.legTegelInKoninkrijk(tegel, speler, "" + finalI + finalJ, switch (richting) {
-						case BOVEN -> 3;
-						case LINKS -> 2;
-						case RECHTS -> 1;
-						case ONDER -> 4;
-					});
-					ImageView tegelViewSmall = new ImageView(new Image(getClass().getResourceAsStream(
-							String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))));
-					ImageView tegelViewLarge = new ImageView(new Image(getClass().getResourceAsStream(
-							String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))));
-					tegelViewSmall.setPreserveRatio(true);
-					tegelViewSmall.setFitHeight(33);
-					tegelViewLarge.setPreserveRatio(true);
-					tegelViewLarge.setFitHeight(90);
-					setHalignment(tegelViewSmall, HPos.CENTER);
-					setValignment(tegelViewSmall, VPos.CENTER);
-					setHalignment(tegelViewLarge, HPos.CENTER);
-					setValignment(tegelViewLarge, VPos.CENTER);
-					if (richting.equals(Richting.RECHTS)) {
-						tegelViewSmall.setRotate(0);
-						tegelViewLarge.setRotate(0);
-						geschaaldKoninkrijk.add(tegelViewSmall, finalJ, finalI, 2, 1);
-						add(tegelViewLarge, finalJ, finalI, 2, 1);
-					}
-					if (richting.equals(Richting.ONDER)) {
-						tegelViewSmall.setRotate(90);
-						tegelViewLarge.setRotate(90);
-						geschaaldKoninkrijk.add(tegelViewSmall, finalJ, finalI, 1, 2);
-						add(tegelViewLarge, finalJ, finalI, 1, 2);
-					}
-					if (richting.equals(Richting.LINKS)) {
-						tegelViewSmall.setRotate(180);
-						tegelViewLarge.setRotate(180);
-						geschaaldKoninkrijk.add(tegelViewSmall, finalJ - 1, finalI, 2, 1);
-						add(tegelViewLarge, finalJ - 1, finalI, 2, 1);
-					}
-					if (richting.equals(Richting.BOVEN)) {
-						tegelViewSmall.setRotate(270);
-						tegelViewLarge.setRotate(270);
-						geschaaldKoninkrijk.add(tegelViewSmall, finalJ, finalI - 1, 1, 2);
-						add(tegelViewLarge, finalJ, finalI - 1, 1, 2);
-					}
-					getChildren().forEach(c -> {
-						if (c instanceof Pane p)
-							p.setOnMouseClicked(null);
-					});
-					plaatsKruisjes();
-					getScene().setRoot(spelSpelenScherm);
-				});
-				add(vak, j, i);
+				if (koninkrijk[i][j].landschap() != null
+						&& koninkrijk[i][j].landschap().equals(Landschap.LEEG.toString())) {
+					ImageView kruisSmall = new ImageView(new Image(getClass().getResourceAsStream("/images/kruis.png")));
+					ImageView kruisLarge = new ImageView(new Image(getClass().getResourceAsStream("/images/kruis.png")));
+					kruisSmall.setPreserveRatio(true);
+					kruisSmall.setFitHeight(28);
+					kruisLarge.setPreserveRatio(true);
+					kruisLarge.setFitHeight(80);
+					setHalignment(kruisSmall, HPos.CENTER);
+					setValignment(kruisSmall, VPos.CENTER);
+					setHalignment(kruisLarge, HPos.CENTER);
+					setValignment(kruisLarge, VPos.CENTER);
+					geschaaldKoninkrijk.add(kruisSmall, finalJ, finalI);
+					add(kruisLarge, finalJ, finalI);
+				}
 			}
 	}
 

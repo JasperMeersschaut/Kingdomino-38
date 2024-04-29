@@ -33,10 +33,11 @@ public class SpelSpelenScherm extends GridPane {
 	private final Stage scherm;
 	private final int[][] koninkrijkPosities = { { 0, 0 }, { 2, 0 }, { 0, 2 }, { 2, 2 } };
 	private SpelerDTO huidigeSpeler;
-	private Label error;
+	public Label error;
 	private List<KoninkrijkScherm> koninkrijken;
 	private TegelDTO tegelTeLeggen;
 	private KoninkrijkScherm koninkrijkScherm;
+	private boolean tegelVerwijderd;
 
 	public SpelSpelenScherm(DomeinController dc, Stage scherm) {
 		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
@@ -45,7 +46,12 @@ public class SpelSpelenScherm extends GridPane {
 		koninkrijken = new ArrayList<>();
 		for (int i = 0; i < dc.geefSpelers().size(); i++)
 			koninkrijken.add(new KoninkrijkScherm(dc, dc.geefSpelers().get(i), this));
+		setTegelVerwijderd(false);
 		bouwScherm();
+	}
+
+	public void setTegelVerwijderd(boolean waarde) {
+		tegelVerwijderd = waarde;
 	}
 
 	public void bouwScherm() {
@@ -72,7 +78,7 @@ public class SpelSpelenScherm extends GridPane {
 			}
 			if (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty()
 					&& dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null))
-				System.out.println("Einde van het spel");
+				getScene().setRoot(new ScoreScherm(dc, scherm));
 		});
 	}
 
@@ -94,7 +100,7 @@ public class SpelSpelenScherm extends GridPane {
 	private void legTegels() {
 		VBox stapels = new VBox();
 		huidigeSpeler = dc.geefHuidigeSpeler();
-		stapels.setSpacing(50);
+		stapels.setSpacing(30);
 		Label huidigeSpelerLabel = new Label(
 				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
 		huidigeSpelerLabel.getStyleClass().addAll("font", "bigText");
@@ -130,6 +136,10 @@ public class SpelSpelenScherm extends GridPane {
 		kolommen.setAlignment(Pos.CENTER);
 		error = new Label("");
 		error.getStyleClass().addAll("font", "mediumText", "error");
+		if (tegelVerwijderd) {
+			error.setText(messages.getString("tile_discarded"));
+			error.getStyleClass().remove("error");
+		}
 		stapels.getChildren().addAll(kolommen, error);
 		stapels.setAlignment(Pos.TOP_CENTER);
 		add(stapels, 1, 0, 1, 3);
@@ -182,10 +192,14 @@ public class SpelSpelenScherm extends GridPane {
 				}
 				catch (IllegalArgumentException iae) {
 					error.setText(iae.getMessage());
+					error.getStyleClass().add("error");
+					setTegelVerwijderd(false);
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 					error.setText(messages.getString("error_occurred"));
+					error.getStyleClass().add("error");
+					setTegelVerwijderd(false);
 				}
 			});
 		}

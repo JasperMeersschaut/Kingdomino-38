@@ -89,6 +89,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		kleur1.setOnMouseClicked(event -> {
 			kleur1.getItems().clear();
 			kleur1.getItems().addAll(dc.geefBeschikbareKleuren());
+			spelMelding.setText("");
 		});
 		VBox kleur1Box = new VBox();
 		kleur1Box.getChildren().add(kleur1);
@@ -98,6 +99,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		kleur2.setOnMouseClicked(event -> {
 			kleur2.getItems().clear();
 			kleur2.getItems().addAll(dc.geefBeschikbareKleuren());
+			spelMelding.setText("");
 		});
 		VBox kleur2Box = new VBox();
 		kleur2Box.getChildren().add(kleur2);
@@ -107,6 +109,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		kleur3.setOnMouseClicked(event -> {
 			kleur3.getItems().clear();
 			kleur3.getItems().addAll(dc.geefBeschikbareKleuren());
+			spelMelding.setText("");
 		});
 		VBox kleur3Box = new VBox();
 		kleur3Box.getChildren().add(kleur3);
@@ -116,6 +119,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		kleur4.setOnMouseClicked(event -> {
 			kleur4.getItems().clear();
 			kleur4.getItems().addAll(dc.geefBeschikbareKleuren());
+			spelMelding.setText("");
 		});
 		VBox kleur4Box = new VBox();
 		kleur4Box.getChildren().add(kleur4);
@@ -257,6 +261,7 @@ public class SpelersToevoegenScherm extends StackPane {
 			ClipboardContent content = new ClipboardContent();
 			content.putString(item.substring(0, item.indexOf(" - ")));
 			dragboard.setContent(content);
+			spelMelding.setText("");
 			event.consume();
 		});
 		List<Label> gebruikers = List.of(gebruiker1, gebruiker2, gebruiker3, gebruiker4);
@@ -334,6 +339,7 @@ public class SpelersToevoegenScherm extends StackPane {
 				@Override
 				protected Void call() {
 					try {
+						Platform.runLater(() -> spelMelding.setText(""));
 						dc.voegSpelerToeAanSpel(spelers.get(index - 1).getText().substring(10),
 								kleuren.get(index - 1).getValue());
 						Platform.runLater(() -> {

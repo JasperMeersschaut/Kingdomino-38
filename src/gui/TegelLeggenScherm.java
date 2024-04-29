@@ -10,8 +10,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -47,23 +49,51 @@ public class TegelLeggenScherm extends HBox {
 		scherm.centerOnScreen();
 		getStyleClass().add("zandkleur");
 		GridPane bediening = bouwBediening();
-		koninkrijkScherm.setMinWidth(scherm.getHeight());
-		koninkrijkScherm.setMinHeight(scherm.getHeight());
-		koninkrijkScherm.setMaxWidth(scherm.getHeight());
-		koninkrijkScherm.setMaxHeight(scherm.getHeight());
-		koninkrijkScherm.setListeners(tegelTeLeggen, richting);
-		getChildren().addAll(bediening, koninkrijkScherm);
+		GridPane koninkrijk = new GridPane();
+		ColumnConstraints col = new ColumnConstraints(85);
+		RowConstraints row = new RowConstraints(85);
+		koninkrijk.getColumnConstraints().addAll(col, col, col, col, col, col, col, col, col);
+		koninkrijk.getRowConstraints().addAll(row, row, row, row, row, row, row, row, row);
+		koninkrijk.add(koninkrijkScherm, 0, 0, 9, 9);
+		for (int i = 0; i < dc.geefKoninkrijk(huidigeSpeler).length; i++)
+			for (int j = 0; j < dc.geefKoninkrijk(huidigeSpeler)[0].length; j++) {
+				int finalI = i;
+				int finalJ = j;
+				Pane vak = new Pane();
+				vak.setPrefSize(85, 85);
+				vak.setOnMouseClicked(event -> {
+					try {
+						dc.legTegelInKoninkrijk(tegelTeLeggen, huidigeSpeler, "" + finalI + finalJ, switch (richting) {
+							case BOVEN -> 3;
+							case LINKS -> 2;
+							case RECHTS -> 1;
+							case ONDER -> 4;
+						});
+						koninkrijkScherm.legTegelInKoninkrijk(tegelTeLeggen, huidigeSpeler, finalI, finalJ, richting);
+					}
+					catch (IllegalArgumentException iae) {
+						error.setText(iae.getMessage());
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						error.setText(messages.getString("error_occurred"));
+					}
+				});
+				koninkrijk.add(vak, finalJ, finalI);
+			}
+		getChildren().addAll(bediening, koninkrijk);
 	}
 
 	private GridPane bouwBediening() {
 		GridPane bediening = new GridPane();
 		bediening.setVgap(50);
-		bediening.getRowConstraints().addAll(new RowConstraints(scherm.getHeight() / 4),
-				new RowConstraints(scherm.getHeight() * 2 / 4), new RowConstraints(scherm.getHeight() / 4));
+		bediening.getRowConstraints().addAll(new RowConstraints(scherm.getHeight() / 5),
+				new RowConstraints(scherm.getHeight() * 2 / 5), new RowConstraints(scherm.getHeight() / 4));
 		bediening.setAlignment(Pos.TOP_CENTER);
 		bediening.setMinWidth(scherm.getWidth() / 3);
 		Label huidigeSpelerLabel = new Label(
 				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
+		huidigeSpelerLabel.setMinWidth(scherm.getWidth() / 3);
 		huidigeSpelerLabel.getStyleClass().addAll("font", "mediumText");
 		huidigeSpelerLabel.setAlignment(Pos.TOP_CENTER);
 		huidigeSpelerLabel.setTextAlignment(TextAlignment.CENTER);
@@ -79,7 +109,9 @@ public class TegelLeggenScherm extends HBox {
 			default -> 0;
 		};
 		tegel.setRotate(richtingsGraden);
-		bediening.add(tegel, 0, 1);
+		HBox tegelView = new HBox(tegel);
+		tegelView.setAlignment(Pos.CENTER);
+		bediening.add(tegelView, 0, 1);
 		VBox bedieners = new VBox();
 		bedieners.setSpacing(20);
 		HBox knoppen = new HBox();
@@ -98,13 +130,13 @@ public class TegelLeggenScherm extends HBox {
 		weggooiKnop.setOnMouseClicked(event -> {
 			try {
 				dc.gooiWeg(tegelTeLeggen, huidigeSpeler);
+				spelSpelenScherm.setTegelVerwijderd(true);
 				getScene().setRoot(spelSpelenScherm);
 			}
 			catch (IllegalArgumentException iae) {
 				error.setText(iae.getMessage());
 			}
 			catch (Exception e) {
-				e.printStackTrace();
 				error.setText(messages.getString("error_occurred"));
 			}
 		});
@@ -112,6 +144,7 @@ public class TegelLeggenScherm extends HBox {
 		knoppen.setAlignment(Pos.TOP_CENTER);
 		error = new Label("");
 		error.getStyleClass().addAll("font", "smallText", "error");
+		error.setMinWidth(scherm.getWidth() / 3);
 		error.setAlignment(Pos.CENTER);
 		bedieners.getChildren().addAll(knoppen, error);
 		bediening.add(bedieners, 0, 2);
