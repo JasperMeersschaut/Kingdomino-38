@@ -10,7 +10,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import utils.Richting;
 import utils.Taal;
@@ -20,25 +24,26 @@ public class TegelLeggenScherm extends HBox {
 	private final ResourceBundle messages;
 	private final DomeinController dc;
 	private final Stage scherm;
-    private final TegelDTO tegelTeLeggen;
-    private final SpelerDTO huidigeSpeler;
-    private final KoninkrijkScherm koninkrijkScherm;
-    private final SpelSpelenScherm spelSpelenScherm;
+	private final TegelDTO tegelTeLeggen;
+	private final SpelerDTO huidigeSpeler;
+	private final KoninkrijkScherm koninkrijkScherm;
+	private final SpelSpelenScherm spelSpelenScherm;
 	private Richting richting = Richting.RECHTS;
 	private Label error;
 
-    public TegelLeggenScherm(DomeinController dc, Stage scherm, TegelDTO tegelTeLeggen, SpelerDTO huidigeSpeler, KoninkrijkScherm koninkrijk, SpelSpelenScherm spelSpelenScherm) {
-        messages = ResourceBundle.getBundle("messages", Taal.getTaal());
-        this.dc = dc;
-        this.scherm = scherm;
-        this.tegelTeLeggen = tegelTeLeggen;
-        this.huidigeSpeler = huidigeSpeler;
-        this.koninkrijkScherm = koninkrijk;
-        this.spelSpelenScherm = spelSpelenScherm;
-        bouwScherm();
-    }
+	public TegelLeggenScherm(DomeinController dc, Stage scherm, TegelDTO tegelTeLeggen, SpelerDTO huidigeSpeler,
+			KoninkrijkScherm koninkrijk, SpelSpelenScherm spelSpelenScherm) {
+		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		this.dc = dc;
+		this.scherm = scherm;
+		this.tegelTeLeggen = tegelTeLeggen;
+		this.huidigeSpeler = huidigeSpeler;
+		this.koninkrijkScherm = koninkrijk;
+		this.spelSpelenScherm = spelSpelenScherm;
+		bouwScherm();
+	}
 
-    private void bouwScherm() {
+	private void bouwScherm() {
 		scherm.centerOnScreen();
 		getStyleClass().add("zandkleur");
 		GridPane bediening = bouwBediening();
@@ -46,19 +51,25 @@ public class TegelLeggenScherm extends HBox {
 		koninkrijkScherm.setMinHeight(scherm.getHeight());
 		koninkrijkScherm.setMaxWidth(scherm.getHeight());
 		koninkrijkScherm.setMaxHeight(scherm.getHeight());
-        koninkrijkScherm.setListeners(tegelTeLeggen,richting);
+		koninkrijkScherm.setListeners(tegelTeLeggen, richting);
 		getChildren().addAll(bediening, koninkrijkScherm);
 	}
 
-    private GridPane bouwBediening() {
+	private GridPane bouwBediening() {
 		GridPane bediening = new GridPane();
 		bediening.setVgap(50);
-		bediening.getRowConstraints().addAll(new RowConstraints(scherm.getHeight() * 2 / 3),
-				new RowConstraints(scherm.getHeight() / 3));
-		bediening.setAlignment(Pos.BOTTOM_CENTER);
+		bediening.getRowConstraints().addAll(new RowConstraints(scherm.getHeight() / 4),
+				new RowConstraints(scherm.getHeight() * 2 / 4), new RowConstraints(scherm.getHeight() / 4));
+		bediening.setAlignment(Pos.TOP_CENTER);
 		bediening.setMinWidth(scherm.getWidth() / 3);
+		Label huidigeSpelerLabel = new Label(
+				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
+		huidigeSpelerLabel.getStyleClass().addAll("font", "mediumText");
+		huidigeSpelerLabel.setAlignment(Pos.TOP_CENTER);
+		huidigeSpelerLabel.setTextAlignment(TextAlignment.CENTER);
+		bediening.add(huidigeSpelerLabel, 0, 0);
 		ImageView tegel = new ImageView(new Image(getClass().getResourceAsStream(
-				String.format("/images/dominotegel/tegel_%02d_voorkant.png", tegelTeLeggen.nummer()))));
+				String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegelTeLeggen.nummer()))));
 		tegel.setPreserveRatio(true);
 		tegel.setFitWidth(scherm.getWidth() / 3 - 100);
 		double richtingsGraden = switch (richting) {
@@ -68,7 +79,7 @@ public class TegelLeggenScherm extends HBox {
 			default -> 0;
 		};
 		tegel.setRotate(richtingsGraden);
-		bediening.add(tegel, 0, 0);
+		bediening.add(tegel, 0, 1);
 		VBox bedieners = new VBox();
 		bedieners.setSpacing(20);
 		HBox knoppen = new HBox();
@@ -103,7 +114,7 @@ public class TegelLeggenScherm extends HBox {
 		error.getStyleClass().addAll("font", "smallText", "error");
 		error.setAlignment(Pos.CENTER);
 		bedieners.getChildren().addAll(knoppen, error);
-		bediening.add(bedieners, 0, 1);
+		bediening.add(bedieners, 0, 2);
 		return bediening;
 	}
 
@@ -111,6 +122,8 @@ public class TegelLeggenScherm extends HBox {
 		Label knop = new Label(tekst);
 		knop.getStyleClass().addAll("font", "mediumText", "border");
 		knop.setMinWidth(200);
+		knop.setAlignment(Pos.TOP_CENTER);
+		knop.setTextAlignment(TextAlignment.CENTER);
 		return knop;
 	}
 

@@ -31,6 +31,7 @@ public class DomeinController {
 
 	public void maakSpelAan() {
 		huidigSpel = new Spel();
+		spelerRepository.updateBeschikbareLijsten();
 	}
 
 	public List<SpelerDTO> geefBeschikbareSpelers() {
@@ -143,10 +144,14 @@ public class DomeinController {
 
 	public void legTegelInKoninkrijk(TegelDTO tegel, SpelerDTO huidigeSpeler, String plaats, int richting) {
 		huidigSpel.legTegelInKoninkrijk(tegel.nummer(), huidigeSpeler.gebruikersnaam(), plaats, richting);
+		if (huidigSpel.getEindKolom().isEmpty() && huidigSpel.getStapel().isEmpty())
+			huidigSpel.setVolgendeSpelerAlsHuidigeSpeler();
 	}
 
 	public void gooiWeg(TegelDTO tegel, SpelerDTO speler) {
 		huidigSpel.gooiWeg(tegel.nummer(), speler.gebruikersnaam());
+		if (huidigSpel.getEindKolom().isEmpty() && huidigSpel.getStapel().isEmpty())
+			huidigSpel.setVolgendeSpelerAlsHuidigeSpeler();
 	}
 
 }

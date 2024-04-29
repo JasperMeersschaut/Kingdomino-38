@@ -16,8 +16,8 @@ public class SpelerRepository {
 
 	private final ResourceBundle messages;
 	private final SpelerMapper mapper;
-	private final List<Speler> beschikbareSpelers;
-	private final List<Kleur> beschikbareKleuren;
+	private List<Speler> beschikbareSpelers;
+	private List<Kleur> beschikbareKleuren;
 
 	public SpelerRepository() {
 		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
@@ -42,11 +42,15 @@ public class SpelerRepository {
 		this.beschikbareKleuren.remove(kleur);
 	}
 
+	public void updateBeschikbareLijsten() {
+		beschikbareSpelers = geefAlleSpelers();
+		beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
+	}
+
 	public void voegToe(Speler speler) {
 		if (bestaatSpeler(speler.getGebruikersnaam()))
 			throw new GebruikersnaamInGebruikException(messages.getString("username_already_in_use"));
 		mapper.voegToe(speler);
-		beschikbareSpelers.add(speler);
 	}
 
 	private boolean bestaatSpeler(String gebruikersnaam) {

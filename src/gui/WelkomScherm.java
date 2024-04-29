@@ -24,14 +24,18 @@ public class WelkomScherm extends StackPane {
 
 	private void bouwScherm() {
 		scherm.centerOnScreen();
-		ImageView imageViewWelkom = new ImageView(new Image(getClass().getResourceAsStream("/images/kingdomino.jpg")));
-		imageViewWelkom.fitWidthProperty().bind(this.scherm.widthProperty());
+		ImageView imageViewWelkom = new ImageView(
+				new Image(getClass().getResourceAsStream("/images/kingdomino/kingdomino.jpg")));
 		imageViewWelkom.setPreserveRatio(true);
+		imageViewWelkom.setFitWidth(scherm.getWidth());
 		HBox talenBox = geefVlaggen();
 		talenBox.setAlignment(Pos.BOTTOM_CENTER);
 		talenBox.setSpacing(50);
 		talenBox.setTranslateY(-50);
 		getChildren().addAll(imageViewWelkom, talenBox);
+		scherm.widthProperty().addListener((observable, oldValue, newValue) -> {
+			imageViewWelkom.setFitWidth(scherm.getWidth());
+		});
 	}
 
 	private HBox geefVlaggen() {

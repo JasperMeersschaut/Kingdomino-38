@@ -57,7 +57,7 @@ public class SpelersToevoegenScherm extends StackPane {
 	private Label melding3;
 	private Label melding4;
 	private Label spelMelding;
-	private ImageView imageLoader = new ImageView(new Image(getClass().getResourceAsStream("/images/loader.gif")));
+	private final ImageView imageLoader = new ImageView(new Image(getClass().getResourceAsStream("/images/loader.gif")));
 
 	public SpelersToevoegenScherm(DomeinController dc, Stage scherm) {
 		gridPane = new GridPane();
@@ -70,22 +70,20 @@ public class SpelersToevoegenScherm extends StackPane {
 	private void bouwScherm() {
 		scherm.centerOnScreen();
 		getStyleClass().add("zandkleur");
-		gridPane.getColumnConstraints().add(new ColumnConstraints(350));
-		gridPane.getColumnConstraints().add(new ColumnConstraints(350));
-		gridPane.getColumnConstraints().add(new ColumnConstraints(350));
-		gridPane.getColumnConstraints().add(new ColumnConstraints(450));
+		for (int i = 0; i < 4; i++)
+			gridPane.getColumnConstraints().add(new ColumnConstraints(scherm.getWidth() / 4));
 		gridPane.getRowConstraints().add(new RowConstraints(135));
 		for (int i = 0; i < 5; i++)
 			gridPane.getRowConstraints().add(new RowConstraints(108));
 		VBox menu = bouwMenu();
 		gridPane.add(menu, 0, 0, 4, 1);
-		gebruiker1 = bouwLabel(messages.getString("fx_player") + " 1: ______");
+		gebruiker1 = bouwLabel(messages.getString("fx_player") + " 1: _____");
 		gridPane.add(gebruiker1, 1, 1, 1, 1);
-		gebruiker2 = bouwLabel(messages.getString("fx_player") + " 2: ______");
+		gebruiker2 = bouwLabel(messages.getString("fx_player") + " 2: _____");
 		gridPane.add(gebruiker2, 1, 2, 1, 1);
-		gebruiker3 = bouwLabel(messages.getString("fx_player") + " 3: ______");
+		gebruiker3 = bouwLabel(messages.getString("fx_player") + " 3: _____");
 		gridPane.add(gebruiker3, 1, 3, 1, 1);
-		gebruiker4 = bouwLabel(messages.getString("fx_player") + " 4: ______");
+		gebruiker4 = bouwLabel(messages.getString("fx_player") + " 4: _____");
 		gridPane.add(gebruiker4, 1, 4, 1, 1);
 		kleur1 = maakComboBox();
 		kleur1.setOnMouseClicked(event -> {
@@ -184,7 +182,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		HBox menuItems = bouwMenuItems();
 		Line line = new Line();
 		line.setStartX(0);
-		line.setEndX(1500);
+		line.setEndX(scherm.getWidth());
 		line.getStyleClass().add("line");
 		menu.getChildren().addAll(menuItems, line);
 		return menu;
@@ -194,7 +192,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		HBox menu = new HBox();
 		menu.getStyleClass().add("zandkleur");
 		menu.setAlignment(Pos.CENTER);
-		menu.setSpacing(700);
+		menu.setSpacing(scherm.getWidth() - 750);
 		Label welkomscherm = new Label(messages.getString("fx_main_menu"));
 		welkomscherm.getStyleClass().addAll("font", "mediumText");
 		welkomscherm.setOnMouseEntered(event -> setCursor(Cursor.HAND));
@@ -221,6 +219,7 @@ public class SpelersToevoegenScherm extends StackPane {
 		comboBox.getStyleClass().addAll("font", "mediumText", "border", "zandkleur", "lijst");
 		comboBox.setMinWidth(210);
 		comboBox.setMinHeight(60);
+		comboBox.setVisibleRowCount(dc.geefBeschikbareKleuren().size());
 		return comboBox;
 	}
 
@@ -319,50 +318,58 @@ public class SpelersToevoegenScherm extends StackPane {
 		List<ComboBox<String>> kleuren = List.of(kleur1, kleur2, kleur3, kleur4);
 		List<Button> knoppen = List.of(voegSpeler1Toe, voegSpeler2Toe, voegSpeler3Toe, voegSpeler4Toe);
 		List<Label> meldingen = List.of(melding1, melding2, melding3, melding4);
-		getChildren().add(imageLoader);
-		Task<Void> startTask = new Task<>() {
+		boolean ingevuld = true;
+		if (spelers.get(index - 1).getText().substring(10).length() < 6) {
+			meldingen.get(index - 1).setText(String.format(messages.getString("fx_player_empty"), index));
+			ingevuld = false;
+		}
+		if (kleuren.get(index - 1).getValue() == null) {
+			meldingen.get(index - 1).setText(messages.getString("fx_color_empty"));
+			ingevuld = false;
+		}
+		if (ingevuld) {
+			getChildren().add(imageLoader);
+			Task<Void> startTask = new Task<>() {
 
-			@Override
-			protected Void call() {
-				try {
-					Platform.runLater(() -> {
-						if (spelers.get(index - 1).getText().length() < 11)
-							throw new IllegalArgumentException(String.format(messages.getString("fx_player_empty"), index));
-						if (kleuren.get(index - 1).getValue() == null)
-							throw new IllegalArgumentException(messages.getString("fx_color_empty"));
-					});
-					dc.voegSpelerToeAanSpel(spelers.get(index - 1).getText().substring(10),
-							kleuren.get(index - 1).getValue());
+				@Override
+				protected Void call() {
+					try {
+						dc.voegSpelerToeAanSpel(spelers.get(index - 1).getText().substring(10),
+								kleuren.get(index - 1).getValue());
+						Platform.runLater(() -> {
+							spelers.get(index - 1).setDisable(true);
+							kleuren.get(index - 1).setDisable(true);
+							getChildren().remove(knoppen.get(index - 1).getParent());
+							updateLijst();
+							Label spelerToegevoegd = meldingen.get(index - 1);
+							spelerToegevoegd.getStyleClass().remove("error");
+							spelerToegevoegd.setText(String.format(messages.getString("fx_player_added"),
+									spelers.get(index - 1).getText().substring(10)));
+							VBox spelerToegevoegdBox = new VBox();
+							spelerToegevoegdBox.setAlignment(Pos.CENTER);
+							spelerToegevoegdBox.getChildren().add(meldingen.get(index - 1));
+							gridPane.add(spelerToegevoegdBox, 3, index, 1, 1);
+							getChildren().remove(imageLoader);
+						});
+					}
+					catch (IllegalArgumentException iae) {
+						Platform.runLater(() -> meldingen.get(index - 1).setText(iae.getMessage()));
+					}
+					catch (Exception e) {
+						Platform.runLater(() -> meldingen.get(index - 1).setText(messages.getString("error_occurred")));
+					}
+					return null;
 				}
-				catch (IllegalArgumentException iae) {
-					Platform.runLater(() -> meldingen.get(index - 1).setText(iae.getMessage()));
-				}
-				catch (Exception e) {
-					Platform.runLater(() -> meldingen.get(index - 1).setText(messages.getString("error_occurred")));
-				}
-				return null;
-			}
 
-		};
-		startTask.setOnSucceeded(event -> {
-			spelers.get(index - 1).setDisable(true);
-			kleuren.get(index - 1).setDisable(true);
-			getChildren().remove(knoppen.get(index - 1).getParent());
-			updateLijst();
-			Label spelerToegevoegd = meldingen.get(index - 1);
-			spelerToegevoegd.getStyleClass().remove("error");
-			spelerToegevoegd.setText(
-					String.format(messages.getString("fx_player_added"), spelers.get(index - 1).getText().substring(10)));
-			VBox spelerToegevoegdBox = new VBox();
-			spelerToegevoegdBox.setAlignment(Pos.CENTER);
-			spelerToegevoegdBox.getChildren().add(meldingen.get(index - 1));
-			gridPane.add(spelerToegevoegdBox, 3, index, 1, 1);
-			getChildren().remove(imageLoader);
-		});
-		startTask.setOnFailed(event -> {
-			getChildren().remove(imageLoader);
-		});
-		new Thread(startTask).start();
+			};
+			startTask.setOnSucceeded(event -> {
+				getChildren().remove(imageLoader);
+			});
+			startTask.setOnFailed(event -> {
+				getChildren().remove(imageLoader);
+			});
+			new Thread(startTask).start();
+		}
 	}
 
 	private void startSpel() {

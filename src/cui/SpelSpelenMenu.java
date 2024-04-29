@@ -35,9 +35,7 @@ public class SpelSpelenMenu {
 		} while (!dc.geefStapel().isEmpty());
 		dc.vulKolommenAan();
 		plaatsKoningenOpTegels();
-		String scoreOverzicht = toonScoreOverzicht();
-		if (scoreOverzicht.length() != 0)
-			System.out.println(toonScoreOverzicht());
+		System.out.println(toonScoreOverzicht());
 	}
 
 	public void plaatsKoningenOpTegels() {

@@ -6,8 +6,6 @@ import java.util.ResourceBundle;
 import domein.DomeinController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -41,17 +39,25 @@ public class RegistratieScherm extends GridPane {
 
 	private void bouwScherm() {
 		scherm.centerOnScreen();
+		setAlignment(Pos.TOP_CENTER);
 		getStyleClass().add("zandkleur");
-		for (int i = 0; i < 4; i++)
-			getColumnConstraints().add(new ColumnConstraints(300));
+		ColumnConstraints bigCol = new ColumnConstraints((scherm.getWidth() - 600) / 2);
+		ColumnConstraints smallCol = new ColumnConstraints(300);
+		getColumnConstraints().addAll(bigCol, smallCol, smallCol, bigCol);
 		for (int i = 0; i < 5; i++)
-			getRowConstraints().add(new RowConstraints(135));
+			getRowConstraints().add(new RowConstraints(scherm.getHeight() / 5 - 30));
+		widthProperty().addListener(observable -> {
+			getChildren().clear();
+			getColumnConstraints().clear();
+			getRowConstraints().clear();
+			bouwScherm();
+		});
 		VBox menu = bouwMenu();
 		add(menu, 0, 0, 4, 1);
 		Label spelerRegistreren = new Label(messages.getString("fx_register_player"));
 		spelerRegistreren.getStyleClass().addAll("font", "bigText");
-		spelerRegistreren.setMinWidth(600);
-		spelerRegistreren.setMinHeight(135);
+		spelerRegistreren.setMinWidth(300);
+		spelerRegistreren.setMinHeight(scherm.getHeight() / 5 - 50);
 		spelerRegistreren.setAlignment(Pos.TOP_CENTER);
 		add(spelerRegistreren, 1, 1, 2, 1);
 		Label gebruikersnaam = bouwLabel(messages.getString("fx_username"), Pos.CENTER_RIGHT, false);
@@ -62,8 +68,8 @@ public class RegistratieScherm extends GridPane {
 		textFieldGebruikersnaam.setMinHeight(30);
 		textFieldGebruikersnaam.onKeyTypedProperty().set(event -> valideerGebruikersnaam());
 		VBox textFieldGebruikersnaamBox = new VBox();
-		textFieldGebruikersnaamBox.setMinWidth(600);
-		textFieldGebruikersnaamBox.setMinHeight(135);
+		textFieldGebruikersnaamBox.setMinWidth(300);
+		textFieldGebruikersnaamBox.setMinHeight(scherm.getHeight() / 5 - 50);
 		textFieldGebruikersnaamBox.setAlignment(Pos.CENTER);
 		textFieldGebruikersnaamBox.getChildren().add(textFieldGebruikersnaam);
 		add(textFieldGebruikersnaamBox, 1, 2, 2, 1);
@@ -79,8 +85,8 @@ public class RegistratieScherm extends GridPane {
 		textFieldGeboortejaar.setMinHeight(30);
 		textFieldGeboortejaar.onKeyTypedProperty().set(event -> valideerGeboortejaar());
 		VBox textFieldGeboortejaarBox = new VBox();
-		textFieldGeboortejaarBox.setMinWidth(600);
-		textFieldGeboortejaarBox.setMinHeight(135);
+		textFieldGeboortejaarBox.setMinWidth(300);
+		textFieldGeboortejaarBox.setMinHeight(scherm.getHeight() / 5 - 50);
 		textFieldGeboortejaarBox.setAlignment(Pos.CENTER);
 		textFieldGeboortejaarBox.getChildren().add(textFieldGeboortejaar);
 		add(textFieldGeboortejaarBox, 1, 3, 2, 1);
@@ -90,7 +96,7 @@ public class RegistratieScherm extends GridPane {
 		registratieMelding.setWrapText(true);
 		VBox registratieMeldingBox = new VBox();
 		registratieMeldingBox.setMinWidth(300);
-		registratieMeldingBox.setMinHeight(135);
+		registratieMeldingBox.setMinHeight(scherm.getHeight() / 5 - 50);
 		registratieMeldingBox.setAlignment(Pos.CENTER_LEFT);
 		registratieMeldingBox.getChildren().add(registratieMelding);
 		add(registratieMeldingBox, 2, 4, 2, 1);
@@ -101,9 +107,10 @@ public class RegistratieScherm extends GridPane {
 		HBox menuItems = bouwMenuItems();
 		Line line = new Line();
 		line.setStartX(0);
-		line.setEndX(1200);
+		line.setEndX(scherm.getWidth());
 		line.getStyleClass().add("line");
 		menu.getChildren().addAll(menuItems, line);
+		widthProperty().addListener(observable -> line.setEndX(scherm.getWidth()));
 		return menu;
 	}
 
@@ -111,7 +118,7 @@ public class RegistratieScherm extends GridPane {
 		HBox menu = new HBox();
 		menu.getStyleClass().add("zandkleur");
 		menu.setAlignment(Pos.CENTER);
-		menu.setSpacing(500);
+		menu.setSpacing(scherm.getWidth() - 750);
 		Label welkomscherm = new Label(messages.getString("fx_main_menu"));
 		welkomscherm.getStyleClass().addAll("font", "mediumText");
 		welkomscherm.setOnMouseEntered(event -> setCursor(Cursor.HAND));
@@ -120,14 +127,15 @@ public class RegistratieScherm extends GridPane {
 		Text kingdomino = new Text("Kingdomino");
 		kingdomino.getStyleClass().addAll("titel", "hugeText");
 		menu.getChildren().addAll(welkomscherm, kingdomino);
+		widthProperty().addListener(observable -> menu.setSpacing(scherm.getWidth() - 750));
 		return menu;
 	}
 
 	private Label bouwLabel(String inhoud, Pos alignment, boolean isError) {
 		Label label = new Label(inhoud);
 		label.getStyleClass().addAll("font", isError ? "smallText" : "mediumText", isError ? "error" : "");
-		label.setMinWidth(300);
-		label.setMinHeight(135);
+		label.setMinWidth((scherm.getWidth() - 600) / 2);
+		label.setMinHeight(scherm.getHeight() / 5 - 50);
 		label.setAlignment(alignment);
 		return label;
 	}
@@ -142,7 +150,7 @@ public class RegistratieScherm extends GridPane {
 		registreerKnop.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
 		VBox registreerKnopBox = new VBox();
 		registreerKnopBox.setMinWidth(300);
-		registreerKnopBox.setMinHeight(135);
+		registreerKnopBox.setMinHeight(scherm.getHeight() / 5 - 50);
 		registreerKnopBox.setAlignment(Pos.CENTER);
 		registreerKnop.setOnAction(event -> registreerSpeler());
 		registreerKnopBox.getChildren().add(registreerKnop);
@@ -199,13 +207,6 @@ public class RegistratieScherm extends GridPane {
 		}
 		catch (Exception e) {
 			registratieMelding.setText(messages.getString("error_occurred"));
-		}
-		finally {
-			if (!textFieldGeboortejaar.getText().isEmpty() && !textFieldGebruikersnaam.getText().isEmpty()) {
-				Alert a = new Alert(AlertType.ERROR);
-				a.setContentText("Er is iets misgelopen.");
-				a.show();
-			}
 		}
 	}
 

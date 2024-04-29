@@ -5,15 +5,16 @@ import domein.DomeinController;
 import dto.SpelerDTO;
 import dto.TegelDTO;
 import dto.VakDTO;
-import javafx.geometry.Pos;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import utils.Kleur;
+import utils.Landschap;
 import utils.Richting;
 
 public class KoninkrijkScherm extends GridPane {
@@ -21,11 +22,13 @@ public class KoninkrijkScherm extends GridPane {
 	private final DomeinController dc;
 	private SpelerDTO speler;
 	private final SpelSpelenScherm spelSpelenScherm;
+	private final GridPane geschaaldKoninkrijk;
 
 	public KoninkrijkScherm(DomeinController dc, SpelerDTO speler, SpelSpelenScherm spelSpelenScherm) {
 		this.dc = dc;
 		this.speler = speler;
 		this.spelSpelenScherm = spelSpelenScherm;
+		this.geschaaldKoninkrijk = new GridPane();
 		bouwScherm();
 	}
 
@@ -34,8 +37,10 @@ public class KoninkrijkScherm extends GridPane {
 		VakDTO[][] koninkrijk = dc.geefKoninkrijk(speler);
 		ColumnConstraints columnConstraints = new ColumnConstraints();
 		columnConstraints.setMinWidth(90);
+		columnConstraints.setMaxWidth(90);
 		RowConstraints rowConstraints = new RowConstraints();
 		rowConstraints.setMinHeight(90);
+		rowConstraints.setMaxHeight(90);
 		for (int i = 0; i < koninkrijk.length; i++)
 			getColumnConstraints().add(columnConstraints);
 		for (int j = 0; j < koninkrijk[0].length; j++)
@@ -47,10 +52,41 @@ public class KoninkrijkScherm extends GridPane {
 			case ROOS -> "roos";
 		};
 		ImageView kasteel = new ImageView(
-				new Image(getClass().getResourceAsStream(String.format("/images/starttegel/starttegel_%s.png", kleur))));
+				new Image(getClass().getResourceAsStream(String.format("/images/starttegels/starttegel_%s.png", kleur))));
 		kasteel.setPreserveRatio(true);
 		kasteel.setFitHeight(90);
 		add(kasteel, 4, 4);
+		bouwGeschaaldKoninkrijk();
+	}
+
+	private void bouwGeschaaldKoninkrijk() {
+		geschaaldKoninkrijk.setGridLinesVisible(true);
+		VakDTO[][] koninkrijk = dc.geefKoninkrijk(speler);
+		ColumnConstraints col = new ColumnConstraints();
+		col.setMinWidth(33);
+		col.setMaxWidth(33);
+		RowConstraints row = new RowConstraints();
+		row.setMinHeight(33);
+		row.setMaxHeight(33);
+		for (int i = 0; i < koninkrijk.length; i++)
+			geschaaldKoninkrijk.getColumnConstraints().add(col);
+		for (int j = 0; j < koninkrijk[0].length; j++)
+			geschaaldKoninkrijk.getRowConstraints().add(row);
+		String kleur = switch (Kleur.geefKleur(speler.kleur())) {
+			case BLAUW -> "blauw";
+			case GEEL -> "geel";
+			case GROEN -> "groen";
+			case ROOS -> "roos";
+		};
+		ImageView kasteel = new ImageView(
+				new Image(getClass().getResourceAsStream(String.format("/images/starttegels/starttegel_%s.png", kleur))));
+		kasteel.setPreserveRatio(true);
+		kasteel.setFitHeight(33);
+		geschaaldKoninkrijk.add(kasteel, 4, 4);
+	}
+
+	public GridPane geefGeschaaldKoninkrijk() {
+		return geschaaldKoninkrijk;
 	}
 
 	public void setListeners(TegelDTO tegel, Richting richting) {
@@ -67,39 +103,74 @@ public class KoninkrijkScherm extends GridPane {
 						case RECHTS -> 1;
 						case ONDER -> 4;
 					});
-					ImageView tegelView = new ImageView(new Image(getClass().getResourceAsStream(
-							String.format("/images/dominotegel/tegel_%02d_voorkant.png", tegel.nummer()))));
-					tegelView.setPreserveRatio(true);
-					tegelView.setFitHeight(90);
-					HBox tegelTeLeggen = new HBox();
-					tegelTeLeggen.setAlignment(Pos.TOP_LEFT);
+					ImageView tegelViewSmall = new ImageView(new Image(getClass().getResourceAsStream(
+							String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))));
+					ImageView tegelViewLarge = new ImageView(new Image(getClass().getResourceAsStream(
+							String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))));
+					tegelViewSmall.setPreserveRatio(true);
+					tegelViewSmall.setFitHeight(33);
+					tegelViewLarge.setPreserveRatio(true);
+					tegelViewLarge.setFitHeight(90);
+					setHalignment(tegelViewSmall, HPos.CENTER);
+					setValignment(tegelViewSmall, VPos.CENTER);
+					setHalignment(tegelViewLarge, HPos.CENTER);
+					setValignment(tegelViewLarge, VPos.CENTER);
 					if (richting.equals(Richting.RECHTS)) {
-						tegelView.setRotate(0);
-						tegelTeLeggen.getChildren().add(tegelView);
-						add(tegelTeLeggen, finalJ, finalI, 2, 1);
+						tegelViewSmall.setRotate(0);
+						tegelViewLarge.setRotate(0);
+						geschaaldKoninkrijk.add(tegelViewSmall, finalJ, finalI, 2, 1);
+						add(tegelViewLarge, finalJ, finalI, 2, 1);
 					}
 					if (richting.equals(Richting.ONDER)) {
-						tegelView.setRotate(90);
-						tegelTeLeggen.getChildren().add(tegelView);
-						add(tegelTeLeggen, finalJ, finalI, 1, 2);
+						tegelViewSmall.setRotate(90);
+						tegelViewLarge.setRotate(90);
+						geschaaldKoninkrijk.add(tegelViewSmall, finalJ, finalI, 1, 2);
+						add(tegelViewLarge, finalJ, finalI, 1, 2);
 					}
 					if (richting.equals(Richting.LINKS)) {
-						tegelView.setRotate(180);
-						tegelTeLeggen.getChildren().add(tegelView);
-						add(tegelTeLeggen, finalJ - 1, finalI, 2, 1);
+						tegelViewSmall.setRotate(180);
+						tegelViewLarge.setRotate(180);
+						geschaaldKoninkrijk.add(tegelViewSmall, finalJ - 1, finalI, 2, 1);
+						add(tegelViewLarge, finalJ - 1, finalI, 2, 1);
 					}
 					if (richting.equals(Richting.BOVEN)) {
-						tegelView.setRotate(270);
-						tegelTeLeggen.getChildren().add(tegelView);
-						add(tegelTeLeggen, finalJ, finalI - 1, 1, 2);
+						tegelViewSmall.setRotate(270);
+						tegelViewLarge.setRotate(270);
+						geschaaldKoninkrijk.add(tegelViewSmall, finalJ, finalI - 1, 1, 2);
+						add(tegelViewLarge, finalJ, finalI - 1, 1, 2);
 					}
 					getChildren().forEach(c -> {
 						if (c instanceof Pane p)
 							p.setOnMouseClicked(null);
 					});
+					plaatsKruisjes();
 					getScene().setRoot(spelSpelenScherm);
 				});
 				add(vak, j, i);
+			}
+	}
+
+	private void plaatsKruisjes() {
+		VakDTO[][] koninkrijk = dc.geefKoninkrijk(speler);
+		for (int i = 0; i < koninkrijk.length; i++)
+			for (int j = 0; j < koninkrijk[0].length; j++) {
+				int finalI = i;
+				int finalJ = j;
+				if (koninkrijk[i][j].landschap() != null
+						&& koninkrijk[i][j].landschap().equals(Landschap.LEEG.toString())) {
+					ImageView kruisSmall = new ImageView(new Image(getClass().getResourceAsStream("/images/kruis.png")));
+					ImageView kruisLarge = new ImageView(new Image(getClass().getResourceAsStream("/images/kruis.png")));
+					kruisSmall.setPreserveRatio(true);
+					kruisSmall.setFitHeight(28);
+					kruisLarge.setPreserveRatio(true);
+					kruisLarge.setFitHeight(85);
+					setHalignment(kruisSmall, HPos.CENTER);
+					setValignment(kruisSmall, VPos.CENTER);
+					setHalignment(kruisLarge, HPos.CENTER);
+					setValignment(kruisLarge, VPos.CENTER);
+					geschaaldKoninkrijk.add(kruisSmall, finalJ, finalI);
+					add(kruisLarge, finalJ, finalI);
+				}
 			}
 	}
 

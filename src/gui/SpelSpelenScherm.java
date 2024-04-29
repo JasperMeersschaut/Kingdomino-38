@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import domein.DomeinController;
 import dto.SpelerDTO;
 import dto.TegelDTO;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -50,16 +51,28 @@ public class SpelSpelenScherm extends GridPane {
 	public void bouwScherm() {
 		getStyleClass().add("zandkleur");
 		scherm.centerOnScreen();
+		setPadding(new Insets(10));
 		ColumnConstraints col = new ColumnConstraints(300);
-		RowConstraints row = new RowConstraints(300);
-		getColumnConstraints().addAll(col, new ColumnConstraints(scherm.getWidth() - 630), col);
-		getRowConstraints().addAll(row, new RowConstraints(scherm.getHeight() - 680), row);
+		RowConstraints row = new RowConstraints(350);
+		getColumnConstraints().addAll(col, new ColumnConstraints(scherm.getWidth() - 640), col);
+		getRowConstraints().addAll(row, new RowConstraints(scherm.getHeight() - 760), row);
 		legKoninkrijken();
 		legTegels();
 		setOnMouseEntered(event -> {
 			if (!dc.geefEindKolom().isEmpty() && dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null))
 				dc.vulKolommenAan();
 			refresh();
+			if (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty()
+					&& !dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null)) {
+				koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));
+				tegelTeLeggen = dc.geefStartKolom().stream()
+						.filter(t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
+						.findAny().get();
+				getScene().setRoot(new TegelLeggenScherm(dc, scherm, tegelTeLeggen, huidigeSpeler, koninkrijkScherm, this));
+			}
+			if (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty()
+					&& dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null))
+				System.out.println("Einde van het spel");
 		});
 	}
 
@@ -67,20 +80,13 @@ public class SpelSpelenScherm extends GridPane {
 		List<SpelerDTO> spelers = dc.geefSpelers();
 		for (int i = 0; i < dc.geefSpelers().size(); i++) {
 			VBox koninkrijkView = new VBox();
-			Pane koninkrijk = new Pane(koninkrijken.get(i));
-			koninkrijk.setScaleX(0.37);
-			koninkrijk.setScaleY(0.37);
-			koninkrijk.setMinWidth(300);
-			koninkrijk.setMinHeight(300);
-			koninkrijk.setMaxWidth(300);
-			koninkrijk.setMaxHeight(300);
-			koninkrijk.setTranslateX(-80);
-			koninkrijk.setTranslateY(-60);
+			GridPane koninkrijk = koninkrijken.get(i).geefGeschaaldKoninkrijk();
 			Label koninkrijkVanSpeler = new Label(spelers.get(i).gebruikersnaam());
 			koninkrijkVanSpeler.getStyleClass().addAll("font", "smallText");
 			koninkrijkVanSpeler.setMinWidth(300);
 			koninkrijkVanSpeler.setAlignment(Pos.CENTER);
 			koninkrijkView.getChildren().addAll(koninkrijk, koninkrijkVanSpeler);
+			koninkrijkView.setAlignment(Pos.CENTER_LEFT);
 			add(koninkrijkView, koninkrijkPosities[i][0], koninkrijkPosities[i][1]);
 		}
 	}
@@ -89,16 +95,24 @@ public class SpelSpelenScherm extends GridPane {
 		VBox stapels = new VBox();
 		huidigeSpeler = dc.geefHuidigeSpeler();
 		stapels.setSpacing(50);
-		Label huidigeSpelerLabel = new Label("Huidige speler: " + dc.geefHuidigeSpeler().gebruikersnaam());
+		Label huidigeSpelerLabel = new Label(
+				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
 		huidigeSpelerLabel.getStyleClass().addAll("font", "bigText");
 		stapels.getChildren().add(huidigeSpelerLabel);
 		if (!dc.geefStapel().isEmpty()) {
 			ImageView bovensteTegel = new ImageView(new Image(getClass()
 					.getResource(
-							String.format("/images/dominotegel/tegel_%02d_achterkant.png", dc.geefStapel().get(0).nummer()))
+							String.format("/images/dominotegels/tegel_%02d_achterkant.png", dc.geefStapel().get(0).nummer()))
 					.toExternalForm()));
 			bovensteTegel.setPreserveRatio(true);
 			bovensteTegel.setFitWidth(200);
+			stapels.getChildren().add(bovensteTegel);
+		} else {
+			Pane bovensteTegel = new Pane();
+			bovensteTegel.setMinHeight(100);
+			bovensteTegel.setMinWidth(200);
+			bovensteTegel.setMaxHeight(100);
+			bovensteTegel.setMaxWidth(200);
 			stapels.getChildren().add(bovensteTegel);
 		}
 		HBox kolommen = new HBox();
@@ -125,7 +139,7 @@ public class SpelSpelenScherm extends GridPane {
 		for (int i = 0; i < dc.geefSpelers().size(); i++) {
 			TegelDTO tegel = isStartKolom ? dc.geefStartKolom().get(i) : dc.geefEindKolom().get(i);
 			ImageView tegelImg = new ImageView(new Image(
-					getClass().getResource(String.format("/images/dominotegel/tegel_%02d_voorkant.png", tegel.nummer()))
+					getClass().getResource(String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))
 							.toExternalForm()));
 			tegelImg.setPreserveRatio(true);
 			tegelImg.setFitWidth(200);
@@ -153,16 +167,18 @@ public class SpelSpelenScherm extends GridPane {
 					};
 					Circle koning = new Circle(20, kleur);
 					tegelView.getChildren().add(koning);
-					koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));
-					tegelTeLeggen = dc.geefStartKolom().stream()
-							.filter(t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
-							.findAny().get();
-					if (isStartKolom && dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() != null))
-						dc.vulKolommenAan();
-					refresh();
-					if (!isStartKolom)
+					if (isStartKolom) {
+						if (dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() != null))
+							dc.vulKolommenAan();
+						refresh();
+					} else {
+						koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));
+						tegelTeLeggen = dc.geefStartKolom().stream().filter(
+								t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
+								.findAny().get();
 						getScene().setRoot(
 								new TegelLeggenScherm(dc, scherm, tegelTeLeggen, huidigeSpeler, koninkrijkScherm, this));
+					}
 				}
 				catch (IllegalArgumentException iae) {
 					error.setText(iae.getMessage());

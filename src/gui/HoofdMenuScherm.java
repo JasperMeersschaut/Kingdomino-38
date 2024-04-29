@@ -46,9 +46,10 @@ public class HoofdMenuScherm extends BorderPane {
 		HBox menuItems = bouwMenuItems();
 		Line line = new Line();
 		line.setStartX(0);
-		line.setEndX(1200);
+		line.setEndX(scherm.getWidth());
 		line.getStyleClass().add("line");
 		menu.getChildren().addAll(menuItems, line);
+		widthProperty().addListener(observable -> line.setEndX(scherm.getWidth()));
 		return menu;
 	}
 
@@ -56,7 +57,7 @@ public class HoofdMenuScherm extends BorderPane {
 		HBox menu = new HBox();
 		menu.getStyleClass().add("zandkleur");
 		menu.setAlignment(Pos.CENTER);
-		menu.setSpacing(500);
+		menu.setSpacing(scherm.getWidth() - 750);
 		Label welkomscherm = new Label(messages.getString("fx_begin_menu"));
 		welkomscherm.getStyleClass().addAll("font", "mediumText");
 		welkomscherm.setOnMouseEntered(event -> setCursor(Cursor.HAND));
@@ -65,18 +66,20 @@ public class HoofdMenuScherm extends BorderPane {
 		Text kingdomino = new Text("Kingdomino");
 		kingdomino.getStyleClass().addAll("titel", "hugeText");
 		menu.getChildren().addAll(welkomscherm, kingdomino);
+		widthProperty().addListener(observable -> menu.setSpacing(scherm.getWidth() - 750));
 		return menu;
 	}
 
 	private StackPane bouwKeuzeMenu() {
 		StackPane keuzeMenu = new StackPane();
-		Image imageWelkom = new Image(getClass().getResourceAsStream("/images/achtergrond.jpg"));
+		Image imageWelkom = new Image(getClass().getResourceAsStream("/images/kingdomino/achtergrond.jpg"));
 		ImageView imageBackground = new ImageView(imageWelkom);
-		imageBackground.fitWidthProperty().bind(keuzeMenu.widthProperty());
 		imageBackground.setPreserveRatio(true);
+		imageBackground.setFitWidth(scherm.getWidth() + 50);
 		HBox keuzeKnoppen = bouwKeuzeKnoppen();
 		keuzeKnoppen.setAlignment(Pos.CENTER);
 		keuzeMenu.getChildren().addAll(imageBackground, keuzeKnoppen);
+		widthProperty().addListener(observable -> imageBackground.setFitWidth(scherm.getWidth() + 50));
 		return keuzeMenu;
 	}
 
@@ -102,20 +105,17 @@ public class HoofdMenuScherm extends BorderPane {
 	}
 
 	private void gaNaarRegistratieMenuScherm() {
-		this.getScene().setRoot(new RegistratieScherm(dc, scherm));
+		getScene().setRoot(new RegistratieScherm(dc, scherm));
 	}
 
 	private void gaNaarSpelersToevoegenScherm() {
-		boolean spelAangemaakt = false;
 		try {
 			dc.maakSpelAan();
-			spelAangemaakt = true;
+			getScene().setRoot(new SpelersToevoegenScherm(dc, scherm));
 		}
 		catch (Exception e) {
 			speelSpelKnop.setText(messages.getString("no_connection"));
 		}
-		if (spelAangemaakt)
-			this.getScene().setRoot(new SpelersToevoegenScherm(dc, scherm));
 	}
 
 }

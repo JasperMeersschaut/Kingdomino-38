@@ -194,8 +194,6 @@ public class Spel {
 				tegel.setSpelerOpTegel(null);
 				break;
 			}
-		if (eindKolom.isEmpty() && stapel.isEmpty())
-			setVolgendeSpelerAlsHuidigeSpeler();
 	}
 
 	private void controleerWeggooienMogelijk(Speler tegelVanSpeler, Tegel tegel) {
@@ -412,19 +410,21 @@ public class Spel {
 				tegelVanSpeler = speler;
 				break;
 			}
+		if (tegelVanSpeler == null)
+			throw new NullPointerException();
 		for (Tegel tegel : startKolom)
 			if (tegel.getTegelNummer() == tegelNummer) {
 				tegelOmTePlaatsen = tegel;
 				break;
 			}
+		if (tegelOmTePlaatsen == null)
+			throw new NullPointerException();
 		controleerWeggooienMogelijk(tegelVanSpeler, tegelOmTePlaatsen);
 		for (Tegel tegel : startKolom)
-			if (tegel.getTegelNummer() == tegelNummer) {
-				startKolom.remove(tegel);
+			if (tegel.getSpelerOpTegel() != null && tegel.getSpelerOpTegel().equals(tegelVanSpeler)) {
+				tegel.setSpelerOpTegel(null);
 				break;
 			}
-		if (eindKolom.isEmpty() && stapel.isEmpty())
-			setVolgendeSpelerAlsHuidigeSpeler();
 	}
 
 }
