@@ -167,6 +167,8 @@ public class SpelSpelenScherm extends GridPane {
 				tegelView.getChildren().add(koning);
 			}
 			tegelImg.setOnMouseClicked(event -> {
+				error.getStyleClass().add("error");
+				setTegelVerwijderd(false);
 				try {
 					dc.plaatsKoningOpTegel(huidigeSpeler, tegel.nummer());
 					Color kleur = switch (Kleur.geefKleur(huidigeSpeler.kleur())) {
@@ -196,7 +198,6 @@ public class SpelSpelenScherm extends GridPane {
 					setTegelVerwijderd(false);
 				}
 				catch (Exception e) {
-					e.printStackTrace();
 					error.setText(messages.getString("error_occurred"));
 					error.getStyleClass().add("error");
 					setTegelVerwijderd(false);

@@ -153,28 +153,4 @@ public class KoninkrijkScherm extends GridPane {
 			}
 	}
 
-	private void plaatsKruisjes() {
-		VakDTO[][] koninkrijk = dc.geefKoninkrijk(speler);
-		for (int i = 0; i < koninkrijk.length; i++)
-			for (int j = 0; j < koninkrijk[0].length; j++) {
-				int finalI = i;
-				int finalJ = j;
-				if (koninkrijk[i][j].landschap() != null
-						&& koninkrijk[i][j].landschap().equals(Landschap.LEEG.toString())) {
-					ImageView kruisSmall = new ImageView(new Image(getClass().getResourceAsStream("/images/kruis.png")));
-					ImageView kruisLarge = new ImageView(new Image(getClass().getResourceAsStream("/images/kruis.png")));
-					kruisSmall.setPreserveRatio(true);
-					kruisSmall.setFitHeight(28);
-					kruisLarge.setPreserveRatio(true);
-					kruisLarge.setFitHeight(85);
-					setHalignment(kruisSmall, HPos.CENTER);
-					setValignment(kruisSmall, VPos.CENTER);
-					setHalignment(kruisLarge, HPos.CENTER);
-					setValignment(kruisLarge, VPos.CENTER);
-					geschaaldKoninkrijk.add(kruisSmall, finalJ, finalI);
-					add(kruisLarge, finalJ, finalI);
-				}
-			}
-	}
-
 }
