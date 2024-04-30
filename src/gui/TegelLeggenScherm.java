@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import domein.DomeinController;
 import dto.SpelerDTO;
 import dto.TegelDTO;
+import exceptions.RaaktGeenTegelMetZelfdeLandschapsException;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;

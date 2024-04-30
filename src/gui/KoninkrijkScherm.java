@@ -1,6 +1,8 @@
 
 package gui;
 
+import java.util.ResourceBundle;
+
 import domein.DomeinController;
 import dto.SpelerDTO;
 import dto.TegelDTO;
@@ -15,9 +17,11 @@ import javafx.scene.layout.RowConstraints;
 import utils.Kleur;
 import utils.Landschap;
 import utils.Richting;
+import utils.Taal;
 
 public class KoninkrijkScherm extends GridPane {
-
+	
+	private final ResourceBundle messages;
 	private final DomeinController dc;
 	private SpelerDTO speler;
 	private final SpelSpelenScherm spelSpelenScherm;
