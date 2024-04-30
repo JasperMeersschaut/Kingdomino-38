@@ -21,7 +21,6 @@ import utils.Taal;
 
 public class KoninkrijkScherm extends GridPane {
 	
-	private final ResourceBundle messages;
 	private final DomeinController dc;
 	private SpelerDTO speler;
 	private final SpelSpelenScherm spelSpelenScherm;
