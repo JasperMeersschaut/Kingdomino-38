@@ -58,7 +58,8 @@ public class ScoreScherm extends BorderPane {
 		for (SpelerDTO speler : spelers) {
 			Label label = new Label(String.format(speler.gebruikersnaam() + ": " + dc.berekenScore(speler)));
 			vbox.getChildren().add(label);
-			label.getStyleClass().addAll("font", "bigText","border");
+			label.getStyleClass().addAll("font", "mediumText");
+			label.setPadding(new Insets(100,0,0,200));
 		}
 		this.setCenter(vbox);
 	}
