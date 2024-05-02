@@ -315,7 +315,7 @@ public class SpelersToevoegenScherm extends StackPane {
 	}
 
 	private void gaNaarHoofdMenuScherm() {
-		getScene().setRoot(new ScoreScherm(dc, scherm));
+		getScene().setRoot(new HoofdMenuScherm(dc, scherm));
 	}
 
 	private void voegSpelerToe(int index) {
