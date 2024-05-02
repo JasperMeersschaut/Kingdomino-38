@@ -16,5 +16,6 @@ module kingdomino.g38 {
 	requires javafx.graphics;
 	requires jsch;
 	requires org.junit.jupiter.api;
+	requires org.junit.jupiter.params;
 
 }
