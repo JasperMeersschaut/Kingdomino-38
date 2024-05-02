@@ -123,8 +123,8 @@ public class DomeinController {
 	}
 
 	public int berekenScore(SpelerDTO speler) {
-		return huidigSpel.berekenScore(huidigSpel.geefKoninkrijk(speler.gebruikersnaam()));
-	}
+		 return huidigSpel.berekenScore(huidigSpel.geefKoninkrijk(speler.gebruikersnaam()));
+			}
 
 	public List<SpelerDTO> geefWinnaars() {
 		List<SpelerDTO> winnaars = new ArrayList<>();
