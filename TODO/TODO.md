@@ -1,7 +1,7 @@
 
 
 Analyse:
-- [] UC5 domeinObject koninkrijk toevoegen
+- [x] UC5 domeinObject koninkrijk toevoegen
 - [] UC5 SSD aanpassen
 
 Programeren:
