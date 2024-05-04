@@ -36,21 +36,7 @@ public class ScoreScherm extends BorderPane {
 		Label hoofding = maakHoofdingScore();
 		this.setTop(hoofding);
 		BorderPane.setAlignment(hoofding, javafx.geometry.Pos.CENTER);
-		
-		
-		// TODO: Linken met rest en testen
-		// Vertaling fixen
-		
-		// werkt
-//		List<SpelerDTO> spelers = dc.geefSpelers();
-//		ListView<String> listView = new ListView<>();
-//		spelers.forEach(speler -> listView.getItems().add(speler.gebruikersnaam() + ": " + dc.berekenScore(speler)));
-//		List<SpelerDTO> winnaars = dc.geefWinnaars();
-//		Label winnaarLabel = new Label(String.format("De %s: %s", winnaars.size() > 1 ? "winnaars zijn" : "winnaar is",
-//				winnaars.stream().map(winnaar -> winnaar.gebruikersnaam()).collect(Collectors.joining(", "))));
-//		this.getChildren().addAll(listView, winnaarLabel);
-		
-		// te testen
+	
 		VBox vbox = new VBox();
 		vbox.setSpacing(20);
 		
