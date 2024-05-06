@@ -14,13 +14,19 @@ public class RegistratieMenu {
 	private final Scanner scanner;
 	private final DomeinController dc;
 
+	/**
+	 * Constructor voor het RegistratieMenu.
+	 *
+	 * @param dc de domeincontroller.
+	 */
 	public RegistratieMenu(DomeinController dc) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		this.dc = dc;
 		scanner = new Scanner(System.in);
+		registreerSpeler();
 	}
 
-	public void registreerSpeler() {
+	private void registreerSpeler() {
 		boolean gebruikersnaamGeldig = false;
 		String gebruikersnaam = null;
 		int geboortejaar;
@@ -44,10 +50,6 @@ public class RegistratieMenu {
 			}
 			catch (RuntimeException re) {
 				System.err.println(messages.getString("no_connection"));
-				scanner.nextLine();
-			}
-			catch (Exception e) {
-				System.err.println(messages.getString("error_occurred"));
 				scanner.nextLine();
 			}
 		while (!gebruikersnaamGeldig);

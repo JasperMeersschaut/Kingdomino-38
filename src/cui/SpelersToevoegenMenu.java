@@ -14,13 +14,19 @@ public class SpelersToevoegenMenu {
 	private final Scanner scanner;
 	private final DomeinController dc;
 
+	/**
+	 * Constructor voor het SpelersToevoegenMenu.
+	 *
+	 * @param dc de domeincontroller.
+	 */
 	public SpelersToevoegenMenu(DomeinController dc) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		scanner = new Scanner(System.in);
 		this.dc = dc;
+		voegSpelerToe();
 	}
 
-	public void voegSpelerToe() {
+	private void voegSpelerToe() {
 		String gebruikersnaam;
 		String kleur;
 		boolean spelerGeldig = false;
@@ -43,31 +49,27 @@ public class SpelersToevoegenMenu {
 				System.err.println(messages.getString("no_connection"));
 				scanner.nextLine();
 			}
-			catch (Exception e) {
-				System.err.println(messages.getString("error_occurred"));
-				scanner.nextLine();
-			}
 		while (!spelerGeldig);
 	}
 
 	private String toonBeschikbareSpelers() {
-		String beschikbareSpelers = "";
-		beschikbareSpelers += (messages.getString("available_existing_players") + "\n");
-		beschikbareSpelers += ("=".repeat(messages.getString("available_existing_players").length()) + "\n");
+		StringBuilder beschikbareSpelers = new StringBuilder();
+		beschikbareSpelers.append(messages.getString("available_existing_players")).append("\n");
+		beschikbareSpelers.append("=".repeat(messages.getString("available_existing_players").length())).append("\n");
 		for (SpelerDTO speler : dc.geefBeschikbareSpelers())
-			beschikbareSpelers += String.format("- %s (%d)%n", speler.gebruikersnaam(), speler.geboortejaar());
-		beschikbareSpelers += ("=".repeat(messages.getString("available_existing_players").length()) + "\n");
-		return beschikbareSpelers;
+			beschikbareSpelers.append(String.format("- %s (%d)%n", speler.gebruikersnaam(), speler.geboortejaar()));
+		beschikbareSpelers.append("=".repeat(messages.getString("available_existing_players").length())).append("\n");
+		return beschikbareSpelers.toString();
 	}
 
 	private String toonBeschikbareKleuren() {
-		String beschikbareKleuren = "";
-		beschikbareKleuren += (messages.getString("available_colours") + "\n");
-		beschikbareKleuren += ("=".repeat(messages.getString("available_colours").length()) + "\n");
+		StringBuilder beschikbareKleuren = new StringBuilder();
+		beschikbareKleuren.append(messages.getString("available_colours")).append("\n");
+		beschikbareKleuren.append("=".repeat(messages.getString("available_colours").length())).append("\n");
 		for (String kleur : dc.geefBeschikbareKleuren())
-			beschikbareKleuren += ("- " + kleur + "\n");
-		beschikbareKleuren += ("=".repeat(messages.getString("available_colours").length()) + "\n");
-		return beschikbareKleuren;
+			beschikbareKleuren.append("- ").append(kleur).append("\n");
+		beschikbareKleuren.append("=".repeat(messages.getString("available_colours").length())).append("\n");
+		return beschikbareKleuren.toString();
 	}
 
 }

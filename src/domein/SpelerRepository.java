@@ -19,57 +19,102 @@ public class SpelerRepository {
 	private List<Speler> beschikbareSpelers;
 	private List<Kleur> beschikbareKleuren;
 
+	/**
+	 * Constructor voor een SpelerRepository.
+	 */
 	public SpelerRepository() {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		mapper = new SpelerMapper();
-		this.beschikbareSpelers = geefAlleSpelers();
-		this.beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
 	}
 
-	public List<Speler> getBeschikbareSpelers() {
+	/**
+	 * Geeft een lijst van beschikbare spelers.
+	 *
+	 * @return een lijst van Speler objecten.
+	 */
+	public List<Speler> geefBeschikbareSpelers() {
 		return beschikbareSpelers;
 	}
 
-	public List<Kleur> getBeschikbareKleuren() {
+	/**
+	 * Geeft een lijst van beschikbare kleuren.
+	 *
+	 * @return een lijst van Kleur objecten.
+	 */
+	public List<Kleur> geefBeschikbareKleuren() {
 		return beschikbareKleuren;
 	}
 
-	public void verwijderSpeler(Speler speler) {
+	/**
+	 * Geeft een lijst van beschikbare kleuren.
+	 *
+	 * @return een lijst van Kleur objecten.
+	 */
+	public void verwijderSpelerUitBeschikbareSpelersLijst(Speler speler) {
 		this.beschikbareSpelers.remove(speler);
 	}
 
-	public void verwijderKleur(Kleur kleur) {
+	/**
+	 * Verwijdert een kleur uit de lijst van beschikbare kleuren.
+	 *
+	 * @param kleur de kleur die moet worden verwijderd.
+	 */
+	public void verwijderKleurUitBeschikbareKleurenLijst(Kleur kleur) {
 		this.beschikbareKleuren.remove(kleur);
 	}
 
-	public void updateBeschikbareLijsten() {
-		beschikbareSpelers = geefAlleSpelers();
+	/**
+	 * Stelt de lijsten van beschikbare spelers en kleuren in.
+	 */
+	public void stelBeschikbareSpelersEnKleurenLijstenIn() {
+		beschikbareSpelers = geefAlleSpelersUitDataBase();
 		beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
 	}
 
-	public void voegToe(Speler speler) {
-		if (bestaatSpeler(speler.getGebruikersnaam()))
+	/**
+	 * Registreert een nieuwe speler.
+	 *
+	 * @param speler de speler die moet worden geregistreerd.
+	 */
+	public void registreerSpeler(Speler speler) {
+		if (bestaatSpeler(speler.geefGebruikersnaam()))
 			throw new GebruikersnaamInGebruikException(messages.getString("username_already_in_use"));
 		mapper.voegToe(speler);
 	}
 
 	private boolean bestaatSpeler(String gebruikersnaam) {
-		return mapper.geefSpeler(gebruikersnaam) != null;
+		return mapper.geefSpelerUitDataBase(gebruikersnaam) != null;
 	}
 
-	public Speler geefSpeler(String gebruikersnaam) {
+	/**
+	 * Geeft een speler uit de database.
+	 *
+	 * @param gebruikersnaam de gebruikersnaam van de speler.
+	 * @return een Speler object.
+	 */
+	public Speler geefSpelerUitDataBase(String gebruikersnaam) {
 		if (!bestaatSpeler(gebruikersnaam))
 			throw new GebruikersnaamBestaatNietException(
 					String.format(messages.getString("player_doenst_exist"), gebruikersnaam));
-		return mapper.geefSpeler(gebruikersnaam);
+		return mapper.geefSpelerUitDataBase(gebruikersnaam);
 	}
 
-	public List<Speler> geefAlleSpelers() {
-		return mapper.geefAlleSpelers();
+	/**
+	 * Geeft alle spelers uit de database.
+	 *
+	 * @return een lijst van Speler objecten.
+	 */
+	public List<Speler> geefAlleSpelersUitDataBase() {
+		return mapper.geefAlleSpelersUitDataBase();
 	}
 
-	public void updateAantalGewonnenEnAantalGespeeld(List<List<Speler>> spelers) {
-		mapper.updateAantalGewonnenEnAantalGespeeld(spelers);
+	/**
+	 * Update het aantal gewonnen en gespeelde spellen voor een lijst van spelers.
+	 *
+	 * @param spelers een lijst van lijsten van Speler objecten.
+	 */
+	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<List<Speler>> spelers) {
+		mapper.updateAantalGewonnenEnAantalGespeeldeSpellen(spelers);
 	}
 
 }

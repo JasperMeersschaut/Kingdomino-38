@@ -1,6 +1,8 @@
 
 package cui;
 
+import static java.lang.Integer.parseInt;
+
 import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -21,24 +23,30 @@ public class SpelSpelenMenu {
 	private final Scanner scanner;
 	private final DomeinController dc;
 
+	/**
+	 * Constructor voor het SpelSpelenMenu.
+	 *
+	 * @param dc de domeincontroller.
+	 */
 	public SpelSpelenMenu(DomeinController dc) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		scanner = new Scanner(System.in);
 		this.dc = dc;
+		speelSpel();
 	}
 
-	public void speelSpel() {
+	private void speelSpel() {
 		plaatsKoningenOpTegels();
 		do {
-			dc.vulKolommenAan();
+			dc.vulStapelsEnKolommenAan();
 			plaatsKoningenOpTegels();
 		} while (!dc.geefStapel().isEmpty());
-		dc.vulKolommenAan();
+		dc.vulStapelsEnKolommenAan();
 		plaatsKoningenOpTegels();
-		System.out.println(toonScoreOverzicht());
+		new ScoreMenu(dc);
 	}
 
-	public void plaatsKoningenOpTegels() {
+	private void plaatsKoningenOpTegels() {
 		int aantalSpelers = dc.geefSpelers().size();
 		int aantalSpelersGespeeld = 0;
 		int gekozenTegel;
@@ -86,7 +94,7 @@ public class SpelSpelenMenu {
 				System.out.printf(messages.getString("which_box_to_place") + " ", toonTegel(tegel));
 				plaats = scanner.next();
 				if (plaats.equals("weggooien") || plaats.equals("discard") || plaats.equals("défausse")) {
-					dc.gooiWeg(tegel, huidigeSpeler);
+					dc.gooiTegelTeLeggenWeg(tegel, huidigeSpeler);
 					System.out.println(messages.getString("tile_discarded"));
 					break;
 				}
@@ -94,7 +102,7 @@ public class SpelSpelenMenu {
 				richting = scanner.nextInt();
 				if (richting < 1 || richting > 4)
 					throw new OngeldigeRichtingException(messages.getString("invalid_direction_number"));
-				dc.legTegelInKoninkrijk(tegel, huidigeSpeler, plaats, richting);
+				dc.legTegelInKoninkrijk(tegel, huidigeSpeler, parseInt(plaats) / 10, parseInt(plaats) % 10, richting);
 				System.out.println();
 				tegelGeplaatst = true;
 				System.out.println(toonKoninkrijk(huidigeSpeler));
@@ -137,11 +145,11 @@ public class SpelSpelenMenu {
 	}
 
 	private String toonSpelers() {
-		String overzichtSpelers = "";
+		StringBuilder overzichtSpelers = new StringBuilder();
 		List<SpelerDTO> spelers = dc.geefSpelers();
 		for (SpelerDTO speler : spelers)
-			overzichtSpelers += String.format(messages.getString("kingdom"), speler.gebruikersnaam(), speler.kleur());
-		return overzichtSpelers;
+			overzichtSpelers.append(String.format(messages.getString("kingdom"), speler.gebruikersnaam(), speler.kleur()));
+		return overzichtSpelers.toString();
 	}
 
 	private String toonTegel(TegelDTO tegel) {
@@ -170,81 +178,48 @@ public class SpelSpelenMenu {
 		List<TegelDTO> stapel = dc.geefStapel();
 		if (stapel.isEmpty())
 			return messages.getString("empty_stack");
-		String stapelNummers = "";
+		StringBuilder stapelNummers = new StringBuilder();
 		Collections.reverse(stapel);
 		for (TegelDTO tegel : stapel)
-			stapelNummers += String.format("%d - ", tegel.nummer());
-		stapelNummers = stapelNummers.substring(0, stapelNummers.length() - 3) + "\n\n";
-		return stapelNummers;
+			stapelNummers.append(String.format("%d - ", tegel.nummer()));
+		stapelNummers = new StringBuilder(stapelNummers.substring(0, stapelNummers.length() - 3) + "\n\n");
+		return stapelNummers.toString();
 	}
 
 	private String toonKolom(List<TegelDTO> kolom) {
-		String overzichtKolom = "";
+		StringBuilder overzichtKolom = new StringBuilder();
 		if (kolom.isEmpty())
 			return "\n";
 		for (TegelDTO tegel : kolom)
-			overzichtKolom += toonTegel(tegel) + "\n";
-		return overzichtKolom;
+			overzichtKolom.append(toonTegel(tegel)).append("\n");
+		return overzichtKolom.toString();
 	}
 
 	private String toonKoninkrijk(SpelerDTO huidigeSpeler) {
-		String koninkrijkString = "  ";
+		StringBuilder koninkrijkString = new StringBuilder("  ");
 		VakDTO[][] koninkrijk = dc.geefKoninkrijk(huidigeSpeler);
 		for (int index = 0; index < koninkrijk.length; index++)
-			koninkrijkString += (" ".repeat(5) + index + " ".repeat(4));
-		koninkrijkString += "\n  " + (" " + "-".repeat(9)).repeat(koninkrijk[0].length) + "\n";
+			koninkrijkString.append(" ".repeat(6)).append(index).append(" ".repeat(4));
+		koninkrijkString.append("\n  ").append((" " + "-".repeat(10)).repeat(koninkrijk[0].length)).append("\n");
 		int index = 0;
 		for (VakDTO[] rij : koninkrijk) {
-			koninkrijkString += "  " + ("|" + " ".repeat(9)).repeat(koninkrijk[0].length) + "|\n"
-					+ String.format("%d", index++) + " |";
+			koninkrijkString.append("  ").append(("|" + " ".repeat(10)).repeat(koninkrijk[0].length)).append("|\n")
+					.append(String.format("%d", index++)).append(" |");
 			for (VakDTO vak : rij)
 				if (vak.landschap() == null)
-					koninkrijkString += " ".repeat(9) + "|";
+					koninkrijkString.append(" ".repeat(10)).append("|");
 				else
 					if (vak.landschap().equalsIgnoreCase(Landschap.KASTEEL.toString()))
-						koninkrijkString += String.format(" %7s |", Landschap.KASTEEL);
+						koninkrijkString.append(String.format(" %8s |", Landschap.KASTEEL));
 					else
 						if (vak.landschap().equalsIgnoreCase(Landschap.LEEG.toString()))
-							koninkrijkString += " ".repeat(4) + "X" + " ".repeat(4) + "|";
+							koninkrijkString.append(" ".repeat(5)).append("X").append(" ".repeat(4)).append("|");
 						else
-							koninkrijkString += String.format(" %5s %d |", vak.landschap(), vak.aantalKronen());
-			koninkrijkString += "\n  |" + (" ".repeat(9) + "|").repeat(koninkrijk[0].length) + "\n  "
-					+ (" " + "-".repeat(9)).repeat(koninkrijk[0].length) + "\n";
+							koninkrijkString.append(String.format(" %6s %d |", vak.landschap(), vak.aantalKronen()));
+			koninkrijkString.append("\n  |").append((" ".repeat(10) + "|").repeat(koninkrijk[0].length)).append("\n  ")
+					.append((" " + "-".repeat(10)).repeat(koninkrijk[0].length)).append("\n");
 		}
-		return koninkrijkString;
-	}
-
-	private String toonScoreOverzicht() {
-		String scoreOverzicht = "";
-		try {
-			List<List<Integer>> scores = dc.geefScoreOverzicht();
-			List<SpelerDTO> winnaars = dc.geefWinnaars();
-			List<SpelerDTO> spelers = dc.geefSpelers();
-			int grootsteLengte = 0;
-			for (SpelerDTO speler : spelers)
-				if (speler.gebruikersnaam().length() > grootsteLengte)
-					grootsteLengte = speler.gebruikersnaam().length();
-			System.out.print(toonMenuTitel(messages.getString("scores")));
-			System.out.printf("%8s%20s%20s%19s%n", messages.getString("players"), messages.getString("amount_played"),
-					messages.getString("amount_won"), messages.getString("winner"));
-			for (int index = 0; index < spelers.size(); index++)
-				scoreOverzicht += String.format("%s%s%12s%20s%28s%n",
-						" ".repeat(grootsteLengte - spelers.get(index).gebruikersnaam().length()),
-						spelers.get(index).gebruikersnaam(), scores.get(0).get(index), scores.get(1).get(index),
-						winnaars.contains(spelers.get(index)) ? "Gewonnen!" : "");
-			scoreOverzicht += "\n";
-		}
-		catch (RuntimeException re) {
-			System.err.println(messages.getString("no_connection"));
-			scanner.nextLine();
-			scoreOverzicht = "";
-		}
-		catch (Exception e) {
-			System.err.println(messages.getString("error_occurred"));
-			scanner.nextLine();
-			scoreOverzicht = "";
-		}
-		return scoreOverzicht;
+		return koninkrijkString.toString();
 	}
 
 }

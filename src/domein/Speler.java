@@ -15,43 +15,67 @@ public class Speler {
 	private final ResourceBundle messages;
 	private String gebruikersnaam;
 	private int geboortejaar;
-	private int aantalGewonnen;
-	private int aantalGespeeld;
+	private final int aantalGewonnenSpellen;
+	private final int aantalGespeeldeSpellen;
 	private Kleur kleur;
-	private Vak[][] koninkrijk;
+	private final Koninkrijk koninkrijk;
 	private static final int MIN_LENGTE_GERUIKERSNAAM = 6;
 	private static final int MIN_LEEFTIJD = 6;
 	private static final int MAX_LEEFTIJD = 150;
 
+	/**
+	 * Constructor voor een Speler.
+	 *
+	 * @param gebruikersnaam de gebruikersnaam van de speler.
+	 * @param geboortejaar   het geboortejaar van de speler.
+	 */
 	public Speler(String gebruikersnaam, int geboortejaar) {
 		this(gebruikersnaam, geboortejaar, 0, 0);
 	}
 
-	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
-		setGebruikersnaam(gebruikersnaam);
-		setGeboortejaar(geboortejaar);
-		setAantalGewonnen(aantalGewonnen);
-		setAantalGespeeld(aantalGespeeld);
+	/**
+	 * Constructor voor een Speler.
+	 *
+	 * @param gebruikersnaam         de gebruikersnaam van de speler.
+	 * @param geboortejaar           het geboortejaar van de speler.
+	 * @param aantalGewonnenSpellen  het aantal gewonnen spellen van de speler.
+	 * @param aantalGespeeldeSpellen het aantal gespeelde spellen van de speler.
+	 */
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnenSpellen, int aantalGespeeldeSpellen) {
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
+		stelGebruikersnaamIn(gebruikersnaam);
+		stelGeboortejaarIn(geboortejaar);
+		this.aantalGewonnenSpellen = aantalGewonnenSpellen;
+		this.aantalGespeeldeSpellen = aantalGespeeldeSpellen;
+		this.koninkrijk = new Koninkrijk();
 	}
 
-	public String getGebruikersnaam() {
+	/**
+	 * Geeft de gebruikersnaam van de speler.
+	 *
+	 * @return de gebruikersnaam van de speler.
+	 */
+	public String geefGebruikersnaam() {
 		return gebruikersnaam;
 	}
 
-	private void setGebruikersnaam(String gebruikersnaam) {
+	private void stelGebruikersnaamIn(String gebruikersnaam) {
 		if (gebruikersnaam.length() < MIN_LENGTE_GERUIKERSNAAM || gebruikersnaam.isBlank())
 			throw new GebruikersnaamOngeldigException(
 					String.format(messages.getString("invalid_username"), MIN_LENGTE_GERUIKERSNAAM));
-		else
-			this.gebruikersnaam = gebruikersnaam;
+		this.gebruikersnaam = gebruikersnaam;
 	}
 
-	public int getGeboortejaar() {
+	/**
+	 * Geeft het geboortejaar van de speler.
+	 *
+	 * @return het geboortejaar van de speler.
+	 */
+	public int geefGeboortejaar() {
 		return geboortejaar;
 	}
 
-	private void setGeboortejaar(int geboortejaar) {
+	private void stelGeboortejaarIn(int geboortejaar) {
 		int huidigJaar = LocalDate.now().getYear();
 		if (geboortejaar > huidigJaar)
 			throw new GeboortejaarOngeldigException(messages.getString("invalid_birthyear"));
@@ -62,48 +86,72 @@ public class Speler {
 		this.geboortejaar = geboortejaar;
 	}
 
-	public int getAantalGewonnen() {
-		return aantalGewonnen;
+	/**
+	 * Geeft het aantal gewonnen spellen van de speler.
+	 *
+	 * @return het aantal gewonnen spellen van de speler.
+	 */
+	public int geefAantalGewonnenSpellen() {
+		return aantalGewonnenSpellen;
 	}
 
-	public void setAantalGewonnen(int aantalGewonnen) {
-		this.aantalGewonnen = aantalGewonnen;
+	/**
+	 * Geeft het aantal gespeelde spellen van de speler.
+	 *
+	 * @return het aantal gespeelde spellen van de speler.
+	 */
+	public int geefAantalGespeeldeSpellen() {
+		return aantalGespeeldeSpellen;
 	}
 
-	public int getAantalGespeeld() {
-		return aantalGespeeld;
-	}
-
-	public void setAantalGespeeld(int aantalGespeeld) {
-		this.aantalGespeeld = aantalGespeeld;
-	}
-
-	public Kleur getKleur() {
+	/**
+	 * Geeft de kleur van de speler.
+	 *
+	 * @return de kleur van de speler.
+	 */
+	public Kleur geefKleur() {
 		return kleur;
 	}
 
-	public void setKleur(Kleur kleur) {
+	/**
+	 * Stelt de kleur van de speler in.
+	 *
+	 * @param kleur de kleur die moet worden ingesteld.
+	 */
+	public void stelKleurIn(Kleur kleur) {
 		this.kleur = kleur;
 	}
 
-	public Vak[][] getKoninkrijk() {
+	/**
+	 * Geeft het koninkrijk van de speler.
+	 *
+	 * @return het koninkrijk van de speler.
+	 */
+	public Koninkrijk geefKoninkrijk() {
 		return koninkrijk;
 	}
 
-	public void setKoninkrijk(Vak[][] koninkrijk) {
-		this.koninkrijk = koninkrijk;
-	}
-
+	/**
+	 * Controleert of een object gelijk is aan deze speler.
+	 *
+	 * @param speler het object om te vergelijken met deze speler.
+	 * @return true als het object gelijk is aan deze speler, anders false.
+	 */
 	@Override
-	public boolean equals(Object o) {
-		if (this == o)
+	public boolean equals(Object speler) {
+		if (this == speler)
 			return true;
-		if (o == null || this.getClass() != o.getClass())
+		if (speler == null || this.getClass() != speler.getClass())
 			return false;
-		Speler speler = (Speler) o;
-		return this.gebruikersnaam.equals(speler.gebruikersnaam) && this.geboortejaar == speler.geboortejaar;
+		Speler spelerObj = (Speler) speler;
+		return this.gebruikersnaam.equals(spelerObj.gebruikersnaam) && this.geboortejaar == spelerObj.geboortejaar;
 	}
 
+	/**
+	 * Geeft een hashcode voor deze speler.
+	 *
+	 * @return een hashcode voor deze speler.
+	 */
 	@Override
 	public int hashCode() {
 		return Objects.hash(gebruikersnaam, geboortejaar);

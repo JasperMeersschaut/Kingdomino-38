@@ -3,9 +3,12 @@ package gui;
 
 import java.util.ResourceBundle;
 
+import cui.HoofdMenu;
 import domein.DomeinController;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -24,10 +27,15 @@ public class HoofdMenuScherm extends BorderPane {
 	private final ResourceBundle messages;
 	private final DomeinController dc;
 	private final Stage scherm;
-	private Button speelSpelKnop;
 
+	/**
+	 * Constructor voor het HoofdMenuScherm.
+	 *
+	 * @param dc     de domeincontroller.
+	 * @param scherm het huidige scherm.
+	 */
 	public HoofdMenuScherm(DomeinController dc, Stage scherm) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		this.dc = dc;
 		this.scherm = scherm;
 		bouwScherm();
@@ -65,6 +73,11 @@ public class HoofdMenuScherm extends BorderPane {
 		welkomscherm.setOnMouseClicked(event -> gaNaarWelkomScherm());
 		Text kingdomino = new Text("Kingdomino");
 		kingdomino.getStyleClass().addAll("titel", "hugeText");
+		kingdomino.setOnMouseClicked(event -> {
+			scherm.hide();
+			new HoofdMenu(dc);
+			scherm.show();
+		});
 		menu.getChildren().addAll(welkomscherm, kingdomino);
 		widthProperty().addListener(observable -> menu.setSpacing(scherm.getWidth() - 750));
 		return menu;
@@ -90,7 +103,7 @@ public class HoofdMenuScherm extends BorderPane {
 		registreerSpelerKnop.setOnMouseEntered(event -> setCursor(Cursor.HAND));
 		registreerSpelerKnop.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
 		registreerSpelerKnop.setOnAction(event -> gaNaarRegistratieMenuScherm());
-		speelSpelKnop = new Button(messages.getString("fx_play_game"));
+		Button speelSpelKnop = new Button(messages.getString("fx_play_game"));
 		speelSpelKnop.getStyleClass().addAll("zandkleur", "font", "smallText", "border");
 		speelSpelKnop.setOnMouseEntered(event -> setCursor(Cursor.HAND));
 		speelSpelKnop.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
@@ -114,7 +127,8 @@ public class HoofdMenuScherm extends BorderPane {
 			getScene().setRoot(new SpelersToevoegenScherm(dc, scherm));
 		}
 		catch (Exception e) {
-			speelSpelKnop.setText(messages.getString("no_connection"));
+			Alert alert = new Alert(AlertType.ERROR, messages.getString("no_connection"));
+			alert.show();
 		}
 	}
 

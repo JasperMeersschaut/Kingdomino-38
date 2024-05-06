@@ -10,10 +10,15 @@ public enum Taal {
 	private static Locale taal;
 
 	Taal(String taal) {
-		setTaal(taal);
+		stelTaalIn(taal);
 	}
 
-	public static void setTaal(String taal) {
+	/**
+	 * Stelt de taal in op basis van de gegeven taalcode.
+	 *
+	 * @param taal de taalcode om in te stellen.
+	 */
+	public static void stelTaalIn(String taal) {
 		switch (taal) {
 			case "BE":
 				Taal.taal = new Locale("nl", "BE");
@@ -21,12 +26,21 @@ public enum Taal {
 			case "FR":
 				Taal.taal = new Locale("fr", "FR");
 				break;
-			default:
+			case "EN":
 				Taal.taal = new Locale("en", "EN");
+				break;
+			default:
+				Taal.taal = Locale.getDefault();
+				break;
 		}
 	}
 
-	public static Locale getTaal() {
+	/**
+	 * Geeft de huidige ingestelde taal terug.
+	 *
+	 * @return de huidige ingestelde taal.
+	 */
+	public static Locale geefTaal() {
 		return taal;
 	}
 
