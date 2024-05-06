@@ -30,8 +30,14 @@ public class RegistratieScherm extends GridPane {
 	private Label registratieMelding;
 	private final Stage scherm;
 
+	/**
+	 * Constructor voor het RegistratieScherm.
+	 *
+	 * @param dc     de domeincontroller.
+	 * @param scherm het huidige scherm.
+	 */
 	public RegistratieScherm(DomeinController dc, Stage scherm) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		this.dc = dc;
 		this.scherm = scherm;
 		bouwScherm();

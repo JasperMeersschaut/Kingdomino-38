@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import domein.DomeinController;
 import dto.SpelerDTO;
 import dto.TegelDTO;
-import exceptions.RaaktGeenTegelMetZelfdeLandschapsException;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -34,9 +33,15 @@ public class TegelLeggenScherm extends HBox {
 	private Richting richting = Richting.RECHTS;
 	private Label error;
 
+	/**
+	 * Constructor voor het TegelLeggenScherm.
+	 *
+	 * @param dc     de domeincontroller.
+	 * @param scherm het huidige scherm.
+	 */
 	public TegelLeggenScherm(DomeinController dc, Stage scherm, TegelDTO tegelTeLeggen, SpelerDTO huidigeSpeler,
 			KoninkrijkScherm koninkrijk, SpelSpelenScherm spelSpelenScherm) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		this.dc = dc;
 		this.scherm = scherm;
 		this.tegelTeLeggen = tegelTeLeggen;
@@ -64,13 +69,13 @@ public class TegelLeggenScherm extends HBox {
 				vak.setPrefSize(85, 85);
 				vak.setOnMouseClicked(event -> {
 					try {
-						dc.legTegelInKoninkrijk(tegelTeLeggen, huidigeSpeler, "" + finalI + finalJ, switch (richting) {
+						dc.legTegelInKoninkrijk(tegelTeLeggen, huidigeSpeler, finalI, finalJ, switch (richting) {
 							case BOVEN -> 3;
 							case LINKS -> 2;
 							case RECHTS -> 1;
 							case ONDER -> 4;
 						});
-						koninkrijkScherm.legTegelInKoninkrijk(tegelTeLeggen, huidigeSpeler, finalI, finalJ, richting);
+						koninkrijkScherm.legTegelInKoninkrijk(tegelTeLeggen, finalI, finalJ, richting);
 					}
 					catch (IllegalArgumentException iae) {
 						error.setText(iae.getMessage());
@@ -80,6 +85,8 @@ public class TegelLeggenScherm extends HBox {
 						error.setText(messages.getString("error_occurred"));
 					}
 				});
+				vak.setOnMouseEntered(event -> koninkrijkScherm.toonTegel(tegelTeLeggen, finalI, finalJ, richting));
+				vak.setOnMouseExited(event -> koninkrijkScherm.hideTegel());
 				koninkrijk.add(vak, finalJ, finalI);
 			}
 		getChildren().addAll(bediening, koninkrijk);
@@ -130,7 +137,7 @@ public class TegelLeggenScherm extends HBox {
 		Label weggooiKnop = maakKnop("weggooien");
 		weggooiKnop.setOnMouseClicked(event -> {
 			try {
-				dc.gooiWeg(tegelTeLeggen, huidigeSpeler);
+				dc.gooiTegelTeLeggenWeg(tegelTeLeggen, huidigeSpeler);
 				spelSpelenScherm.setTegelVerwijderd(true);
 				getScene().setRoot(spelSpelenScherm);
 			}

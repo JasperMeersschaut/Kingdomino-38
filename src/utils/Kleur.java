@@ -9,28 +9,40 @@ public enum Kleur {
 
 	GROEN, BLAUW, ROOS, GEEL;
 
+	/**
+	 * Geeft de kleur terug als een string.
+	 *
+	 * @return de kleur als string.
+	 */
 	@Override
 	public String toString() {
 		return switch (this.name()) {
-			case "GROEN" -> ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_green");
-			case "BLAUW" -> ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_blue");
-			case "ROOS" -> ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_pink");
-			case "GEEL" -> ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_yellow");
-			default -> this.name().charAt(0) + this.name().substring(1).toLowerCase();
+			case "GROEN" -> ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_green");
+			case "BLAUW" -> ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_blue");
+			case "ROOS" -> ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_pink");
+			case "GEEL" -> ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_yellow");
+			default -> null;
 		};
 	}
 
+	/**
+	 * Geeft de kleur terug die overeenkomt met de opgegeven string.
+	 *
+	 * @param kleur de kleur in de vorm van een string.
+	 * @return de kleur die overeenkomt met de gegeven string.
+	 * @throws KleurBestaatNietException als de kleur niet bestaat.
+	 */
 	public static Kleur geefKleur(String kleur) {
 		if (!Kleur.bestaatKleur(kleur))
 			throw new KleurBestaatNietException(String
-					.format(ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_doenst_exist"), kleur));
-		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_green")))
+					.format(ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_doenst_exist"), kleur));
+		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_green")))
 			return GROEN;
-		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_blue")))
+		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_blue")))
 			return BLAUW;
-		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_pink")))
+		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_pink")))
 			return ROOS;
-		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.getTaal()).getString("color_yellow")))
+		if (kleur.equalsIgnoreCase(ResourceBundle.getBundle("messages", Taal.geefTaal()).getString("color_yellow")))
 			return GEEL;
 		return null;
 	}

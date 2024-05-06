@@ -10,74 +10,54 @@ import utils.Taal;
 
 public class HoofdMenu {
 
-	private ResourceBundle messages;
+	private final ResourceBundle messages;
 	private final Scanner scanner;
-	private DomeinController dc;
+	private final DomeinController dc;
 
+	/**
+	 * Constructor voor het HoofdMenu.
+	 *
+	 * @param dc de domeincontroller.
+	 */
 	public HoofdMenu(DomeinController dc) {
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		scanner = new Scanner(System.in);
 		this.dc = dc;
-	}
-
-	public void vraagTaal() {
-		int keuze;
-		boolean keuzeGeldig;
-		do {
-			keuze = vraagKeuzeMetHoofdMenu(
-					"In which language would you like to play this game?\n1. Dutch\n2. English\n3. French\nPlease indicate your choice:");
-			System.out.println();
-			switch (keuze) {
-				case 1 -> Taal.setTaal("BE");
-				case 2 -> Taal.setTaal("EN");
-				case 3 -> Taal.setTaal("FR");
-			}
-			keuzeGeldig = keuze >= 1 && keuze <= 3;
-		} while (!keuzeGeldig);
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
 		vraagKeuze();
 	}
 
-	public void vraagKeuze() {
+	private void vraagKeuze() {
 		int keuze;
 		do {
 			keuze = vraagKeuzeMetHoofdMenu(messages.getString("main_menu"));
 			System.out.println();
 			switch (keuze) {
-				case 1 -> new RegistratieMenu(dc).registreerSpeler();
+				case 1 -> new RegistratieMenu(dc);
 				case 2 -> {
-					boolean spelAangemaakt = false;
 					try {
 						dc.maakSpelAan();
-						spelAangemaakt = true;
+						vraagKeuzeOverSpel();
 					}
 					catch (RuntimeException re) {
 						System.err.println(messages.getString("no_connection"));
 						scanner.nextLine();
 					}
-					catch (Exception e) {
-						System.err.println(messages.getString("error_occurred"));
-						scanner.nextLine();
-					}
-					if (spelAangemaakt)
-						vraagKeuzeOverSpel();
 				}
 			}
 		} while (keuze != 3);
 	}
 
 	private void vraagKeuzeOverSpel() {
-		SpelersToevoegenMenu spelersToevoegenMenu = new SpelersToevoegenMenu(dc);
-		SpelSpelenMenu spelSpelenMenu = new SpelSpelenMenu(dc);
 		int keuze;
 		do {
 			keuze = vraagKeuzeMetHoofdMenu(messages.getString("game_menu"));
 			System.out.println();
 			switch (keuze) {
-				case 1 -> spelersToevoegenMenu.voegSpelerToe();
+				case 1 -> new SpelersToevoegenMenu(dc);
 				case 2 -> {
 					try {
 						dc.startSpel();
-						spelSpelenMenu.speelSpel();
+						new SpelSpelenMenu(dc);
 					}
 					catch (IllegalArgumentException iae) {
 						System.err.println(iae.getMessage());

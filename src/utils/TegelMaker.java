@@ -11,6 +11,9 @@ public class TegelMaker {
 
 	private final List<Tegel> tegels;
 
+	/**
+	 * Constructor voor de TegelMaker klasse. Initialiseert de lijst van tegels.
+	 */
 	public TegelMaker() {
 		tegels = new ArrayList<>();
 		tegels.add(new Tegel(1, new Vak(Landschap.ZAND, 0), new Vak(Landschap.ZAND, 0)));
@@ -63,6 +66,11 @@ public class TegelMaker {
 		tegels.add(new Tegel(48, new Vak(Landschap.ZAND, 0), new Vak(Landschap.MIJN, 3)));
 	}
 
+	/**
+	 * Geeft de lijst van tegels terug.
+	 *
+	 * @return de lijst van tegels.
+	 */
 	public List<Tegel> geeftegels() {
 		return tegels;
 	}

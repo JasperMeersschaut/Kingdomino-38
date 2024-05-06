@@ -39,8 +39,14 @@ public class SpelSpelenScherm extends GridPane {
 	private KoninkrijkScherm koninkrijkScherm;
 	private boolean tegelVerwijderd;
 
+	/**
+	 * Constructor voor het SpelSpelenScherm.
+	 *
+	 * @param dc     de domeincontroller.
+	 * @param scherm het huidige scherm.
+	 */
 	public SpelSpelenScherm(DomeinController dc, Stage scherm) {
-		messages = ResourceBundle.getBundle("messages", Taal.getTaal());
+		messages = ResourceBundle.getBundle("messages", Taal.geefTaal());
 		this.dc = dc;
 		this.scherm = scherm;
 		koninkrijken = new ArrayList<>();
@@ -66,7 +72,7 @@ public class SpelSpelenScherm extends GridPane {
 		legTegels();
 		setOnMouseEntered(event -> {
 			if (!dc.geefEindKolom().isEmpty() && dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null))
-				dc.vulKolommenAan();
+				dc.vulStapelsEnKolommenAan();
 			refresh();
 			if (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty()
 					&& !dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null)) {
@@ -181,7 +187,7 @@ public class SpelSpelenScherm extends GridPane {
 					tegelView.getChildren().add(koning);
 					if (isStartKolom) {
 						if (dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() != null))
-							dc.vulKolommenAan();
+							dc.vulStapelsEnKolommenAan();
 						refresh();
 					} else {
 						koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));

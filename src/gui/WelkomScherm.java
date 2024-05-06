@@ -16,6 +16,12 @@ public class WelkomScherm extends StackPane {
 	private final DomeinController dc;
 	private final Stage scherm;
 
+	/**
+	 * Constructor voor het WelkomScherm.
+	 *
+	 * @param dc     de domeincontroller.
+	 * @param scherm het huidige scherm.
+	 */
 	public WelkomScherm(DomeinController dc, Stage scherm) {
 		this.dc = dc;
 		this.scherm = scherm;
@@ -33,42 +39,30 @@ public class WelkomScherm extends StackPane {
 		talenBox.setSpacing(50);
 		talenBox.setTranslateY(-50);
 		getChildren().addAll(imageViewWelkom, talenBox);
-		scherm.widthProperty().addListener((observable, oldValue, newValue) -> {
-			imageViewWelkom.setFitWidth(scherm.getWidth());
-		});
+		scherm.widthProperty()
+				.addListener((observable, oldValue, newValue) -> imageViewWelkom.setFitWidth(scherm.getWidth()));
 	}
 
 	private HBox geefVlaggen() {
 		HBox talenBox = new HBox();
-		ImageView vlagBE = new ImageView(new Image(getClass().getResourceAsStream("/images/flags/flagBE.png")));
-		vlagBE.setFitWidth(200);
-		vlagBE.setPreserveRatio(true);
-		vlagBE.setOnMouseEntered(event -> setCursor(Cursor.HAND));
-		vlagBE.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
-		vlagBE.setOnMouseClicked(event -> {
-			Taal.setTaal("BE");
-			gaNaarHoofdMenuScherm();
-		});
-		ImageView vlagEN = new ImageView(new Image(getClass().getResourceAsStream("/images/flags/flagUK.png")));
-		vlagEN.setFitWidth(200);
-		vlagEN.setPreserveRatio(true);
-		vlagEN.setOnMouseEntered(event -> setCursor(Cursor.HAND));
-		vlagEN.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
-		vlagEN.setOnMouseClicked(event -> {
-			Taal.setTaal("EN");
-			gaNaarHoofdMenuScherm();
-		});
-		ImageView vlagFR = new ImageView(new Image(getClass().getResourceAsStream("/images/flags/flagFR.png")));
-		vlagFR.setFitWidth(200);
-		vlagFR.setPreserveRatio(true);
-		vlagFR.setOnMouseEntered(event -> setCursor(Cursor.HAND));
-		vlagFR.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
-		vlagFR.setOnMouseClicked(event -> {
-			Taal.setTaal("FR");
-			gaNaarHoofdMenuScherm();
-		});
+		ImageView vlagBE = maakVlag("/images/flags/flagBE.png", "BE");
+		ImageView vlagEN = maakVlag("/images/flags/flagUK.png", "EN");
+		ImageView vlagFR = maakVlag("/images/flags/flagFR.png", "FR");
 		talenBox.getChildren().addAll(vlagBE, vlagEN, vlagFR);
 		return talenBox;
+	}
+
+	private ImageView maakVlag(String pad, String taal) {
+		ImageView vlag = new ImageView(new Image(getClass().getResourceAsStream(pad)));
+		vlag.setFitWidth(200);
+		vlag.setPreserveRatio(true);
+		vlag.setOnMouseEntered(event -> setCursor(Cursor.HAND));
+		vlag.setOnMouseExited(event -> setCursor(Cursor.DEFAULT));
+		vlag.setOnMouseClicked(event -> {
+			Taal.stelTaalIn(taal);
+			gaNaarHoofdMenuScherm();
+		});
+		return vlag;
 	}
 
 	private void gaNaarHoofdMenuScherm() {
