@@ -46,9 +46,9 @@ public class SpelerRepository {
 	}
 
 	/**
-	 * Geeft een lijst van beschikbare kleuren.
+	 * Verwijdert een speler uit de lijst van beschikbare spelers.
 	 *
-	 * @return een lijst van Kleur objecten.
+	 * @param speler de speler die moet worden verwijderd.
 	 */
 	public void verwijderSpelerUitBeschikbareSpelersLijst(Speler speler) {
 		this.beschikbareSpelers.remove(speler);
@@ -111,10 +111,12 @@ public class SpelerRepository {
 	/**
 	 * Update het aantal gewonnen en gespeelde spellen voor een lijst van spelers.
 	 *
-	 * @param spelers een lijst van lijsten van Speler objecten.
+	 * @param spelersGespeeld een lijst van spelers die gespeeld hebben.
+	 * @param spelersGewonnen een lijst van spelers die gewonnen hebben.
 	 */
-	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<List<Speler>> spelers) {
-		mapper.updateAantalGewonnenEnAantalGespeeldeSpellen(spelers);
+	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<Speler> spelersGespeeld,
+			List<Speler> spelersGewonnen) {
+		mapper.updateAantalGewonnenEnAantalGespeeldeSpellen(spelersGespeeld, spelersGewonnen);
 	}
 
 }

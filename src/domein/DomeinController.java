@@ -236,17 +236,19 @@ public class DomeinController {
 	 */
 	public List<List<Integer>> geefAantalGespeeldeEnAantalGewonnenSpellen() {
 		List<List<Integer>> scores = new ArrayList<>(Arrays.asList(new ArrayList<>(), new ArrayList<>()));
+		List<Speler> spelersGespeeld = new ArrayList<>();
+		List<Speler> spelersGewonnen = new ArrayList<>();
 		List<List<Speler>> spelers = new ArrayList<>(Arrays.asList(new ArrayList<>(), new ArrayList<>()));
 		for (Speler speler : huidigSpel.geefSpelers()) {
 			scores.get(0).add(speler.geefAantalGespeeldeSpellen());
-			spelers.get(0).add(speler);
+			spelersGespeeld.add(speler);
 			if (huidigSpel.geefWinnaars().contains(speler)) {
 				scores.get(1).add(speler.geefAantalGewonnenSpellen() + 1);
-				spelers.get(1).add(speler);
+				spelersGewonnen.add(speler);
 			} else
 				scores.get(1).add(speler.geefAantalGewonnenSpellen());
 		}
-		spelerRepository.updateAantalGewonnenEnAantalGespeeldeSpellen(spelers);
+		spelerRepository.updateAantalGewonnenEnAantalGespeeldeSpellen(spelersGespeeld, spelersGewonnen);
 		return scores;
 	}
 

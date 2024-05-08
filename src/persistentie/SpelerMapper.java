@@ -106,13 +106,15 @@ public class SpelerMapper {
 	 * Update het aantal gewonnen en gespeelde spellen voor een lijst van spelers in
 	 * de database.
 	 *
-	 * @param spelers de lijst van spelers om te updaten.
+	 * @param spelersGespeeld een lijst van spelers die gespeeld hebben.
+	 * @param spelersGewonnen een lijst van spelers die gewonnen hebben.
 	 */
-	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<List<Speler>> spelers) {
+	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<Speler> spelersGespeeld,
+			List<Speler> spelersGewonnen) {
 		Connectie ssh = new Connectie();
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
 				PreparedStatement queryUpdateAantalGespeeld = conn.prepareStatement(UPDATE_AANTAL_GESPEELD)) {
-			for (Speler speler : spelers.get(0)) {
+			for (Speler speler : spelersGespeeld) {
 				queryUpdateAantalGespeeld.setString(1, speler.geefGebruikersnaam());
 				queryUpdateAantalGespeeld.executeUpdate();
 			}
@@ -122,7 +124,7 @@ public class SpelerMapper {
 		}
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
 				PreparedStatement queryUpdateAantalGewonnen = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN)) {
-			for (Speler speler : spelers.get(1)) {
+			for (Speler speler : spelersGewonnen) {
 				queryUpdateAantalGewonnen.setString(1, speler.geefGebruikersnaam());
 				queryUpdateAantalGewonnen.executeUpdate();
 			}
