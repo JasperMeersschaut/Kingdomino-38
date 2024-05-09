@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import domein.DomeinController;
+import dto.SpelerDTO;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
@@ -41,16 +42,15 @@ public class ScoreScherm extends VBox {
 		setSpacing(100);
 		HBox spelers = new HBox();
 		for (int i = 0; i < dc.geefSpelers().size(); i++) {
-			Label speler = new Label(dc.geefSpelers().get(i).gebruikersnaam());
-			speler.getStyleClass().addAll("font", "mediumText");
-			Label score = new Label(
-					String.format("%s %d", messages.getString("fx_score"), dc.berekenScore(dc.geefSpelers().get(i))));
+			SpelerDTO speler = dc.geefSpelers().get(i);
+			Label spelerLabel = new Label(speler.gebruikersnaam());
+			spelerLabel.getStyleClass().addAll("font", "mediumText");
+			Label score = new Label(String.format("%s %d", messages.getString("fx_score"), dc.berekenScore(speler)));
 			score.getStyleClass().addAll("font", "mediumText");
-			Label gewonnen = new Label(
-					dc.geefWinnaars().contains(dc.geefSpelers().get(i)) ? messages.getString("fx_won") : "");
+			Label gewonnen = new Label(dc.geefWinnaars().contains(speler) ? messages.getString("fx_won") : "");
 			gewonnen.getStyleClass().addAll("font", "mediumText");
 			VBox spelerStats = new VBox();
-			spelerStats.getChildren().addAll(speler, score, gewonnen);
+			spelerStats.getChildren().addAll(spelerLabel, score, gewonnen);
 			spelerStats.setAlignment(Pos.CENTER);
 			spelerStats.setSpacing(10);
 			spelers.getChildren().add(spelerStats);

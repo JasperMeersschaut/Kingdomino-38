@@ -56,11 +56,14 @@ public class SpelSpelenScherm extends GridPane {
 		bouwScherm();
 	}
 
+	/**
+	 * Setter voor de boolean tegelVerwijderd.
+	 */
 	public void setTegelVerwijderd(boolean waarde) {
 		tegelVerwijderd = waarde;
 	}
 
-	public void bouwScherm() {
+	private void bouwScherm() {
 		getStyleClass().add("zandkleur");
 		scherm.centerOnScreen();
 		setPadding(new Insets(10));
