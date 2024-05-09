@@ -47,10 +47,16 @@ public class ScoreScherm extends VBox {
 			spelerLabel.getStyleClass().addAll("font", "mediumText");
 			Label score = new Label(String.format("%s %d", messages.getString("fx_score"), dc.berekenScore(speler)));
 			score.getStyleClass().addAll("font", "mediumText");
-			Label gewonnen = new Label(dc.geefWinnaars().contains(speler) ? messages.getString("fx_won") : "");
+			Label gewonnen = new Label(dc.geefWinnaars().contains(speler) ? messages.getString("won") : "");
 			gewonnen.getStyleClass().addAll("font", "mediumText");
+			Label aantalGespeeld = new Label(String.format("%s %d", messages.getString("amount_played"),
+					dc.geefAantalGespeeldeEnAantalGewonnenSpellen().get(0).get(i)));
+			aantalGespeeld.getStyleClass().addAll("font", "mediumText");
+			Label aantalGewonnen = new Label(String.format("%s %d", messages.getString("amount_won"),
+					dc.geefAantalGespeeldeEnAantalGewonnenSpellen().get(1).get(i)));
+			aantalGewonnen.getStyleClass().addAll("font", "mediumText");
 			VBox spelerStats = new VBox();
-			spelerStats.getChildren().addAll(spelerLabel, score, gewonnen);
+			spelerStats.getChildren().addAll(spelerLabel, score, gewonnen, aantalGespeeld, aantalGewonnen);
 			spelerStats.setAlignment(Pos.CENTER);
 			spelerStats.setSpacing(10);
 			spelers.getChildren().add(spelerStats);

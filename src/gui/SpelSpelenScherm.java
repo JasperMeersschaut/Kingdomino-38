@@ -57,7 +57,9 @@ public class SpelSpelenScherm extends GridPane {
 	}
 
 	/**
-	 * Setter voor de boolean tegelVerwijderd.
+	 * Stelt in of de tegelTeLeggen verwijderd is.
+	 * 
+	 * @param waarde boolean die aangeeft of de tegel verwijderd is.
 	 */
 	public void setTegelVerwijderd(boolean waarde) {
 		tegelVerwijderd = waarde;
@@ -80,11 +82,10 @@ public class SpelSpelenScherm extends GridPane {
 			if (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty()
 					&& !dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null)) {
 				koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));
-				tegelTeLeggen = dc.geefStartKolom().stream().filter(
-						t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
+				tegelTeLeggen = dc.geefStartKolom().stream()
+						.filter(t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
 						.findAny().get();
-				getScene().setRoot(
-						new TegelLeggenScherm(dc, scherm, tegelTeLeggen, huidigeSpeler, koninkrijkScherm, this));
+				getScene().setRoot(new TegelLeggenScherm(dc, scherm, tegelTeLeggen, huidigeSpeler, koninkrijkScherm, this));
 			}
 			if (dc.geefEindKolom().isEmpty() && dc.geefStapel().isEmpty()
 					&& dc.geefStartKolom().stream().allMatch(t -> t.spelerOpTegel() == null))
@@ -110,14 +111,15 @@ public class SpelSpelenScherm extends GridPane {
 	private void legTegels() {
 		VBox stapels = new VBox();
 		huidigeSpeler = dc.geefHuidigeSpeler();
-		stapels.setSpacing(30);
+		stapels.setSpacing(20);
 		Label huidigeSpelerLabel = new Label(
 				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
 		huidigeSpelerLabel.getStyleClass().addAll("font", "bigText");
 		stapels.getChildren().add(huidigeSpelerLabel);
 		if (!dc.geefStapel().isEmpty()) {
-			ImageView bovensteTegel = new ImageView(new Image(getClass().getResource(
-					String.format("/images/dominotegels/tegel_%02d_achterkant.png", dc.geefStapel().get(0).nummer()))
+			ImageView bovensteTegel = new ImageView(new Image(getClass()
+					.getResource(
+							String.format("/images/dominotegels/tegel_%02d_achterkant.png", dc.geefStapel().get(0).nummer()))
 					.toExternalForm()));
 			bovensteTegel.setPreserveRatio(true);
 			bovensteTegel.setFitWidth(200);
@@ -157,9 +159,9 @@ public class SpelSpelenScherm extends GridPane {
 	private void addKolomListener(VBox kolom, boolean isStartKolom) {
 		for (int i = 0; i < dc.geefSpelers().size(); i++) {
 			TegelDTO tegel = isStartKolom ? dc.geefStartKolom().get(i) : dc.geefEindKolom().get(i);
-			ImageView tegelImg = new ImageView(new Image(getClass()
-					.getResource(String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))
-					.toExternalForm()));
+			ImageView tegelImg = new ImageView(new Image(
+					getClass().getResource(String.format("/images/dominotegels/tegel_%02d_voorkant.png", tegel.nummer()))
+							.toExternalForm()));
 			tegelImg.setPreserveRatio(true);
 			tegelImg.setFitWidth(200);
 			StackPane tegelView = new StackPane();
@@ -167,10 +169,10 @@ public class SpelSpelenScherm extends GridPane {
 			kolom.getChildren().add(tegelView);
 			if (tegel.spelerOpTegel() != null) {
 				Color kleur = switch (Kleur.geefKleur(tegel.kleur())) {
-				case BLAUW -> Color.BLUE;
-				case GEEL -> Color.YELLOW;
-				case ROOS -> Color.PINK;
-				case GROEN -> Color.LIMEGREEN;
+					case BLAUW -> Color.BLUE;
+					case GEEL -> Color.YELLOW;
+					case ROOS -> Color.PINK;
+					case GROEN -> Color.LIMEGREEN;
 				};
 				Circle koning = new Circle(20, kleur);
 				tegelView.getChildren().add(koning);
@@ -181,10 +183,10 @@ public class SpelSpelenScherm extends GridPane {
 				try {
 					dc.plaatsKoningOpTegel(huidigeSpeler, tegel.nummer());
 					Color kleur = switch (Kleur.geefKleur(huidigeSpeler.kleur())) {
-					case BLAUW -> Color.BLUE;
-					case GEEL -> Color.YELLOW;
-					case GROEN -> Color.LIMEGREEN;
-					case ROOS -> Color.PINK;
+						case BLAUW -> Color.BLUE;
+						case GEEL -> Color.YELLOW;
+						case GROEN -> Color.LIMEGREEN;
+						case ROOS -> Color.PINK;
 					};
 					Circle koning = new Circle(20, kleur);
 					tegelView.getChildren().add(koning);
@@ -194,16 +196,19 @@ public class SpelSpelenScherm extends GridPane {
 						refresh();
 					} else {
 						koninkrijkScherm = koninkrijken.get(dc.geefSpelers().indexOf(huidigeSpeler));
-						tegelTeLeggen = dc.geefStartKolom().stream().filter(t -> t.spelerOpTegel() != null
-								&& t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam())).findAny().get();
-						getScene().setRoot(new TegelLeggenScherm(dc, scherm, tegelTeLeggen, huidigeSpeler,
-								koninkrijkScherm, this));
+						tegelTeLeggen = dc.geefStartKolom().stream().filter(
+								t -> t.spelerOpTegel() != null && t.spelerOpTegel().equals(huidigeSpeler.gebruikersnaam()))
+								.findAny().get();
+						getScene().setRoot(
+								new TegelLeggenScherm(dc, scherm, tegelTeLeggen, huidigeSpeler, koninkrijkScherm, this));
 					}
-				} catch (IllegalArgumentException iae) {
+				}
+				catch (IllegalArgumentException iae) {
 					error.setText(iae.getMessage());
 					error.getStyleClass().add("error");
 					setTegelVerwijderd(false);
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					error.setText(messages.getString("error_occurred"));
 					error.getStyleClass().add("error");
 					setTegelVerwijderd(false);

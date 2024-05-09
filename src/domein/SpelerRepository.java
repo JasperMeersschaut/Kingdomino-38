@@ -67,7 +67,7 @@ public class SpelerRepository {
 	 * Stelt de lijsten van beschikbare spelers en kleuren in.
 	 */
 	public void stelBeschikbareSpelersEnKleurenLijstenIn() {
-		beschikbareSpelers = geefAlleSpelersUitDataBase();
+		beschikbareSpelers = geefAlleSpelersUitDatabase();
 		beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
 	}
 
@@ -92,7 +92,7 @@ public class SpelerRepository {
 	 * @param gebruikersnaam de gebruikersnaam van de speler.
 	 * @return een Speler object.
 	 */
-	public Speler geefSpelerUitDataBase(String gebruikersnaam) {
+	public Speler geefSpelerUitDatabase(String gebruikersnaam) {
 		if (!bestaatSpeler(gebruikersnaam))
 			throw new GebruikersnaamBestaatNietException(
 					String.format(messages.getString("player_doenst_exist"), gebruikersnaam));
@@ -104,7 +104,7 @@ public class SpelerRepository {
 	 *
 	 * @return een lijst van Speler objecten.
 	 */
-	public List<Speler> geefAlleSpelersUitDataBase() {
+	public List<Speler> geefAlleSpelersUitDatabase() {
 		return mapper.geefAlleSpelersUitDataBase();
 	}
 

@@ -41,7 +41,7 @@ public class ScoreMenu {
 				scoreOverzicht.append(String.format("%s%s%12s%20s%28s%n",
 						" ".repeat(grootsteLengte - spelers.get(index).gebruikersnaam().length()),
 						spelers.get(index).gebruikersnaam(), scores.get(0).get(index), scores.get(1).get(index),
-						winnaars.contains(spelers.get(index)) ? "Gewonnen!" : ""));
+						winnaars.contains(spelers.get(index)) ? messages.getString("won") : ""));
 			scoreOverzicht.append("\n");
 		}
 		catch (RuntimeException re) {
