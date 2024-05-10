@@ -137,7 +137,7 @@ public class TegelLeggenScherm extends HBox {
 		Label weggooiKnop = maakKnop("weggooien");
 		weggooiKnop.setOnMouseClicked(event -> {
 			try {
-				dc.gooiTegelTeLeggenWeg(tegelTeLeggen, huidigeSpeler);
+				dc.gooiTegelWeg(tegelTeLeggen, huidigeSpeler);
 				spelSpelenScherm.setTegelVerwijderd(true);
 				getScene().setRoot(spelSpelenScherm);
 			}

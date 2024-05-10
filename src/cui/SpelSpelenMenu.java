@@ -94,7 +94,7 @@ public class SpelSpelenMenu {
 				System.out.printf(messages.getString("which_box_to_place") + " ", toonTegel(tegel));
 				plaats = scanner.next();
 				if (plaats.equals("weggooien") || plaats.equals("discard") || plaats.equals("défausse")) {
-					dc.gooiTegelTeLeggenWeg(tegel, huidigeSpeler);
+					dc.gooiTegelWeg(tegel, huidigeSpeler);
 					System.out.println(messages.getString("tile_discarded"));
 					break;
 				}

@@ -11,12 +11,12 @@ public class Tegel implements Comparable<Tegel> {
 	/**
 	 * Constructor voor een Tegel.
 	 *
-	 * @param nummer    het nummer van de tegel.
+	 * @param tegelNummer    het nummer van de tegel.
 	 * @param vakLinks  het vak aan de linkerkant van de tegel.
 	 * @param vakRechts het vak aan de rechterkant van de tegel.
 	 */
-	public Tegel(int nummer, Vak vakLinks, Vak vakRechts) {
-		this.tegelNummer = nummer;
+	public Tegel(int tegelNummer, Vak vakLinks, Vak vakRechts) {
+		this.tegelNummer = tegelNummer;
 		this.vakLinks = vakLinks;
 		this.vakRechts = vakRechts;
 		this.spelerOpTegel = null;

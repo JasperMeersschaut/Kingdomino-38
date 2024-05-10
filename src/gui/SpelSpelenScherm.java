@@ -56,11 +56,16 @@ public class SpelSpelenScherm extends GridPane {
 		bouwScherm();
 	}
 
+	/**
+	 * Stelt in of de tegelTeLeggen verwijderd is.
+	 * 
+	 * @param waarde boolean die aangeeft of de tegel verwijderd is.
+	 */
 	public void setTegelVerwijderd(boolean waarde) {
 		tegelVerwijderd = waarde;
 	}
 
-	public void bouwScherm() {
+	private void bouwScherm() {
 		getStyleClass().add("zandkleur");
 		scherm.centerOnScreen();
 		setPadding(new Insets(10));
@@ -106,7 +111,7 @@ public class SpelSpelenScherm extends GridPane {
 	private void legTegels() {
 		VBox stapels = new VBox();
 		huidigeSpeler = dc.geefHuidigeSpeler();
-		stapels.setSpacing(30);
+		stapels.setSpacing(20);
 		Label huidigeSpelerLabel = new Label(
 				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
 		huidigeSpelerLabel.getStyleClass().addAll("font", "bigText");

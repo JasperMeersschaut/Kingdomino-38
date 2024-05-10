@@ -13,11 +13,11 @@ import domein.Speler;
 
 public class SpelerMapper {
 
-	private static final String INSERT_SPELER = "INSERT INTO Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld) VALUES (?, ?, ?, ?)";
+	private static final String INSERT_SPELER = "INSERT INTO Speler (gebruikersnaam, geboortejaar, aantalGewonnenSpellen, aantalGespeeldeSpellen) VALUES (?, ?, ?, ?)";
 	private static final String SELECT_SPELER = "SELECT * FROM Speler WHERE gebruikersnaam = ?";
 	private static final String SELECT_ALL_SPELERS = "SELECT * FROM Speler";
-	private static final String UPDATE_AANTAL_GEWONNEN = "UPDATE Speler SET aantalGewonnen = aantalGewonnen + 1 WHERE gebruikersnaam = ?";
-	private static final String UPDATE_AANTAL_GESPEELD = "UPDATE Speler SET aantalGespeeld = aantalGespeeld + 1 WHERE gebruikersnaam = ?";
+	private static final String UPDATE_AANTAL_GEWONNEN_SPELLEN = "UPDATE Speler SET aantalGewonnenSpellen = aantalGewonnenSpellen + 1 WHERE gebruikersnaam = ?";
+	private static final String UPDATE_AANTAL_GESPEELDE_SPELLEN = "UPDATE Speler SET aantalGespeeldeSpellen = aantalGespeeldeSpellen + 1 WHERE gebruikersnaam = ?";
 
 	/**
 	 * Voegt een nieuwe speler toe aan de database.
@@ -58,9 +58,9 @@ public class SpelerMapper {
 				if (rs.next()) {
 					gebruikersnaam = rs.getString("gebruikersnaam");
 					int geboortejaar = rs.getInt("geboortejaar");
-					int aantalGewonnen = rs.getInt("aantalGewonnen");
-					int aantalGespeeld = rs.getInt("aantalGespeeld");
-					speler = new Speler(gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld);
+					int aantalGewonnenSpellen = rs.getInt("aantalGewonnen");
+					int aantalGespeeldeSpellen = rs.getInt("aantalGespeeld");
+					speler = new Speler(gebruikersnaam, geboortejaar, aantalGewonnenSpellen, aantalGespeeldeSpellen);
 				}
 			}
 		}
@@ -87,9 +87,9 @@ public class SpelerMapper {
 				while (rs.next()) {
 					String gebruikersnaam = rs.getString("gebruikersnaam");
 					int geboortejaar = rs.getInt("geboortejaar");
-					int aantalGewonnen = rs.getInt("aantalGewonnen");
-					int aantalGespeeld = rs.getInt("aantalGespeeld");
-					spelers.add(new Speler(gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld));
+					int aantalGewonnenSpellen = rs.getInt("aantalGewonnen");
+					int aantalGespeeldeSpellen = rs.getInt("aantalGespeeld");
+					spelers.add(new Speler(gebruikersnaam, geboortejaar, aantalGewonnenSpellen, aantalGespeeldeSpellen));
 				}
 			}
 		}
@@ -106,25 +106,27 @@ public class SpelerMapper {
 	 * Update het aantal gewonnen en gespeelde spellen voor een lijst van spelers in
 	 * de database.
 	 *
-	 * @param spelers de lijst van spelers om te updaten.
+	 * @param spelersGespeeld een lijst van spelers die gespeeld hebben.
+	 * @param spelersGewonnen een lijst van spelers die gewonnen hebben.
 	 */
-	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<List<Speler>> spelers) {
+	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<Speler> spelersGespeeld,
+			List<Speler> spelersGewonnen) {
 		Connectie ssh = new Connectie();
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-				PreparedStatement queryUpdateAantalGespeeld = conn.prepareStatement(UPDATE_AANTAL_GESPEELD)) {
-			for (Speler speler : spelers.get(0)) {
-				queryUpdateAantalGespeeld.setString(1, speler.geefGebruikersnaam());
-				queryUpdateAantalGespeeld.executeUpdate();
+				PreparedStatement queryUpdateAantalGespeeldeSpellen = conn.prepareStatement(UPDATE_AANTAL_GESPEELDE_SPELLEN)) {
+			for (Speler speler : spelersGespeeld) {
+				queryUpdateAantalGespeeldeSpellen.setString(1, speler.geefGebruikersnaam());
+				queryUpdateAantalGespeeldeSpellen.executeUpdate();
 			}
 		}
 		catch (SQLException ex) {
 			throw new RuntimeException(ex);
 		}
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-				PreparedStatement queryUpdateAantalGewonnen = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN)) {
-			for (Speler speler : spelers.get(1)) {
-				queryUpdateAantalGewonnen.setString(1, speler.geefGebruikersnaam());
-				queryUpdateAantalGewonnen.executeUpdate();
+				PreparedStatement queryUpdateAantalGewonnenSpellen = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN_SPELLEN)) {
+			for (Speler speler : spelersGewonnen) {
+				queryUpdateAantalGewonnenSpellen.setString(1, speler.geefGebruikersnaam());
+				queryUpdateAantalGewonnenSpellen.executeUpdate();
 			}
 		}
 		catch (SQLException ex) {

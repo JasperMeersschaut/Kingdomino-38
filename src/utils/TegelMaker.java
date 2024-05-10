@@ -71,7 +71,7 @@ public class TegelMaker {
 	 *
 	 * @return de lijst van tegels.
 	 */
-	public List<Tegel> geeftegels() {
+	public List<Tegel> geefTegels() {
 		return tegels;
 	}
 

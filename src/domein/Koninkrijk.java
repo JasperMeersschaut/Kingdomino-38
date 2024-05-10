@@ -53,7 +53,7 @@ public class Koninkrijk {
 			case 4 -> Richting.ONDER;
 			default -> null;
 		});
-		Tegel tegelOmTePlaatsen = new TegelMaker().geeftegels().stream().filter(t -> t.geefTegelNummer() == tegelNummer)
+		Tegel tegelOmTePlaatsen = new TegelMaker().geefTegels().stream().filter(t -> t.geefTegelNummer() == tegelNummer)
 				.findAny().orElse(null);
 		controleerRijKolomRichtingBinnenGebied(rij, kolom, richting);
 		if (!tegelIsPlaatsbaar(rij, kolom, richting, tegelOmTePlaatsen))
@@ -153,7 +153,7 @@ public class Koninkrijk {
 	 * @param tegelNummer het nummer van de tegel die wordt weggegooid.
 	 */
 	public void gooiWeg(int tegelNummer) {
-		Tegel tegelOmTePlaatsen = new TegelMaker().geeftegels().stream().filter(t -> t.geefTegelNummer() == tegelNummer)
+		Tegel tegelOmTePlaatsen = new TegelMaker().geefTegels().stream().filter(t -> t.geefTegelNummer() == tegelNummer)
 				.findAny().orElse(null);
 		controleerWeggooienMogelijk(tegelOmTePlaatsen);
 	}

@@ -46,9 +46,9 @@ public class SpelerRepository {
 	}
 
 	/**
-	 * Geeft een lijst van beschikbare kleuren.
+	 * Verwijdert een speler uit de lijst van beschikbare spelers.
 	 *
-	 * @return een lijst van Kleur objecten.
+	 * @param speler de speler die moet worden verwijderd.
 	 */
 	public void verwijderSpelerUitBeschikbareSpelersLijst(Speler speler) {
 		this.beschikbareSpelers.remove(speler);
@@ -67,7 +67,7 @@ public class SpelerRepository {
 	 * Stelt de lijsten van beschikbare spelers en kleuren in.
 	 */
 	public void stelBeschikbareSpelersEnKleurenLijstenIn() {
-		beschikbareSpelers = geefAlleSpelersUitDataBase();
+		beschikbareSpelers = geefAlleSpelersUitDatabase();
 		beschikbareKleuren = new ArrayList<>(Arrays.asList(Kleur.values()));
 	}
 
@@ -92,7 +92,7 @@ public class SpelerRepository {
 	 * @param gebruikersnaam de gebruikersnaam van de speler.
 	 * @return een Speler object.
 	 */
-	public Speler geefSpelerUitDataBase(String gebruikersnaam) {
+	public Speler geefSpelerUitDatabase(String gebruikersnaam) {
 		if (!bestaatSpeler(gebruikersnaam))
 			throw new GebruikersnaamBestaatNietException(
 					String.format(messages.getString("player_doenst_exist"), gebruikersnaam));
@@ -104,17 +104,19 @@ public class SpelerRepository {
 	 *
 	 * @return een lijst van Speler objecten.
 	 */
-	public List<Speler> geefAlleSpelersUitDataBase() {
+	public List<Speler> geefAlleSpelersUitDatabase() {
 		return mapper.geefAlleSpelersUitDataBase();
 	}
 
 	/**
 	 * Update het aantal gewonnen en gespeelde spellen voor een lijst van spelers.
 	 *
-	 * @param spelers een lijst van lijsten van Speler objecten.
+	 * @param spelersGespeeld een lijst van spelers die gespeeld hebben.
+	 * @param spelersGewonnen een lijst van spelers die gewonnen hebben.
 	 */
-	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<List<Speler>> spelers) {
-		mapper.updateAantalGewonnenEnAantalGespeeldeSpellen(spelers);
+	public void updateAantalGewonnenEnAantalGespeeldeSpellen(List<Speler> spelersGespeeld,
+			List<Speler> spelersGewonnen) {
+		mapper.updateAantalGewonnenEnAantalGespeeldeSpellen(spelersGespeeld, spelersGewonnen);
 	}
 
 }
