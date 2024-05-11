@@ -58,8 +58,8 @@ public class SpelerMapper {
 				if (rs.next()) {
 					gebruikersnaam = rs.getString("gebruikersnaam");
 					int geboortejaar = rs.getInt("geboortejaar");
-					int aantalGewonnenSpellen = rs.getInt("aantalGewonnen");
-					int aantalGespeeldeSpellen = rs.getInt("aantalGespeeld");
+					int aantalGewonnenSpellen = rs.getInt("aantalGewonnenSpellen");
+					int aantalGespeeldeSpellen = rs.getInt("aantalGespeeldeSpellen");
 					speler = new Speler(gebruikersnaam, geboortejaar, aantalGewonnenSpellen, aantalGespeeldeSpellen);
 				}
 			}
@@ -87,8 +87,8 @@ public class SpelerMapper {
 				while (rs.next()) {
 					String gebruikersnaam = rs.getString("gebruikersnaam");
 					int geboortejaar = rs.getInt("geboortejaar");
-					int aantalGewonnenSpellen = rs.getInt("aantalGewonnen");
-					int aantalGespeeldeSpellen = rs.getInt("aantalGespeeld");
+					int aantalGewonnenSpellen = rs.getInt("aantalGewonnenSpellen");
+					int aantalGespeeldeSpellen = rs.getInt("aantalGespeeldeSpellen");
 					spelers.add(new Speler(gebruikersnaam, geboortejaar, aantalGewonnenSpellen, aantalGespeeldeSpellen));
 				}
 			}
@@ -113,7 +113,8 @@ public class SpelerMapper {
 			List<Speler> spelersGewonnen) {
 		Connectie ssh = new Connectie();
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-				PreparedStatement queryUpdateAantalGespeeldeSpellen = conn.prepareStatement(UPDATE_AANTAL_GESPEELDE_SPELLEN)) {
+				PreparedStatement queryUpdateAantalGespeeldeSpellen = conn
+						.prepareStatement(UPDATE_AANTAL_GESPEELDE_SPELLEN)) {
 			for (Speler speler : spelersGespeeld) {
 				queryUpdateAantalGespeeldeSpellen.setString(1, speler.geefGebruikersnaam());
 				queryUpdateAantalGespeeldeSpellen.executeUpdate();
@@ -123,7 +124,8 @@ public class SpelerMapper {
 			throw new RuntimeException(ex);
 		}
 		try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-				PreparedStatement queryUpdateAantalGewonnenSpellen = conn.prepareStatement(UPDATE_AANTAL_GEWONNEN_SPELLEN)) {
+				PreparedStatement queryUpdateAantalGewonnenSpellen = conn
+						.prepareStatement(UPDATE_AANTAL_GEWONNEN_SPELLEN)) {
 			for (Speler speler : spelersGewonnen) {
 				queryUpdateAantalGewonnenSpellen.setString(1, speler.geefGebruikersnaam());
 				queryUpdateAantalGewonnenSpellen.executeUpdate();
