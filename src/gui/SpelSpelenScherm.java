@@ -115,6 +115,7 @@ public class SpelSpelenScherm extends GridPane {
 		Label huidigeSpelerLabel = new Label(
 				messages.getString("fx_current_player") + " " + huidigeSpeler.gebruikersnaam());
 		huidigeSpelerLabel.getStyleClass().addAll("font", "bigText");
+		huidigeSpelerLabel.setOnMouseClicked(event -> getScene().setRoot(new ScoreScherm(dc, scherm)));
 		stapels.getChildren().add(huidigeSpelerLabel);
 		if (!dc.geefStapel().isEmpty()) {
 			ImageView bovensteTegel = new ImageView(new Image(getClass()
