@@ -98,6 +98,10 @@ public class SpelSpelenMenu {
 					System.out.println(messages.getString("tile_discarded"));
 					break;
 				}
+				if (plaats.equals("score")) {
+					new ScoreMenu(dc);
+					break;
+				}
 				System.out.print(messages.getString("which_direction_to_place") + " ");
 				richting = scanner.nextInt();
 				if (richting < 1 || richting > 4)
